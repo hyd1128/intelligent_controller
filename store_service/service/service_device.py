@@ -104,7 +104,6 @@ class DeviceService:
         # 3、返回符合条件的设备
         return len(suitable_device_list) // items_ + 1
 
-
     def delete(self, id):
         # 根据传入的id删除对应设备
         DeviceMapper().delete_by_id(id)
@@ -120,6 +119,45 @@ class DeviceService:
 
     def update(self, device: Device) -> None:
         DeviceMapper().update(device)
+
+    # ##################以上是旧的群控版本查询设备api###################
+
+    def select_device_page(self,
+                           page_number=0,
+                           total_item=15,
+                           task_status: Optional[int] = None,
+                           online_status: Optional[int] = None
+                           ):
+        """
+        分页条件查询
+
+        :param page_number: 页数
+        :param total_item: 单页数据条数
+        :param task_status: 任务状态
+        :param online_status: 在线状态
+        :return:
+        """
+        if task_status and online_status:
+            sql_ = (f"select * from tb_device "
+                    f"where task_status={task_status} and online_status={online_status} "
+                    f"limit {total_item} offset {page_number * total_item}"
+                    )
+        elif task_status:
+            sql_ = (f"select * from tb_device "
+                    f"where task_status={task_status} "
+                    f"limit {total_item} offset {page_number * total_item}"
+                    )
+        elif online_status:
+            sql_ = (f"select * from tb_device "
+                    f"where online_status={online_status} "
+                    f"limit {total_item} offset {page_number * total_item}"
+                    )
+        else:
+            sql_ = (f"select * from tb_device "
+                    f"limit {total_item} offset {page_number * total_item}"
+                    )
+        result = DeviceMapper().select_specific_devices(sql_)
+        return result
 
 
 

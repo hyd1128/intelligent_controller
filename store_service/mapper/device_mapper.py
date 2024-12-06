@@ -23,7 +23,7 @@ class DeviceMapper:
         """
         通过id查找设备
 
-        :param _id:
+        :param id_:
         :return:
         """
         sql_ = "select * from tb_device where id = ?;"
@@ -35,7 +35,7 @@ class DeviceMapper:
             return Device(*result)
         return result
 
-    def select_by_device_id(self, device_id: str) -> Device:
+    def select_by_device_id(self, device_id: str) -> Optional[Device]:
         """
         通过device_id查找设备
 
@@ -68,6 +68,22 @@ class DeviceMapper:
             return device_list_
         return result
 
+    def select_specific_devices(self, sql_: str) -> List[Device]:
+        """
+        条件查询符合条件的设备
+
+        :param sql_:
+        :return:
+        """
+        result = self.cursor.execute(sql_).fetchall()
+        self.pool.return_connection(self.conn)
+        if result:
+            device_list_ = []
+            for device_ in result:
+                device_list_.append(Device(*device_))
+            return device_list_
+        return result
+
     def insert(self, device: Device) -> int:
         """
         添加设备
@@ -75,13 +91,29 @@ class DeviceMapper:
         :param device:
         :return:
         """
-        params = (device.device_id, device.brand, device.manufacturer, device.android_version,
-                  device.resolution_ratio, device.online_state, device.task_state, device.coord,
-                  device.locating_app_status, device.locating_app_last_reload_time)
+        params = (device.device_id,
+                  device.brand,
+                  device.manufacturer,
+                  device.android_version,
+                  device.resolution_ratio,
+                  device.online_state,
+                  device.task_state, device.coord,
+                  device.locating_app_status,
+                  device.locating_app_last_reload_time
+                  )
+
         sql_ = ("insert into tb_device "
-                "(device_id, brand, manufacturer, android_version, "
-                "resolution_ratio, online_state, task_state, coord, "
-                "locating_app_status, locating_app_last_reload_time) "
+                "(device_id, "
+                "brand, "
+                "manufacturer, "
+                "android_version, "
+                "resolution_ratio, "
+                "online_state, "
+                "task_state, "
+                "coord, "
+                "locating_app_status, "
+                "locating_app_last_reload_time"
+                ") "
                 "values (?, ?, ?, ? , ?, ?, ?, ?, ?, ?)")
         try:
             self.cursor.execute(sql_, params)
@@ -121,12 +153,18 @@ class DeviceMapper:
         """
         params = device.to_dict()
         sql_ = (f"update tb_device set "
-                f"device_id=:device_id, brand=:brand, manufacturer=:manufacturer, "
-                f"android_version=:android_version, resolution_ratio=:resolution_ratio, "
-                f"online_state=:online_state, task_state=:task_state, coord=:coord, "
+                f"device_id=:device_id, "
+                f"brand=:brand, "
+                f"manufacturer=:manufacturer, "
+                f"android_version=:android_version, "
+                f"resolution_ratio=:resolution_ratio, "
+                f"online_state=:online_state, "
+                f"task_state=:task_state, "
+                f"coord=:coord, "
                 f"locating_app_status=:locating_app_status, "
                 f"locating_app_last_reload_time=:locating_app_last_reload_time "
-                f"where id={device.id}")
+                f"where id={device.id}"
+                )
 
         try:
             self.cursor.execute(sql_, params)

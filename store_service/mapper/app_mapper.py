@@ -29,6 +29,7 @@ class AppMapper:
         id_ = app_id
         sql_ = "select * from tb_app where id = ?;"
         params = (id_,)
+        # fetchone查询到数据返回元组 未查询到数据返回None
         result = self.cursor.execute(sql_, params).fetchone()
         self.pool.return_connection(self.conn)
 
