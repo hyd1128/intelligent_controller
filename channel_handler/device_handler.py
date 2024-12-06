@@ -38,7 +38,7 @@ class DeviceHandler(QObject):
             return {
                 "code": "400",
                 "data": "",
-                "msg": e
+                "msg": str(e)
             }
 
     @pyqtSlot(int, int, result="QVariant")
@@ -61,17 +61,5 @@ class DeviceHandler(QObject):
             return {
                 "code": "400",
                 "data": "",
-                "msg": e
+                "msg": str(e)
             }
-
-    # # @pyqtSlot(int, int, result="QVariant")
-    # @pyqtSlot(int, int, result=int)
-    # def demo(self, a: int, b: int) -> int:
-    #     print(a + b)
-    #     return a + b
-    #
-    # # @pyqtSlot(int, int, int, result="QVariant")
-    # @pyqtSlot(int, int, int, result=int)
-    # def demo1(self, a, b, c):
-    #     print(a + b + c)
-    #     return a + b + c
