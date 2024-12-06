@@ -1,0 +1,22 @@
+.idea/
+__pycache__/
+*.iml
+*.pyc
+.idea/workspace.xml
+
+# 忽略的文件夹
+/build/
+/dist/
+/test/
+
+# 忽略的文件
+/store/files/*.json
+/store/files/device/*.json
+/store/files/task/*.json
+*.spec
+test*.py
+/log/*
+/.DS_Store
+
+# 需要保留的文件
+!log/.gitkeep
