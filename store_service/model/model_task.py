@@ -9,8 +9,15 @@ class Task:
     任务模型类
     """
 
-    def __init__(self, _id=None, task_name=None, task_execution_duration=None,
-                 min_execution_times=None, max_execution_times=None, task_release_date=None, app=None):
+    def __init__(self,
+                 _id=None,
+                 task_name=None,  # 任务名称
+                 task_execution_duration=None,  # 任务持续执行时长
+                 min_execution_times=None,  # 任务最少执行次数
+                 max_execution_times=None,  # 任务最多执行次数
+                 task_release_date=None,  # 任务发布日期
+                 app=None  # 脚本所作用app
+                 ):
         self.id = _id
         self.task_name = task_name
         self.task_execution_duration = task_execution_duration
@@ -26,10 +33,15 @@ class Task:
         return self.__dict__
 
     def __str__(self):
-        return (
-            f"Task(id={self.id}, task_name={self.task_name}, task_execution_duration={self.task_execution_duration}, "
-            f"min_execution_times={self.min_execution_times}, max_execution_times={self.max_execution_times}, "
-            f"task_release_date={self.task_release_date}, app={self.app})")
+        return (f"Task("
+                f"id={self.id}, "
+                f"task_name={self.task_name}, "
+                f"task_execution_duration={self.task_execution_duration}, "
+                f"min_execution_times={self.min_execution_times}, "
+                f"max_execution_times={self.max_execution_times}, "
+                f"task_release_date={self.task_release_date}, "
+                f"app={self.app})"
+                )
 
 
 if __name__ == '__main__':
