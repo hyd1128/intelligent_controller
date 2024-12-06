@@ -12,6 +12,7 @@ from PyQt6.QtWebEngineCore import QWebEnginePage, QWebEngineSettings
 from PyQt6.QtWebEngineWidgets import QWebEngineView
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QApplication
 from channel_handler.demo_handler import TestHandler
+from channel_handler.device_handler import DeviceHandler
 
 
 class BrowserPage(QWidget):
@@ -21,6 +22,8 @@ class BrowserPage(QWidget):
         self.channel = QWebChannel()
         # 实例化一个handler slot
         self.test_handler = TestHandler()
+        self.device_handler = DeviceHandler()
+
         self.dev_tools = QWebEngineView()
         self.dev_tools_page = QWebEnginePage()
         # 定义布局
@@ -48,13 +51,14 @@ class BrowserPage(QWidget):
     def init_web_view(self):
         # 这里添加所有的handler
         self.channel.registerObject("testHandler", self.test_handler)
+        self.channel.registerObject("deviceHandler", self.device_handler)
         self.web_view.page().setWebChannel(self.channel)
 
         # 启用localstorage
         setting = self.web_view.page().settings()
         setting.setAttribute(QWebEngineSettings.WebAttribute.LocalStorageEnabled, True)
-        # self.web_view.load(QUrl("http://127.0.0.1:8041"))
-        self.web_view.load(QUrl("http://www.baidu.com"))
+        self.web_view.load(QUrl("http://127.0.0.1:8041"))
+        # self.web_view.load(QUrl("http://www.baidu.com"))
 
     def bind_short_cut(self):
         # 给界面绑定f12快捷键

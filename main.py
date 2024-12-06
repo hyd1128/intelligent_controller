@@ -11,9 +11,9 @@ if __name__ == "__main__":
     daemon_thread.start()
     app = QtWidgets.QApplication(sys.argv)
     # 暗色主题
-    apply_stylesheet(app, theme='dark_teal.xml')
+    # apply_stylesheet(app, theme='dark_teal.xml')
     # 亮色主题
-    # apply_stylesheet(app, theme='light_teal_500.xml', invert_secondary=True)
+    apply_stylesheet(app, theme='light_teal_500.xml', invert_secondary=True)
     window = Main()
     window.show()
     sys.exit(app.exec())

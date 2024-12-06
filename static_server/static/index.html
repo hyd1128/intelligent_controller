@@ -81,38 +81,36 @@
     new QWebChannel(qt.webChannelTransport, function (channel) {
         // 获取Python处理器对象
         window.testHandler = channel.objects.testHandler;
+        window.deviceHandler = channel.objects.deviceHandler;
     });
 
 
     document.getElementById('loginForm').addEventListener('submit', function (event) {
         event.preventDefault(); // 阻止表单默认提交
-        alert(localStorage.getItem("username"))
+
 
         // 获取用户名和密码
         const username = document.getElementById('username').value;
         const password = document.getElementById('password').value;
+        alert(`username: ${username}`)
+        alert(`password: ${password}`)
 
-        // 简单的验证示例
-        if (username && password) {
-            alert(`Login attempt: ${username}--${password}`);
-            alert("执行到了这里")
-            localStorage.setItem("username", "123")
-            alert("执行到了这里")
-            localStorage.setItem("password", "1233")
-            let data = localStorage.getItem("username")
-            alert(data)
+        deviceHandler.device_list(0, 15, function(result) {
+            alert(`响应结果: ${JSON.stringify(result)}`)
+        })
 
-            // 这里可以添加实际的登录逻辑，如发送到服务器
-            testHandler.login_slot(username, password, (result) => {
-                alert("传递过来的数据===> " + JSON.stringify(result))
-                alert(typeof result)
-                alert(typeof result.code)
+        // deviceHandler.demo(0, 15, 1, (result) => {
+        //     alert(`响应结果: ${result}`)
+        // })
 
-            })
 
-        } else {
-            alert('Please enter both username and password');
-        }
+        // 这里可以添加实际的登录逻辑，如发送到服务器
+        testHandler.login_slot(username, password, (result) => {
+            alert("传递过来的数据===> " + JSON.stringify(result))
+            alert(typeof result)
+            alert(typeof result.code)
+
+        })
     });
 </script>
 </body>

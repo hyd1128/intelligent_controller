@@ -122,12 +122,12 @@ class DeviceService:
 
     # ##################以上是旧的群控版本查询设备api###################
 
-    def select_device_page(self,
-                           page_number=0,
-                           total_item=15,
-                           task_status: Optional[int] = None,
-                           online_status: Optional[int] = None
-                           ):
+    def select_condition_device_list(self,
+                                     page_number=0,
+                                     total_item=15,
+                                     task_status: Optional[int] = None,
+                                     online_status: Optional[int] = None
+                                     ):
         """
         分页条件查询
 
@@ -137,28 +137,23 @@ class DeviceService:
         :param online_status: 在线状态
         :return:
         """
-        if task_status and online_status:
-            sql_ = (f"select * from tb_device "
-                    f"where task_status={task_status} and online_status={online_status} "
-                    f"limit {total_item} offset {page_number * total_item}"
-                    )
-        elif task_status:
-            sql_ = (f"select * from tb_device "
-                    f"where task_status={task_status} "
-                    f"limit {total_item} offset {page_number * total_item}"
-                    )
-        elif online_status:
-            sql_ = (f"select * from tb_device "
-                    f"where online_status={online_status} "
-                    f"limit {total_item} offset {page_number * total_item}"
-                    )
-        else:
-            sql_ = (f"select * from tb_device "
-                    f"limit {total_item} offset {page_number * total_item}"
-                    )
+        sql_ = (f"select * from tb_device "
+                f"where task_status={task_status} and online_status={online_status} "
+                f"limit {total_item} offset {page_number * total_item}"
+                )
+
         result = DeviceMapper().select_specific_devices(sql_)
         return result
 
+    def select_device_list(self,
+                           page_number=0,
+                           total_item=15):
+        sql_ = (f"select * from tb_device "
+                f"limit {total_item} offset {page_number * total_item}"
+                )
+
+        result = DeviceMapper().select_specific_devices(sql_)
+        return result
 
 
 if __name__ == '__main__':
