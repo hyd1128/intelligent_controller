@@ -11,7 +11,7 @@ from PyQt6.QtWebChannel import QWebChannel
 from PyQt6.QtWebEngineCore import QWebEnginePage, QWebEngineSettings
 from PyQt6.QtWebEngineWidgets import QWebEngineView
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QApplication
-from channel_handler.test_handler import TestHandler
+from channel_handler.demo_handler import TestHandler
 
 
 class BrowserPage(QWidget):
