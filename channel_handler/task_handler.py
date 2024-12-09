@@ -11,7 +11,14 @@ class TaskHandler(QObject):
         super().__init__()
 
     @pyqtSlot(int, int, result="QVariant")
-    def device_list(self, page_number: int, total_item: int):
+    def device_list_slot(self, page_number: int, total_item: int):
+        """
+        任务列表分页槽函数
+
+        :param page_number:
+        :param total_item:
+        :return:
+        """
         """status: 0表示已运行 1表示正在运行 2表示未运行"""
         task_data = [
             {

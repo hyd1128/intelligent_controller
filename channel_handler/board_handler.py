@@ -17,7 +17,12 @@ class BoardHandler(QObject):
         super().__init__()
 
     @pyqtSlot(result="QVariant")
-    def node_data(self):
+    def node_data_slot(self):
+        """
+        看板界面节点数据
+
+        :return:
+        """
         try:
             all_device_amount = len(DeviceService().select_all_devices())
             online_device_amount = len(DeviceService().select_online_state_devices(online_status=1))
@@ -45,7 +50,12 @@ class BoardHandler(QObject):
             }
 
     @pyqtSlot(result="QVariant")
-    def task_status(self):
+    def task_status_slot(self):
+        """
+        看板界面 任务状态数据
+
+        :return:
+        """
         try:
             all_task = TaskService.select_all()
             latest_task = all_task[-1]
@@ -76,7 +86,12 @@ class BoardHandler(QObject):
             }
 
     @pyqtSlot(result="QVariant")
-    def recently_seven_day_running_condition(self):
+    def recently_seven_day_running_condition_slot(self):
+        """
+        看板界面近一周任务时长
+
+        :return:
+        """
         try:
             recently_seven_day_running = dict()
             today = datetime.today()
@@ -96,8 +111,10 @@ class BoardHandler(QObject):
             }
 
     @pyqtSlot(int, int, result="QVariant")
-    def broad_notic(self, page_number: int, total_items: int):
+    def broad_notice_slot(self, page_number: int, total_items: int):
         """
+        看板界面通知模块
+
         注:
         通知的数据类型
         {"notic_id", "notic_type": "", "notic_content": "", "notic_occur_time": ""}
