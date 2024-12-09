@@ -54,8 +54,8 @@ class TaskHandler(QObject):
         ]
 
         try:
-            first_ = page_number * total_item
-            last_ = page_number * total_item + total_item
+            first_ = (page_number - 1) * total_item
+            last_ = first_ + total_item
             data_ = task_data[first_:last_]
             return {
                 "code": 200,

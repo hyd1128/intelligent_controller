@@ -83,6 +83,8 @@
         window.loginHandler = channel.objects.loginHandler;
         window.deviceHandler = channel.objects.deviceHandler;
         window.boardHandler = channel.objects.boardHandler
+        window.taskHandler = channel.objects.taskHandler
+        window.toolsHandler = channel.objects.toolsHandler
     });
 
 
@@ -128,10 +130,27 @@
         // })
 
         // 系统通知
-        boardHandler.broad_notice_slot(1, 3, (result) => {
+        // boardHandler.broad_notice_slot(1, 3, (result) => {
+        //     alert("传递过来的数据==> " + JSON.stringify(result))
+        //     console.log(JSON.stringify(result))
+        // })
+
+        // 任务相关
+        // 任务分页
+        // taskHandler.device_list_slot(1, 3, (result) => {
+        //     alert("传递过来的数据==> " + JSON.stringify(result))
+        //     console.log(JSON.stringify(result))
+        // })
+
+        // 工具相关
+        // 调节音量
+        toolsHandler.adjust_volume_slot("abcdefg", "raise", (result) => {
             alert("传递过来的数据==> " + JSON.stringify(result))
             console.log(JSON.stringify(result))
         })
+
+        // 调节亮度
+        // 开关
 
 
     });
