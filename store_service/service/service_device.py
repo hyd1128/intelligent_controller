@@ -155,6 +155,19 @@ class DeviceService:
         result = DeviceMapper().select_specific_devices(sql_)
         return result
 
+    def select_online_state_devices(self, online_status: int) -> List[Device]:
+        all_devices = DeviceMapper().select_all()
+        suitable_devices = []
+        for device_ in all_devices:
+            if device_.online_state == online_status:
+                suitable_devices.append(device_)
+        return suitable_devices
+
+    def select_all_devices(self):
+        all_devices = DeviceMapper().select_all()
+        return all_devices
+
+
 
 if __name__ == '__main__':
     pass
