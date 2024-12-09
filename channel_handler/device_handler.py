@@ -64,4 +64,3 @@ class DeviceHandler(QObject):
                 "msg": str(e)
             }
 
-    # @pyqtSlot()

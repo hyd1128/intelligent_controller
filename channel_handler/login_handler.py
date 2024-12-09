@@ -6,7 +6,7 @@
 from PyQt6.QtCore import QObject, pyqtSlot, QVariant
 
 
-class TestHandler(QObject):
+class LoginHandler(QObject):
     def __init__(self):
         super().__init__()
 

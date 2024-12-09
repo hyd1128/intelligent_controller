@@ -11,8 +11,12 @@ from PyQt6.QtWebChannel import QWebChannel
 from PyQt6.QtWebEngineCore import QWebEnginePage, QWebEngineSettings
 from PyQt6.QtWebEngineWidgets import QWebEngineView
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QApplication
-from channel_handler.login_handler import TestHandler
+
+from channel_handler.board_handler import BoardHandler
+from channel_handler.login_handler import LoginHandler
 from channel_handler.device_handler import DeviceHandler
+from channel_handler.task_handler import TaskHandler
+from channel_handler.tools_handler import ToolsHandler
 
 
 class BrowserPage(QWidget):
@@ -21,8 +25,12 @@ class BrowserPage(QWidget):
         self.web_view = QWebEngineView()
         self.channel = QWebChannel()
         # 实例化一个handler slot
-        self.test_handler = TestHandler()
+        self.login_handler = LoginHandler()
         self.device_handler = DeviceHandler()
+        self.board_handler = BoardHandler()
+        self.task_handler = TaskHandler()
+        self.tools_handler = ToolsHandler()
+
 
         self.dev_tools = QWebEngineView()
         self.dev_tools_page = QWebEnginePage()
@@ -50,8 +58,11 @@ class BrowserPage(QWidget):
 
     def init_web_view(self):
         # 这里添加所有的handler
-        self.channel.registerObject("testHandler", self.test_handler)
+        self.channel.registerObject("loginHandler", self.login_handler)
         self.channel.registerObject("deviceHandler", self.device_handler)
+        self.channel.registerObject("boardHandler", self.board_handler)
+        self.channel.registerObject("taskHandler", self.task_handler)
+        self.channel.registerObject("toolsHandler", self.tools_handler)
         self.web_view.page().setWebChannel(self.channel)
 
         # 启用localstorage
