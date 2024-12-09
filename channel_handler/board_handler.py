@@ -57,14 +57,14 @@ class BoardHandler(QObject):
         :return:
         """
         try:
-            all_task = TaskService.select_all()
+            all_task = TaskService().select_all_no_condition()
             latest_task = all_task[-1]
             current_task_id = latest_task.task_name
             latest_task_id = latest_task.task_name
             # 是否更新到最新任务
             is_latest_task = latest_task.task_release_date == datetime.strftime(datetime.now(), "%Y-%m-%d")
-            is_latest_task_status = True if latest_task_id else False
-            last_update_task_date_time = datetime(2024, 12, 9, 13, 56, 58).strptime("%Y-%m-%d %H:%M:%S")
+            is_latest_task_status = True if is_latest_task else False
+            last_update_task_date_time = datetime(2024, 12, 9, 13, 56, 58).strftime("%Y-%m-%d %H:%M:%S")
             running_status = True if not is_running else False
             return {
                 "code": 200,
@@ -72,7 +72,6 @@ class BoardHandler(QObject):
                     "current_task_id": current_task_id,
                     "latest_task_id": latest_task_id,
                     "is_latest_task": is_latest_task,
-                    "is_latest_task_status": is_latest_task_status,
                     "last_update_task_date_time": last_update_task_date_time,
                     "running_status": running_status
                 },
@@ -161,8 +160,8 @@ class BoardHandler(QObject):
         ]
 
         try:
-            first_ = page_number*total_items
-            last_ = page_number*total_items + total_items
+            first_ = (page_number - 1) * total_items
+            last_ = first_ + total_items
             data_ = notice_data[first_:last_]
             return {
                 "code": 200,

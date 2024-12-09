@@ -80,8 +80,9 @@
     // 等待WebChannel准备就绪
     new QWebChannel(qt.webChannelTransport, function (channel) {
         // 获取Python处理器对象
-        window.testHandler = channel.objects.testHandler;
+        window.loginHandler = channel.objects.loginHandler;
         window.deviceHandler = channel.objects.deviceHandler;
+        window.boardHandler = channel.objects.boardHandler
     });
 
 
@@ -95,24 +96,44 @@
         alert(`username: ${username}`)
         alert(`password: ${password}`)
 
-        deviceHandler.device_list(0, 15, function(result) {
-            alert(`响应结果: ${JSON.stringify(result)}`)
+        // // 获取设备列表 不带条件查询
+        // deviceHandler.device_list_slot(0, 15, function(result) {
+        //     alert(`响应结果: ${JSON.stringify(result)}`)
+        //     console.log(JSON.stringify(result))
+        // })
+        //
+        // // 这里可以添加实际的登录逻辑，如发送到服务器
+        // loginHandler.login_slot(username, password, (result) => {
+        //     alert("传递过来的数据===> " + JSON.stringify(result))
+        //     console.log(JSON.stringify(result))
+        // })
+
+        // 面板
+        // 面板节点数据
+        // boardHandler.node_data_slot((result) => {
+        //     alert("传递过来的数据==> " + JSON.stringify(result))
+        //     console.log(JSON.stringify(result))
+        // })
+
+        // 任务状态
+        // boardHandler.task_status_slot((result) => {
+        //     alert("传递过来的数据==> " + JSON.stringify(result))
+        //     console.log(JSON.stringify(result))
+        // })
+
+        // 最近一周运行时长统计
+        // boardHandler.recently_seven_day_running_condition_slot((result) => {
+        //     alert("传递过来的数据==> " + JSON.stringify(result))
+        //     console.log(JSON.stringify(result))
+        // })
+
+        // 系统通知
+        boardHandler.broad_notice_slot(1, 3, (result) => {
+            alert("传递过来的数据==> " + JSON.stringify(result))
             console.log(JSON.stringify(result))
         })
 
-        // deviceHandler.demo(0, 15, 1, (result) => {
-        //     alert(`响应结果: ${result}`)
-        // })
 
-
-        // 这里可以添加实际的登录逻辑，如发送到服务器
-        testHandler.login_slot(username, password, (result) => {
-            alert("传递过来的数据===> " + JSON.stringify(result))
-            // console.log(JSON.stringify(result))
-            alert(typeof result)
-            alert(typeof result.code)
-
-        })
     });
 </script>
 </body>

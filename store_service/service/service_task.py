@@ -36,4 +36,10 @@ class TaskService:
         suitable_task = TaskMapper().select_by_date(date_)
         return suitable_task
 
+    def select_all_no_condition(self) -> List[Task]:
+        # 1、获取所有的任务
+        task_list = TaskMapper().select_all()
+        return task_list
+
+
 

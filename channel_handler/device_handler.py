@@ -6,7 +6,6 @@
 from typing import Optional
 from store_service.model.model_device import Device
 from store_service.service.service_device import DeviceService
-
 from PyQt6.QtCore import QObject, pyqtSlot
 
 
@@ -15,12 +14,12 @@ class DeviceHandler(QObject):
         super().__init__()
 
     @pyqtSlot(int, int, int, int, result="QVariant")
-    def condition_device_list(self,
-                              page_number: int,
-                              total_items: int,
-                              task_status: int,
-                              online_status: int
-                              ) -> dict:
+    def condition_device_list_slot(self,
+                                   page_number: int,
+                                   total_items: int,
+                                   task_status: int,
+                                   online_status: int
+                                   ) -> dict:
         try:
             suitable_device = DeviceService().select_condition_device_list(page_number,
                                                                            total_items,
@@ -42,10 +41,10 @@ class DeviceHandler(QObject):
             }
 
     @pyqtSlot(int, int, result="QVariant")
-    def device_list(self,
-                    page_number: int,
-                    total_items: int,
-                    ) -> dict:
+    def device_list_slot(self,
+                         page_number: int,
+                         total_items: int,
+                         ) -> dict:
         try:
             suitable_device = DeviceService().select_device_list(page_number,
                                                                  total_items)
@@ -63,4 +62,3 @@ class DeviceHandler(QObject):
                 "data": "",
                 "msg": str(e)
             }
-

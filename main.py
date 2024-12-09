@@ -2,13 +2,9 @@ from PyQt6 import QtWidgets
 import sys
 from window.main import Main
 from qt_material import apply_stylesheet
-# from static_server.server import main as static_server
 import threading
-import os
 from flask import Flask, send_from_directory
 
-current_dir = os.path.dirname(os.path.abspath(__file__))
-# static_file_path = os.path.join(current_dir, "static")
 server = Flask(__name__, static_folder="static")
 
 
