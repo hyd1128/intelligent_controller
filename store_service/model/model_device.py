@@ -17,10 +17,10 @@ class Device:
                  manufacturer=None,  # 厂商
                  android_version=None,  # 安卓版本
                  resolution_ratio=None,  # 分辨率
-                 online_state=None,  # 在线状态(adb连接状态)
-                 task_state=None,  # 任务状态
+                 online_state=None,  # 在线状态(adb连接状态) 1表示连接 0表示未连接
+                 task_state=None,  # 任务状态 1表示正在执行任务 0表示未执行任务
                  coord=None,  # 坐标
-                 locating_app_status=None,  # 定位软件状态
+                 locating_app_status=None,  # 定位软件状态  1表示已重启 0表示未重启
                  locating_app_last_reload_time=None  # 上一次重启定位软件时间
                  ):
         self.id = id_

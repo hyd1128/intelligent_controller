@@ -2,12 +2,41 @@ from PyQt6 import QtWidgets
 import sys
 from window.main import Main
 from qt_material import apply_stylesheet
-from static_server.server import main as static_server
+# from static_server.server import main as static_server
 import threading
+import os
+from flask import Flask, send_from_directory
+
+current_dir = os.path.dirname(os.path.abspath(__file__))
+# static_file_path = os.path.join(current_dir, "static")
+server = Flask(__name__, static_folder="static")
+
+
+@server.route('/')
+def serve_index():
+    return send_from_directory(server.static_folder, 'index.html')
+
+
+@server.route('/<path:filename>')
+def serve_static(filename):
+    return send_from_directory(server.static_folder, filename)
+
+
+@server.route("/test")
+def test():
+    return "flask项目已启动"
+
+
+def server_():
+    server.run(
+        host="0.0.0.0",
+        port=8041,
+        debug=False
+    )
 
 
 if __name__ == "__main__":
-    daemon_thread = threading.Thread(target=static_server, daemon=True)
+    daemon_thread = threading.Thread(target=server_, daemon=True)
     daemon_thread.start()
     app = QtWidgets.QApplication(sys.argv)
     # 暗色主题

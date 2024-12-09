@@ -24,6 +24,9 @@ pyinstaller-hooks-contrib==2024.8
 pyparsing==3.1.4
 PyQt6==6.7.1
 PyQt6-Qt6==6.7.2
+PyQt6-WebEngine==6.7.0
+PyQt6-WebEngine-Qt6==6.7.3
+PyQt6-WebEngineSubwheel-Qt6==6.7.3
 PyQt6_sip==13.8.0
 python-dateutil==2.9.0.post0
 pywin32-ctypes==0.2.2
