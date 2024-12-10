@@ -92,11 +92,14 @@ class BoardHandler(QObject):
         :return:
         """
         try:
-            recently_seven_day_running = dict()
+            recently_seven_day_running = []
             today = datetime.today()
             for i in range(1, 8):
+                object_ = {}
                 past_date = datetime.strftime(today - timedelta(days=i), '%Y-%m-%d')
-                recently_seven_day_running[past_date] = random.randint(50, 150)
+                object_["date"] = past_date
+                object_["time"] = random.randint(50, 150)
+                recently_seven_day_running.append(object_)
             return {
                 "code": 200,
                 "data": recently_seven_day_running,
