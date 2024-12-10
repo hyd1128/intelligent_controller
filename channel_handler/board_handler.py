@@ -9,7 +9,7 @@ import random
 from PyQt6.QtCore import QObject, pyqtSlot
 from store_service.service.service_device import DeviceService
 from store_service.service.service_task import TaskService
-from global_var import is_running
+import global_var
 
 
 class BoardHandler(QObject):
@@ -63,9 +63,9 @@ class BoardHandler(QObject):
             latest_task_id = latest_task.task_name
             # 是否更新到最新任务
             is_latest_task = latest_task.task_release_date == datetime.strftime(datetime.now(), "%Y-%m-%d")
-            is_latest_task_status = True if is_latest_task else False
+            # is_latest_task_status = True if is_latest_task else False
             last_update_task_date_time = datetime(2024, 12, 9, 13, 56, 58).strftime("%Y-%m-%d %H:%M:%S")
-            running_status = True if not is_running else False
+            running_status = True if not global_var.is_running else False
             return {
                 "code": 200,
                 "data": {
