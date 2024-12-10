@@ -58,8 +58,8 @@ class ToolsHandler(QObject):
                 "msg": str(e)
             }
 
-    @pyqtSlot(str, result="QVariant")
-    def open_switch_slot(self, action_: str):
+    @pyqtSlot(bool, result="QVariant")
+    def open_switch_slot(self, action_: bool):
         """
         开启或者关闭开关槽函数
 

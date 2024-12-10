@@ -46,7 +46,7 @@ class DeviceHandler(QObject):
                          total_items: int,
                          ) -> dict:
         try:
-            suitable_device = DeviceService().select_device_list(page_number,
+            suitable_device = DeviceService().select_device_list(page_number-1,
                                                                  total_items)
             for i in range(len(suitable_device)):
                 suitable_device[i] = suitable_device[i].to_dict()
