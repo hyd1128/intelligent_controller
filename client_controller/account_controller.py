@@ -28,14 +28,13 @@ class AccountController:
         response = requests.post(url, data=json.dumps(data), headers=headers)
         if response.status_code == 200:
             print("登录成功")
-            print(response.json())
             # node_info = get_node_info(os.path.join(sys.path[1] + "/node_info/info.json"))
-            node_info = get_node_info("./node_info/current_user_detail.json")
+            node_info = get_node_info("./node_info/info.json")
             node_info["normal_account"] = account
             node_info["password"] = password
-            node_info["top_account"] = response.json()["top_accounts"]
+            node_info["top_account"] = response.json()["data"]["top_accounts"]
             # edit_node_info(os.path.join(sys.path[1] + "/node_info/current_user_detail.json"), response.json())
-            edit_node_info("./node_info/current_user_detail.json", response.json())
+            edit_node_info("./node_info/current_user_detail.json", response.json()["data"])
             return True
         else:
             print("status code: " + str(response.status_code))

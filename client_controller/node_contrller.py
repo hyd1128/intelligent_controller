@@ -28,6 +28,7 @@ class NodeController(QThread):
         while True:
             if self.flag:
                 break
+            print("节点接口执行了一次")
             # node_info = get_node_info(os.path.join(sys.path[1] + "/node_info/info.json"))
             node_info = get_node_info("./node_info/info.json")
             # 要发送的 JSON 数据
@@ -53,15 +54,15 @@ class NodeController(QThread):
                 'Content-Type': 'application/json'  # 指定发送 JSON 格式的数据
             }
 
-            # 发送 POST 请求，传递 JSON 数据
-            response = requests.post(url, data=json.dumps(node_data), headers=headers)
-
-            # 获取返回的 JSON 数据
-            if response.status_code == 200:
-                response_data = response.json()  # 解析返回的 JSON 数据
-                print("上传成功，返回的数据：", response_data)
-            else:
-                print(f"请求失败，状态码: {response.status_code}")
+            # # 发送 POST 请求，传递 JSON 数据
+            # response = requests.post(url, data=json.dumps(node_data), headers=headers)
+            #
+            # # 获取返回的 JSON 数据
+            # if response.status_code == 200:
+            #     response_data = response.json()  # 解析返回的 JSON 数据
+            #     print("上传成功，返回的数据：", response_data)
+            # else:
+            #     print(f"请求失败，状态码: {response.status_code}")
 
             time.sleep(30)
 

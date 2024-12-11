@@ -68,7 +68,7 @@ class BrowserPage(QWidget):
         # 启用localstorage
         setting = self.web_view.page().settings()
         setting.setAttribute(QWebEngineSettings.WebAttribute.LocalStorageEnabled, True)
-        self.web_view.load(QUrl("http://127.0.0.1:8000"))
+        self.web_view.load(QUrl("http://127.0.0.1:3000"))
         # self.web_view.load(QUrl("http://www.baidu.com"))
 
     def bind_short_cut(self):
