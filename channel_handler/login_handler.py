@@ -41,7 +41,9 @@ class LoginHandler(QObject):
     @pyqtSlot(result="QVariant")
     def get_current_user_detail(self):
         try:
-            current_user_detail = get_node_info(os.path.join(sys.path[1] + "/node_info/current_user_detail.json"))
+            # current_user_detail = get_node_info(os.path.join(sys.path[1] + "/node_info/current_user_detail.json"))
+            current_user_detail = get_node_info("./node_info/current_user_detail.json")
+
             return {
                 "code": 200,
                 "data": current_user_detail,

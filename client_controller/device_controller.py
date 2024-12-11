@@ -29,14 +29,15 @@ class DeviceController(QThread):
             if self.flag:
                 break
 
-            node_info = get_node_info(os.path.join(sys.path[1] + "/node_info/info.json"))
+            # node_info = get_node_info(os.path.join(sys.path[1] + "/node_info/info.json"))
+            node_info = get_node_info("./node_info/info.json")
             # 要发送的 JSON 数据
             suitable_devices = DeviceService().select(online_state="all", task_state="all")
             suitable_device_data = []
             for device_ in suitable_devices:
                 suitable_device_data.append({"uuid": device_.device_id,
                                              "device_model": device_.manufacturer,
-                                             "networl": device_.online_state,
+                                             "network": device_.online_state,
                                              "status": device_.task_state,
                                              "node": node_info["node_id"],
                                              "normal_accounts": node_info["account"],

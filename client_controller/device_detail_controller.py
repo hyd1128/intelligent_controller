@@ -29,7 +29,8 @@ class DeviceDetailController(QThread):
             if self.flag:
                 break
 
-            node_info = get_node_info(os.path.join(sys.path[1] + "/node_info/info.json"))
+            # node_info = get_node_info(os.path.join(sys.path[1] + "/node_info/info.json"))
+            node_info = get_node_info("./node_info/info.json")
             # 要发送的 JSON 数据
             suitable_devices = DeviceService().select(online_state="online", task_state="all")
             suitable_device_data = []

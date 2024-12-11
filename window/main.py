@@ -42,7 +42,8 @@ class Main(QMainWindow):
         self.setWindowIcon(QIcon("app/icon/quanqiu.png"))
 
         # 判断该节点是否具有唯一标识 如果没有 则生成并添加
-        node_info_path = os.path.join(sys.path[1] + "/node_info/info.json")
+        # node_info_path = os.path.join(sys.path[1] + "/node_info/info.json")
+        node_info_path = "./node_info/info.json"
         node_info = get_node_info(node_info_path)
         if not node_info["node_id"]:
             node_info["node_id"] = generate_unique_node_token()
@@ -90,14 +91,16 @@ class Main(QMainWindow):
         self.run_task.stop()
         self.main_controller.stop()
 
-        node_info_path = os.path.join(sys.path[1] + "/node_info/info.json")
-        current_user_detail_path = os.path.join(sys.path[1] + "/node_info/current_user_detail.json")
+        # node_info_path = os.path.join(sys.path[1] + "/node_info/info.json")
+        # current_user_detail_path = os.path.join(sys.path[1] + "/node_info/current_user_detail.json")
+        node_info_path = "./node_info/info.json"
+        current_user_detail_path = "./node_info/current_user_detail.json"
         node_info = get_node_info(node_info_path)
         node_info["normal_account"] = ""
         node_info["password"] = ""
         node_info["top_account"] = ""
         edit_node_info(node_info_path, node_info)
-        current_user_detail = ""
+        current_user_detail = {}
         edit_node_info(current_user_detail_path, current_user_detail)
         event.accept()
 
