@@ -45,7 +45,7 @@ class LoginHandler(QObject):
             return {
                 "code": 200,
                 "data": current_user_detail,
-                "msag": ""
+                "msg": ""
             }
         except Exception as e:
             return {
