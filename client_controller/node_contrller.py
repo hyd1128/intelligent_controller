@@ -3,6 +3,8 @@
 # @Time : 2024/11/26 7:43
 # @Author : limber
 # @desc :
+import os
+import sys
 import time
 
 from PyQt6 import QtCore
@@ -10,8 +12,8 @@ from PyQt6.QtCore import QThread
 import requests
 import json
 
-
-# from store_service.service.service_device import DeviceService
+from store_service.service.service_device import DeviceService
+from util.info_util import get_node_info
 
 
 class DeviceController(QThread):
@@ -26,24 +28,20 @@ class DeviceController(QThread):
         while True:
             if self.flag:
                 break
-
-            # node_id = "test_node_id_99"
-            #
-            # # 要发送的 JSON 数据
-            # suitable_devices = DeviceService().select(online_state="online", task_state="all")
-            # suitable_device_data = []
-            # for device_ in suitable_devices:
-            #     suitable_device_data.append({"device": device_.device_id, "node": node_id})
+            node_info = get_node_info(os.path.join(sys.path[1] + "/node_info/info.json"))
+            # 要发送的 JSON 数据
+            suitable_devices = DeviceService().select(online_state="online", task_state="all")
+            online_device = len(suitable_devices)
 
             # 当前节点信息
-            node_data = {"node_version": "v1.0",
-                         "uuid": "node_2",
-                         "normal_accounts": "13611223344",
-                         "top_accounts": "13812345678",
-                         "online_device": "60",
-                         "status": 1,
-                         "task_version": "2024_1128_001",
-                         "update_task": 1
+            node_data = {"node_version": node_info["node_version"],
+                         "uuid": node_info["node_id"],
+                         "normal_accounts": node_info["normal_account"],
+                         "top_accounts": node_info["top_account"],
+                         "online_device": online_device,
+                         "status": 1,   # 1 节点在线 0 节点离线
+                         "task_version": "2024_1211_001",   # 当前执行的任务版本
+                         "update_task": 1   # 是否更新最新任务
                          }
 
             # 接口URL（替换为你要发送数据的实际接口地址）

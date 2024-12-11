@@ -3,56 +3,41 @@
 # @Time : 2024/11/26 7:43
 # @Author : limber
 # @desc :
+import os
+import sys
 import time
 
-from PyQt6 import QtCore
-from PyQt6.QtCore import QThread
 import requests
 import json
+from util.info_util import get_node_info, edit_node_info
 
-# from store_service.service.service_device import DeviceService
+
+class AccountController:
+    @staticmethod
+    def login(account: str, password: str):
+        url = "http://127.0.0.1:8000/api/v1/top_accounts/user/normal_user_login"
+        # 设置请求头
+        headers = {
+            'Content-Type': 'application/json'  # 指定发送 JSON 格式的数据
+        }
+
+        data = {
+            "username": account,
+            "password": password
+        }
+
+        # 发送 POST 请求，传递 JSON 数据
+        response = requests.post(url, data=json.dumps(data), headers=headers)
+        if response.status_code == 200:
+            print("登录成功")
+            print(response.json())
+            node_info = get_node_info(os.path.join(sys.path[1] + "/node_info/info.json"))
+            node_info["normal_account"] = account
+            node_info["password"] = password
+            node_info["top_account"] = response.json()["top_accounts"]
+        else:
+            print("status code: " + str(response.status_code))
 
 
-class DeviceController(QThread):
-    signal = QtCore.pyqtSignal(dict)
-
-    def __init__(self):
-        super().__init__()
-        self.flag = False
-
-    # 监控是否有新增
-    def run(self):
-        while True:
-            if self.flag:
-                break
-
-            node_id = "test_node_id_99"
-
-            # 要发送的 JSON 数据
-            suitable_devices = DeviceService().select(online_state="online", task_state="all")
-            suitable_device_data = []
-            for device_ in suitable_devices:
-                suitable_device_data.append({"device": device_.device_id, "node": node_id})
-
-            # 接口URL（替换为你要发送数据的实际接口地址）
-            url = 'http://groupcontroladminapi.inziqi.com/api/v1/root_accounts/device/add_device_details'
-
-            # 设置请求头
-            headers = {
-                'Content-Type': 'application/json'  # 指定发送 JSON 格式的数据
-            }
-
-            # 发送 POST 请求，传递 JSON 数据
-            response = requests.post(url, data=json.dumps(suitable_device_data), headers=headers)
-
-            # 获取返回的 JSON 数据
-            if response.status_code == 200:
-                response_data = response.json()  # 解析返回的 JSON 数据
-                print("上传成功，返回的数据：", response_data)
-            else:
-                print(f"请求失败，状态码: {response.status_code}")
-
-            time.sleep(60)
-
-    def stop(self):
-        self.flag = True
+if __name__ == '__main__':
+    AccountController.login("13611223344", "123456")
