@@ -5,8 +5,6 @@
 # @desc :
 import os
 import sys
-import time
-
 import requests
 import json
 from util.info_util import get_node_info, edit_node_info

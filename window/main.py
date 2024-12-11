@@ -11,6 +11,7 @@ from window.dialog.offline_device import OfflineDeviceDialog
 from run.run_sync import Run
 from util.utils import queue_store_device_detail_config
 from window.web.web_view import BrowserPage
+from client_controller.main_controller import MainController
 
 
 class Main(QMainWindow):
@@ -25,11 +26,11 @@ class Main(QMainWindow):
         self.watch_new = None
         self.watch_offline = None
         self.run_task = None
+        self.main_controller = None
         # 定义组件
         self.browser = None
         self.setup()
 
-        # 定义组件
 
     def setup(self):
         # 初始化窗口
@@ -69,10 +70,15 @@ class Main(QMainWindow):
         self.run_task = Run()
         self.run_task.start()
 
+        # 启动定时上传任务
+        self.main_controller = MainController()
+        self.main_controller.start()
+
     def closeEvent(self, event):
         self.watch_new.stop()
         self.watch_offline.stop()
         self.run_task.stop()
+        self.main_controller.stop()
         event.accept()
 
     def change_page(self, index):

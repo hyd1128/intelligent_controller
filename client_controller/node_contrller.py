@@ -16,7 +16,7 @@ from store_service.service.service_device import DeviceService
 from util.info_util import get_node_info
 
 
-class DeviceController(QThread):
+class NodeController(QThread):
     signal = QtCore.pyqtSignal(dict)
 
     def __init__(self):
