@@ -62,7 +62,7 @@ class NodeController(QThread):
             else:
                 print(f"请求失败，状态码: {response.status_code}")
 
-            time.sleep(60)
+            time.sleep(30)
 
     def stop(self):
         self.flag = True

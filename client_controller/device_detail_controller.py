@@ -57,7 +57,7 @@ class DeviceDetailController(QThread):
                 print("上传成功，返回的数据：", response_data)
             else:
                 print(f"请求失败，状态码: {response.status_code}")
-            time.sleep(60)
+            time.sleep(90)
 
     def stop(self):
         self.flag = True
