@@ -33,8 +33,11 @@ class AccountController:
             node_info["normal_account"] = account
             node_info["password"] = password
             node_info["top_account"] = response.json()["top_accounts"]
+            edit_node_info(os.path.join(sys.path[1] + "/node_info/current_user_detail.json"), response.json())
+            return True
         else:
             print("status code: " + str(response.status_code))
+            return False
 
 
 if __name__ == '__main__':

@@ -1,3 +1,5 @@
+import os.path
+import sys
 from typing import Any
 
 from PyQt6 import QtWidgets
@@ -12,6 +14,8 @@ from run.run_sync import Run
 from util.utils import queue_store_device_detail_config
 from window.web.web_view import BrowserPage
 from client_controller.main_controller import MainController
+from util.info_util import get_node_info, edit_node_info
+from util.identify_util import generate_unique_node_token
 
 
 class Main(QMainWindow):
@@ -31,12 +35,18 @@ class Main(QMainWindow):
         self.browser = None
         self.setup()
 
-
     def setup(self):
         # 初始化窗口
         self.resize(1200, 600)
         self.setWindowTitle("智控管家")
         self.setWindowIcon(QIcon("app/icon/quanqiu.png"))
+
+        # 判断该节点是否具有唯一标识 如果没有 则生成并添加
+        node_info_path = os.path.join(sys.path[1] + "/node_info/info.json")
+        node_info = get_node_info(node_info_path)
+        if not node_info["node_id"]:
+            node_info["node_id"] = generate_unique_node_token()
+            edit_node_info(node_info_path, node_info)
 
         # 容器
         self.widget = QtWidgets.QWidget(parent=self)
@@ -79,6 +89,16 @@ class Main(QMainWindow):
         self.watch_offline.stop()
         self.run_task.stop()
         self.main_controller.stop()
+
+        node_info_path = os.path.join(sys.path[1] + "/node_info/info.json")
+        current_user_detail_path = os.path.join(sys.path[1] + "/node_info/current_user_detail.json")
+        node_info = get_node_info(node_info_path)
+        node_info["normal_account"] = ""
+        node_info["password"] = ""
+        node_info["top_account"] = ""
+        edit_node_info(node_info_path, node_info)
+        current_user_detail = ""
+        edit_node_info(current_user_detail_path, current_user_detail)
         event.accept()
 
     def change_page(self, index):
