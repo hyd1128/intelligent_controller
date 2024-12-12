@@ -27,10 +27,10 @@ class DeviceController(QThread):
         uri = "/api/v1/root_accounts/device/add_device"
 
         while True:
+            time.sleep(10)
             if self.flag:
                 break
             print("上传设备接口执行了一次")
-            time.sleep(10)
             root_path = PathUtil.get_current_file_absolute_path(__file__).parent.parent
             node_info_path = root_path.joinpath("node_info").joinpath("info.json")
             node_info = FileUtil.read_file_content(node_info_path)
@@ -54,7 +54,6 @@ class DeviceController(QThread):
             else:
                 print("定时上传设备数据失败")
                 print(response_data["data"]["data"])
-
 
     def stop(self):
         self.flag = True

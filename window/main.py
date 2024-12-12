@@ -80,8 +80,8 @@ class Main(QMainWindow):
         self.watch_offline.start()
 
         # 执行任务
-        # self.run_task = Run()
-        # self.run_task.start()
+        self.run_task = Run()
+        self.run_task.start()
 
         # 启动定时上传任务
         self.main_controller = MainController()

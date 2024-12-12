@@ -17,21 +17,21 @@ class MainController(QThread):
         super().__init__()
         self.flog = False
         self.device_thread = DeviceController()
-        # self.device_detail_thread = DeviceDetailController()
-        # self.node_thread = NodeController()
+        self.device_detail_thread = DeviceDetailController()
+        self.node_thread = NodeController()
 
     def run(self):
         while True:
             if self.flog:
                 break
-            if global_var.is_running and not self.device_thread.isRunning():
+            if global_var.is_running and not self.device_detail_thread.isRunning():
                 self.device_thread.start()
-                # self.device_detail_thread.start()
-                # self.node_thread.start()
-            elif not global_var.is_running and self.device_thread.isRunning():
+                self.device_detail_thread.start()
+                self.node_thread.start()
+            elif not global_var.is_running and self.device_detail_thread.isRunning():
                 self.device_thread.stop()
-                # self.device_detail_thread.stop()
-                # self.node_thread.stop()
+                self.device_detail_thread.stop()
+                self.node_thread.stop()
             time.sleep(30)
 
     def stop(self):
