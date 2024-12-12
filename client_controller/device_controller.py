@@ -27,7 +27,7 @@ class DeviceController(QThread):
         uri = "/api/v1/root_accounts/device/add_device"
 
         while True:
-            time.sleep(10)
+            time.sleep(20)
             if self.flag:
                 break
             print("上传设备接口执行了一次")

@@ -22,7 +22,7 @@ class DeviceDetailController(QThread):
         # 统一资源定位符
         URI = "/api/v1/root_accounts/device/add_device_details"
         while True:
-            time.sleep(10)
+            time.sleep(30)
             if self.flag:
                 break
             print("上传设备详细接口执行了一次")

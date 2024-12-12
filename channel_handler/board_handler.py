@@ -10,6 +10,9 @@ from PyQt6.QtCore import QObject, pyqtSlot
 from store_service.service.service_device import DeviceService
 from store_service.service.service_task import TaskService
 import global_var
+from util.http_util import HttpUtils
+from util.path_util import PathUtil
+from util.file_util import FileUtil
 
 
 class BoardHandler(QObject):
@@ -28,8 +31,16 @@ class BoardHandler(QObject):
             online_device_amount = len(DeviceService().select_online_state_devices(online_status=1))
             offline_device_amount = len(DeviceService().select_online_state_devices(online_status=0))
             # todo: 累计在线时长后期使用requests来写 当前写死
-            total_online_times = 1090
-            today_online_times = 90
+            root_path = PathUtil.get_current_file_absolute_path(__file__).parent.parent
+            node_info_path = root_path.joinpath("node_info").joinpath("info.json")
+            node_info = FileUtil.read_file_content(node_info_path)
+            total_online_times = 0
+            today_online_times = 0
+            URI = f"/api/v1/root_accounts/accounts/get_total_task_duration/{node_info['normal_account']}"
+            response_data = HttpUtils.get(URI)
+            if response_data["code"] == 200 and response_data["data"]["code"] == 200:
+                total_online_times = response_data["data"]["data"]["total_task_duration"]
+                today_online_times = response_data["data"]["data"]["today_task_duration"]
 
             return {
                 "code": 200,

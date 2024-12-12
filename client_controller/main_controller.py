@@ -32,7 +32,7 @@ class MainController(QThread):
                 self.device_thread.stop()
                 self.device_detail_thread.stop()
                 self.node_thread.stop()
-            time.sleep(30)
+            time.sleep(5)
 
     def stop(self):
         self.flog = True

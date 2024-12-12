@@ -52,6 +52,40 @@ class HttpUtils:
                 "data": str(e)
             }
 
+    @classmethod
+    def get(cls, uri: str):
+        """
+        post请求传递传递json数据
+
+        :param uri: 资源定位符 以/开头
+        :param json_data:
+        :param headers:
+        :return:
+        """
+
+        try:
+
+            response_ = requests.get(
+                url=cls.base_url + uri
+            )
+
+            if 200 <= response_.status_code <= 299:
+                # 响应返回结果的dict对象
+                return {
+                    "code": response_.status_code,
+                    "data": response_.json()
+                }
+            else:
+                return {
+                    "code": response_.status_code,
+                    "data": response_.json()
+                }
+        except requests.exceptions.RequestException as e:
+            return {
+                "code": 500,
+                "data": str(e)
+            }
+
 
 if __name__ == '__main__':
     json_data = {

@@ -71,12 +71,12 @@ class Main(QMainWindow):
 
         # 监听新设备
         self.watch_new = New()
-        self.watch_new.signal.connect(self.dialog_new_device)
+        # self.watch_new.signal.connect(self.dialog_new_device)
         self.watch_new.start()
 
         # 监听掉线设备
         self.watch_offline = Offline()
-        self.watch_offline.signal.connect(self.dialog_offline_device)
+        # self.watch_offline.signal.connect(self.dialog_offline_device)
         self.watch_offline.start()
 
         # 执行任务

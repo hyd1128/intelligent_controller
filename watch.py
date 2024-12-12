@@ -6,7 +6,9 @@ from adb.adb import device_list, info
 from global_var import coord_1, coord_2
 from modify_position.allocation_position import generate_coordinate
 from logger_zk.logger_types import logger_watch
+from store_service.model.model_device import Device
 from store_service.service.service_device import DeviceService
+from util.device_queue import DeviceQueue
 
 
 class New(QThread):
@@ -43,7 +45,23 @@ class New(QThread):
                         device_info["device_id"] = item
                         device_info["coord"] = str(generate_coordinate(coord_1, coord_2))
 
-                        self.signal.emit(device_info)
+                        ###################
+                        device_info["online_state"] = 1
+                        device_info["task_state"] = 0
+                        device_info["locating_app_status"] = 0
+                        # 查询该设备的device_id是否存在, 不存在则为新设备
+                        result = DeviceService().select_by_device_id(device_info["device_id"])
+
+                        # 判断是否为新设备
+                        if result is None:
+                            # 实例化一个Device对象
+                            device_ = Device(**device_info)
+                            DeviceService().add_device(device_)
+                            # 将新设备添加到队列
+                            new_device = DeviceService().select_by_device_id(device_.device_id)
+                            DeviceQueue.put(new_device)
+                        ##################
+                        # self.signal.emit(device_info)
             time.sleep(20)  # 20秒查询一次
 
     def stop(self):
@@ -86,7 +104,7 @@ class Offline(QThread):
 
                     item.task_state = 0
                     DeviceService().update(item)
-                    self.signal.emit(item)
+                    # self.signal.emit(item)
             time.sleep(30)  # 30秒查询一次
 
     def stop(self):
