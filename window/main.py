@@ -5,6 +5,8 @@ from typing import Any
 from PyQt6 import QtWidgets
 from PyQt6.QtGui import QIcon
 from PyQt6.QtWidgets import QMainWindow
+
+from util.path_util import PathUtil
 from window.navbar.main import Navbar
 from window.page.main import Page
 from watch import New, Offline
@@ -14,7 +16,7 @@ from run.run_sync import Run
 from util.utils import queue_store_device_detail_config
 from window.web.web_view import BrowserPage
 from client_controller.main_controller import MainController
-from util.file_util import get_node_info, edit_node_info
+from util.file_util import get_node_info, edit_node_info, FileUtil
 from util.identify_util import generate_unique_node_token
 
 
@@ -41,13 +43,13 @@ class Main(QMainWindow):
         self.setWindowTitle("智控管家")
         self.setWindowIcon(QIcon("app/icon/quanqiu.png"))
 
-        # 判断该节点是否具有唯一标识 如果没有 则生成并添加
-        # node_info_path = os.path.join(sys.path[1] + "/node_info/info.json")
-        node_info_path = "./node_info/info.json"
-        node_info = get_node_info(node_info_path)
+        # 判断该节点是否具有唯一标识 如何是初始打开该软件 则生成唯一ID
+        root_path = PathUtil.get_current_file_absolute_path(__file__).parent
+        node_info_path = root_path.joinpath("node_info").joinpath("info.json")
+        node_info = FileUtil.read_file_content(node_info_path)
         if not node_info["node_id"]:
             node_info["node_id"] = generate_unique_node_token()
-            edit_node_info(node_info_path, node_info)
+            FileUtil.write_file_content(node_info_path, node_info)
 
         # 容器
         self.widget = QtWidgets.QWidget(parent=self)
@@ -91,17 +93,22 @@ class Main(QMainWindow):
         self.run_task.stop()
         self.main_controller.stop()
 
-        # node_info_path = os.path.join(sys.path[1] + "/node_info/info.json")
-        # current_user_detail_path = os.path.join(sys.path[1] + "/node_info/current_user_detail.json")
-        node_info_path = "./node_info/info.json"
-        current_user_detail_path = "./node_info/current_user_detail.json"
-        node_info = get_node_info(node_info_path)
-        node_info["normal_account"] = ""
-        node_info["password"] = ""
-        node_info["top_account"] = ""
-        edit_node_info(node_info_path, node_info)
+        root_path = PathUtil.get_current_file_absolute_path(__file__).parent
+        node_info_path = root_path.joinpath("node_info").joinpath("info.json")
+        current_user_detail_path = root_path.joinpath("node_path").joinpath("current_user_detail.json")
+        node_info = FileUtil.read_file_content(node_info_path)
+        update_node_info = {
+            "normal_account": "",
+            "password": "",
+            "top_account": ""
+        }
+        # 关闭窗口后置空登录用户
+        node_info = {**node_info, **update_node_info}
+        FileUtil.write_file_content(node_info_path, node_info)
+
+        # 关闭窗口给后置空当前登录用户
         current_user_detail = {}
-        edit_node_info(current_user_detail_path, current_user_detail)
+        FileUtil.write_file_content(current_user_detail_path, current_user_detail)
         event.accept()
 
     def change_page(self, index):

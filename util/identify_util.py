@@ -18,9 +18,6 @@ def generate_unique_node_token():
     return unique_string
 
 
-
-
-
 if __name__ == '__main__':
     token = generate_unique_node_token()
     print(token)

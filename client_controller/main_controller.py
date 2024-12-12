@@ -5,11 +5,11 @@
 # @desc :
 
 import time
+import global_var
 from PyQt6.QtCore import QThread
+from client_controller.node_contrller import NodeController
 from client_controller.device_controller import DeviceController
 from client_controller.device_detail_controller import DeviceDetailController
-from client_controller.node_contrller import NodeController
-import global_var
 
 
 class MainController(QThread):

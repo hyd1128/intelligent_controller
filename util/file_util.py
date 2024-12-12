@@ -33,11 +33,4 @@ def edit_node_info(path: Any, data: dict) -> None:
 
 
 if __name__ == '__main__':
-    path = "../node_info/info.json"
-    data = get_node_info(path)
-    # print(data)
-    data["node_id"] = "abcdef"
-    data["normal_account"] = "123"
-    data["password"] = "abcdef"
-    data["top_account"] = "4567"
-    edit_node_info(path, data)
+    pass

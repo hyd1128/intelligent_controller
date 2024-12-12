@@ -8,7 +8,8 @@ import sys
 
 from PyQt6.QtCore import QObject, pyqtSlot, QVariant
 from client_controller.account_controller import AccountController
-from util.file_util import get_node_info
+from util.file_util import FileUtil
+from util.path_util import PathUtil
 
 
 class LoginHandler(QObject):
@@ -41,8 +42,9 @@ class LoginHandler(QObject):
     @pyqtSlot(result="QVariant")
     def get_current_user_detail(self):
         try:
-            # current_user_detail = get_node_info(os.path.join(sys.path[1] + "/node_info/current_user_detail.json"))
-            current_user_detail = get_node_info("./node_info/current_user_detail.json")
+            root_path = PathUtil.get_current_file_absolute_path(__file__).parent.parent
+            current_user_detail_path = root_path.joinpath("node_info").joinpath("current_user_detail.json")
+            current_user_detail = FileUtil.read_file_content(current_user_detail_path)
 
             return {
                 "code": 200,
