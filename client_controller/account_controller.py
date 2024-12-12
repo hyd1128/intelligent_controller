@@ -33,6 +33,7 @@ class AccountController:
             node_info["normal_account"] = account
             node_info["password"] = password
             node_info["top_account"] = response.json()["data"]["top_accounts"]
+            edit_node_info("./node_info/info.json", node_info)
             # edit_node_info(os.path.join(sys.path[1] + "/node_info/current_user_detail.json"), response.json())
             edit_node_info("./node_info/current_user_detail.json", response.json()["data"])
             return True
