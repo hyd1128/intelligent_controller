@@ -44,7 +44,7 @@ class Main(QMainWindow):
         self.setWindowIcon(QIcon("app/icon/quanqiu.png"))
 
         # 判断该节点是否具有唯一标识 如何是初始打开该软件 则生成唯一ID
-        root_path = PathUtil.get_current_file_absolute_path(__file__).parent
+        root_path = PathUtil.get_current_file_absolute_path(__file__).parent.parent
         node_info_path = root_path.joinpath("node_info").joinpath("info.json")
         node_info = FileUtil.read_file_content(node_info_path)
         if not node_info["node_id"]:
@@ -93,9 +93,9 @@ class Main(QMainWindow):
         self.run_task.stop()
         self.main_controller.stop()
 
-        root_path = PathUtil.get_current_file_absolute_path(__file__).parent
+        root_path = PathUtil.get_current_file_absolute_path(__file__).parent.parent
         node_info_path = root_path.joinpath("node_info").joinpath("info.json")
-        current_user_detail_path = root_path.joinpath("node_path").joinpath("current_user_detail.json")
+        current_user_detail_path = root_path.joinpath("node_info").joinpath("current_user_detail.json")
         node_info = FileUtil.read_file_content(node_info_path)
         update_node_info = {
             "normal_account": "",

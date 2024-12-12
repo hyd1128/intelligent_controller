@@ -35,5 +35,4 @@ class MainController(QThread):
             time.sleep(30)
 
     def stop(self):
-        if self.flog is False and self.isRunning():
-            self.flog = True
+        self.flog = True
