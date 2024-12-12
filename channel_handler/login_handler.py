@@ -8,7 +8,7 @@ import sys
 
 from PyQt6.QtCore import QObject, pyqtSlot, QVariant
 from client_controller.account_controller import AccountController
-from util.info_util import get_node_info
+from util.file_util import get_node_info
 
 
 class LoginHandler(QObject):

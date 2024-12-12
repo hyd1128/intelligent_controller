@@ -3,35 +3,33 @@
 # @Time : 2024/11/26 7:43
 # @Author : limber
 # @desc :
-import os
-import sys
+
 import time
-
-from PyQt6 import QtCore
 from PyQt6.QtCore import QThread
-import requests
-import json
-
 from store_service.service.service_device import DeviceService
-from util.info_util import get_node_info
+from util.http_util import HttpUtils
+from util.file_util import FileUtil
+from util.path_util import PathUtil
 
 
 class DeviceDetailController(QThread):
-    # signal = QtCore.pyqtSignal(dict)
 
     def __init__(self):
         super().__init__()
         self.flag = False
 
-    # 监控是否有新增
     def run(self):
+        # 统一资源定位符
+        URI = "/api/v1/root_accounts/device/add_device_details"
         while True:
             if self.flag:
                 break
             print("上传设备详细接口执行了一次")
-            # node_info = get_node_info(os.path.join(sys.path[1] + "/node_info/info.json"))
-            node_info = get_node_info("./node_info/info.json")
-            # 要发送的 JSON 数据
+            root_path = PathUtil.get_current_file_absolute_path(__file__).parent.parent
+            node_info_path = root_path.joinpath("node_info").joinpath("info.json")
+            node_info = FileUtil.read_file_content(node_info_path)
+
+            # 每小时发送一次设备运行任务详细
             suitable_devices = DeviceService().select(online_state="online", task_state="all")
             suitable_device_data = []
             for device_ in suitable_devices:
@@ -41,50 +39,25 @@ class DeviceDetailController(QThread):
                     "normal_accounts": node_info["normal_account"]
                 })
 
-            # 接口URL（替换为你要发送数据的实际接口地址）
-            url = 'http://127.0.0.1:8000/api/v1/root_accounts/device/add_device_details'
+            response_data = HttpUtils.post(URI, suitable_device_data)
 
-            # 设置请求头
-            headers = {
-                'Content-Type': 'application/json'  # 指定发送 JSON 格式的数据
-            }
+            if response_data["code"] == 200 and response_data["data"]["code"] == 200:
+                print("定时上传设备运行详细数据成功")
+                print(response_data["data"]["data"])
+            else:
+                print("定时上传设备详细数据失败")
+                print(response_data["data"]["data"])
 
-            # # 发送 POST 请求，传递 JSON 数据
-            # response = requests.post(url, data=json.dumps(suitable_device_data), headers=headers)
-            #
-            # # 获取返回的 JSON 数据
-            # if response.status_code == 200:
-            #     response_data = response.json()  # 解析返回的 JSON 数据
-            #     print("上传成功，返回的数据：", response_data)
-            # else:
-            #     print(f"请求失败，状态码: {response.status_code}")
-            time.sleep(90)
+            time.sleep(45)
 
     def stop(self):
         self.flag = True
 
 
 if __name__ == '__main__':
-    device_detail = {
-        "device": "device_02",
-        "node": "node_1",
-        "normal_account": "123"
-    }
-
-    # 接口URL（替换为你要发送数据的实际接口地址）
-    url = 'http://127.0.0.1:8000/api/v1/root_accounts/device/add_device_details'
-
-    # 设置请求头
-    headers = {
-        'Content-Type': 'application/json'  # 指定发送 JSON 格式的数据
-    }
-
-    # 发送 POST 请求，传递 JSON 数据
-    response = requests.post(url, data=json.dumps(device_detail), headers=headers)
-
-    # 获取返回的 JSON 数据
-    if response.status_code == 200:
-        response_data = response.json()  # 解析返回的 JSON 数据
-        print("上传成功，返回的数据：", response_data)
-    else:
-        print(f"请求失败，状态码: {response.status_code}")
+    # device_detail = {
+    #     "device": "device_02",
+    #     "node": "node_1",
+    #     "normal_account": "123"
+    # }
+    pass

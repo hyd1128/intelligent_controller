@@ -3,17 +3,14 @@
 # @Time : 2024/11/26 7:43
 # @Author : limber
 # @desc :
-import os
-import sys
-import time
 
+import time
 from PyQt6 import QtCore
 from PyQt6.QtCore import QThread
-import requests
-import json
-
 from store_service.service.service_device import DeviceService
-from util.info_util import get_node_info
+from util.file_util import FileUtil
+from util.path_util import PathUtil
+from util.http_util import HttpUtils
 
 
 class NodeController(QThread):
@@ -25,46 +22,41 @@ class NodeController(QThread):
 
     # 监控是否有新增
     def run(self):
+        URI = "/api/v1/root_accounts/device/node"
         while True:
             if self.flag:
                 break
             print("节点接口执行了一次")
-            # node_info = get_node_info(os.path.join(sys.path[1] + "/node_info/info.json"))
-            node_info = get_node_info("./node_info/info.json")
-            # 要发送的 JSON 数据
+            root_path = PathUtil.get_current_file_absolute_path(__file__).parent.parent
+            node_info_path = root_path.joinpath("node_info").joinpath("info.json")
+            node_info = FileUtil.read_file_content(node_info_path)
+
+            # 定时更新节点信息
             suitable_devices = DeviceService().select(online_state="online", task_state="all")
             online_device = len(suitable_devices)
 
             # 当前节点信息
-            node_data = {"node_version": node_info["node_version"],
-                         "uuid": node_info["node_id"],
-                         "normal_accounts": node_info["normal_account"],
-                         "top_accounts": node_info["top_account"],
-                         "online_device": online_device,
-                         "status": 1,   # 1 节点在线 0 节点离线
-                         "task_version": "2024_1211_001",   # 当前执行的任务版本
-                         "update_task": 1   # 是否更新最新任务
-                         }
-
-            # 接口URL（替换为你要发送数据的实际接口地址）
-            url = 'http://127.0.0.1:8000/api/v1/root_accounts/device/node'
-
-            # 设置请求头
-            headers = {
-                'Content-Type': 'application/json'  # 指定发送 JSON 格式的数据
+            node_data = {
+                "uuid": node_info["node_id"],   # 节点ID
+                "node_version": node_info["node_version"],  # 节点版本
+                "normal_accounts": node_info["normal_account"],     # 当前登录节点的普通账号
+                "top_accounts": node_info["top_account"],   # 普通账号所属的顶级账号
+                "online_device": online_device,     # 在线设备数
+                "status": 1,  # 1:节点在线  0:节点离线
+                "task_version": "2024_1211_001",  # 当前执行的任务版本
+                "update_task": 1  # 1: 已更新最新任务 0: 未更新最新任务
             }
 
-            # # 发送 POST 请求，传递 JSON 数据
-            # response = requests.post(url, data=json.dumps(node_data), headers=headers)
-            #
-            # # 获取返回的 JSON 数据
-            # if response.status_code == 200:
-            #     response_data = response.json()  # 解析返回的 JSON 数据
-            #     print("上传成功，返回的数据：", response_data)
-            # else:
-            #     print(f"请求失败，状态码: {response.status_code}")
+            response_data = HttpUtils.post(URI, json_data=node_data)
 
-            time.sleep(30)
+            if response_data["code"] == 200 and response_data["data"]["code"] == 200:
+                print("定时上传设备数据成功")
+                print(response_data["data"]["data"])
+            else:
+                print("定时上传设备数据失败")
+                print(response_data["data"]["data"])
+
+            time.sleep(45)
 
     def stop(self):
         self.flag = True
@@ -72,31 +64,13 @@ class NodeController(QThread):
 
 if __name__ == "__main__":
     # 当前节点信息
-    node_data = {"node_version": "v1.0",
-                 "uuid": "node_4",
-                 "normal_accounts": "13611223344",
-                 "top_accounts": "13812345678",
-                 "online_device": "100",
-                 "status": 1,
-                 "task_version": "2024_1128_001",
-                 "update_task": 1
-                 }
-
-    # 接口URL（替换为你要发送数据的实际接口地址）
-    url = 'http://127.0.0.1:8000/api/v1/root_accounts/device/node'
-
-    # 设置请求头
-    headers = {
-        'Content-Type': 'application/json'  # 指定发送 JSON 格式的数据
-    }
-
-    # 发送 POST 请求，传递 JSON 数据
-    response = requests.post(url, data=json.dumps(node_data), headers=headers)
-
-    # 获取返回的 JSON 数据
-    if response.status_code == 200:
-        response_data = response.json()  # 解析返回的 JSON 数据
-        print("上传成功，返回的数据：", response_data)
-    else:
-        print(f"请求失败，状态码: {response.status_code}")
-        print(f"fail detail: {response.json()}")
+    # node_data = {"node_version": "v1.0",
+    #              "uuid": "node_4",
+    #              "normal_accounts": "13611223344",
+    #              "top_accounts": "13812345678",
+    #              "online_device": "100",
+    #              "status": 1,
+    #              "task_version": "2024_1128_001",
+    #              "update_task": 1
+    #              }
+    pass
