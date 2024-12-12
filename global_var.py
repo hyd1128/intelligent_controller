@@ -1,5 +1,5 @@
 # 启动线程执行任务 关闭线程停止任务
-is_running = False
+is_running = True
 
 # 电脑端图片相对与工作目录的路径
 photo_relative_path = "app/script_photo/ziqi.jpg"

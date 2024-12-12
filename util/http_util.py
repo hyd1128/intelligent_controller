@@ -21,13 +21,13 @@ class HttpUtils:
 
         :param uri: 资源定位符 以/开头
         :param json_data:
-        :param header:
+        :param headers:
         :return:
         """
 
         try:
             if headers is None:
-                header = {"Content-Type": "application/json"}
+                headers = {"Content-Type": "application/json"}
 
             response_ = requests.post(
                 url=cls.base_url + uri,

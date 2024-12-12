@@ -24,6 +24,7 @@ class NodeController(QThread):
     def run(self):
         URI = "/api/v1/root_accounts/device/node"
         while True:
+            time.sleep(10)
             if self.flag:
                 break
             print("节点接口执行了一次")
@@ -41,7 +42,7 @@ class NodeController(QThread):
                 "node_version": node_info["node_version"],  # 节点版本
                 "normal_accounts": node_info["normal_account"],     # 当前登录节点的普通账号
                 "top_accounts": node_info["top_account"],   # 普通账号所属的顶级账号
-                "online_device": online_device,     # 在线设备数
+                "online_device": str(online_device),     # 在线设备数
                 "status": 1,  # 1:节点在线  0:节点离线
                 "task_version": "2024_1211_001",  # 当前执行的任务版本
                 "update_task": 1  # 1: 已更新最新任务 0: 未更新最新任务
@@ -56,7 +57,7 @@ class NodeController(QThread):
                 print("定时上传设备数据失败")
                 print(response_data["data"]["data"])
 
-            time.sleep(45)
+
 
     def stop(self):
         self.flag = True

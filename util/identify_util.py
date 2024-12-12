@@ -13,7 +13,7 @@ def generate_unique_node_token():
     mac_str = f"{mac}"
 
     # 使用 MAC 地址生成固定哈希值
-    unique_string = hashlib.sha256(mac_str.encode()).hexdigest()
+    unique_string = hashlib.sha256(mac_str.encode()).hexdigest()[:50]
 
     return unique_string
 
