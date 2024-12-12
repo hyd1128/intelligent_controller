@@ -21,16 +21,5 @@ class FileUtil:
             json.dump(file_content, f)
 
 
-def get_node_info(path: Any) -> dict:
-    with open(path, mode="r", encoding="utf-8") as f:
-        data = json.load(f)
-    return data
-
-
-def edit_node_info(path: Any, data: dict) -> None:
-    with open(path, mode="w", encoding="utf-8") as f:
-        json.dump(data, f)
-
-
 if __name__ == '__main__':
     pass

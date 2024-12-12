@@ -16,7 +16,7 @@ from run.run_sync import Run
 from util.utils import queue_store_device_detail_config
 from window.web.web_view import BrowserPage
 from client_controller.main_controller import MainController
-from util.file_util import get_node_info, edit_node_info, FileUtil
+from util.file_util import FileUtil
 from util.identify_util import generate_unique_node_token
 
 
