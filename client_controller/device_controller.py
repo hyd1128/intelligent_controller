@@ -30,6 +30,7 @@ class DeviceController(QThread):
             if self.flag:
                 break
             print("上传设备接口执行了一次")
+            time.sleep(10)
             root_path = PathUtil.get_current_file_absolute_path(__file__).parent.parent
             node_info_path = root_path.joinpath("node_info").joinpath("info.json")
             node_info = FileUtil.read_file_content(node_info_path)
@@ -39,7 +40,7 @@ class DeviceController(QThread):
             for device_ in suitable_devices:
                 suitable_device_data.append({"uuid": device_.device_id,
                                              "top_accounts": node_info["top_account"],
-                                             "normal_accounts": node_info["account"],
+                                             "normal_accounts": node_info["normal_account"],
                                              "device_model": device_.manufacturer,
                                              "node": node_info["node_id"],
                                              "network": device_.online_state,
@@ -54,7 +55,6 @@ class DeviceController(QThread):
                 print("定时上传设备数据失败")
                 print(response_data["data"]["data"])
 
-            time.sleep(45)
 
     def stop(self):
         self.flag = True
