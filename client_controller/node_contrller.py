@@ -5,9 +5,12 @@
 # @desc :
 
 import time
+from datetime import datetime, date
+
 from PyQt6 import QtCore
 from PyQt6.QtCore import QThread
 from store_service.service.service_device import DeviceService
+from store_service.service.service_task import TaskService
 from util.file_util import FileUtil
 from util.path_util import PathUtil
 from util.http_util import HttpUtils
@@ -34,18 +37,22 @@ class NodeController(QThread):
 
             # 定时更新节点信息
             suitable_devices = DeviceService().select(online_state="online", task_state="all")
+            latest_task = TaskService().select_all_no_condition()[-1]
+            latest_task_release_date = datetime.strptime(latest_task.task_release_date, "%Y-%m-%d %H:%M:%S")
+            today_ = datetime.strptime(str(date.today()), "%Y-%m-%d %H:%M:%S")
+            is_update_latest = 1 if today_ == latest_task_release_date else 0
             online_device = len(suitable_devices)
 
             # 当前节点信息
             node_data = {
-                "uuid": node_info["node_id"],   # 节点ID
+                "uuid": node_info["node_id"],  # 节点ID
                 "node_version": node_info["node_version"],  # 节点版本
-                "normal_accounts": node_info["normal_account"],     # 当前登录节点的普通账号
-                "top_accounts": node_info["top_account"],   # 普通账号所属的顶级账号
-                "online_device": str(online_device),     # 在线设备数
+                "normal_accounts": node_info["normal_account"],  # 当前登录节点的普通账号
+                "top_accounts": node_info["top_account"],  # 普通账号所属的顶级账号
+                "online_device": str(online_device),  # 在线设备数
                 "status": 1,  # 1:节点在线  0:节点离线
-                "task_version": "2024_1211_001",  # 当前执行的任务版本
-                "update_task": 1  # 1: 已更新最新任务 0: 未更新最新任务
+                "task_version": latest_task.task_release_date,  # 当前执行的任务版本
+                "update_task": is_update_latest  # 1: 已更新最新任务 0: 未更新最新任务
             }
 
             response_data = HttpUtils.post(URI, json_data=node_data)
@@ -56,8 +63,6 @@ class NodeController(QThread):
             else:
                 print("定时上传设备数据失败")
                 print(response_data["data"]["data"])
-
-
 
     def stop(self):
         self.flag = True

@@ -1,11 +1,15 @@
 import os.path
 import sys
+from datetime import date, datetime
 from typing import Any
 
 from PyQt6 import QtWidgets
 from PyQt6.QtGui import QIcon
 from PyQt6.QtWidgets import QMainWindow
 
+from store_service.service.service_device import DeviceService
+from store_service.service.service_task import TaskService
+from util.http_util import HttpUtils
 from util.path_util import PathUtil
 from window.navbar.main import Navbar
 from window.page.main import Page
@@ -102,6 +106,31 @@ class Main(QMainWindow):
             "password": "",
             "top_account": ""
         }
+
+        # 关闭窗口后更新节点状态
+        # 定时更新节点信息
+        suitable_devices = DeviceService().select(online_state="online", task_state="all")
+        latest_task = TaskService().select_all_no_condition()[-1]
+        latest_task_release_date = datetime.strptime(latest_task.task_release_date, "%Y-%m-%d %H:%M:%S")
+        today_ = datetime.strptime(str(date.today()), "%Y-%m-%d %H:%M:%S")
+        is_update_latest = 1 if today_ == latest_task_release_date else 0
+        online_device = len(suitable_devices)
+
+        # 当前节点信息
+        node_data = {
+            "uuid": node_info["node_id"],  # 节点ID
+            "node_version": node_info["node_version"],  # 节点版本
+            "normal_accounts": node_info["normal_account"],  # 当前登录节点的普通账号
+            "top_accounts": node_info["top_account"],  # 普通账号所属的顶级账号
+            "online_device": str(online_device),  # 在线设备数
+            "status": 0,  # 1:节点在线  0:节点离线
+            "task_version": latest_task.task_release_date,  # 当前执行的任务版本
+            "update_task": is_update_latest  # 1: 已更新最新任务 0: 未更新最新任务
+        }
+
+        UPDATE_NODE_URI = "/api/v1/root_accounts/device/node"
+        HttpUtils.post(UPDATE_NODE_URI, json_data=node_data)
+
         # 关闭窗口后置空登录用户
         node_info = {**node_info, **update_node_info}
         FileUtil.write_file_content(node_info_path, node_info)
@@ -109,6 +138,7 @@ class Main(QMainWindow):
         # 关闭窗口给后置空当前登录用户
         current_user_detail = {}
         FileUtil.write_file_content(current_user_detail_path, current_user_detail)
+
         event.accept()
 
     def change_page(self, index):
@@ -149,4 +179,3 @@ class Main(QMainWindow):
         # 如果设备离线，则弹框
         # if msg["online"] == "offline":
         #     OfflineDeviceDialog(msg).exec()
-

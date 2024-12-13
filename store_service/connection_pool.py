@@ -9,8 +9,8 @@ class ConnectionPool:
     _initialized = False
 
     @classmethod
-    def initialize(cls, db_name='../data/database.db', pool_size=20):
-    # def initialize(cls, db_name='./data/database.db', pool_size=20):
+    # def initialize(cls, db_name='../data/database.db', pool_size=20):
+    def initialize(cls, db_name='./data/database.db', pool_size=20):
         if not cls._initialized:
             with cls._lock:
                 if not cls._initialized:
