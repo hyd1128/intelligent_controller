@@ -23,16 +23,17 @@ from store_service.service.service_task import TaskService
 class TaskController:
     @staticmethod
     def pull_task():
-        latest_task = TaskService().select_all_no_condition()[-1]
-        latest_task_release_date = datetime.strptime(latest_task.task_release_date, "%Y-%m-%d")
-        today_ = datetime.now()
-        duration_timedelta = today_ - latest_task_release_date
-        if duration_timedelta.days <= 1:
-            return {
-                "result": False,
-                "msg": "当前任务已为最新"
-            }
-
+        tasks_ = TaskService().select_all_no_condition()
+        if tasks_:
+            latest_task = TaskService().select_all_no_condition()[-1]
+            latest_task_release_date = datetime.strptime(latest_task.task_release_date, "%Y-%m-%d")
+            today_ = datetime.now()
+            duration_timedelta = today_ - latest_task_release_date
+            if duration_timedelta.days <= 1:
+                return {
+                    "result": False,
+                    "msg": "当前任务已为最新"
+                }
         URI = "/api/v1/root_accounts/task/download_tasks"
         today_ = datetime.now().strftime("%Y-%m-%d")
         json_data = {"part_task_id": today_}

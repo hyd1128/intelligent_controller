@@ -73,9 +73,11 @@ class BoardHandler(QObject):
             current_task_id = latest_task.task_name
             latest_task_id = latest_task.task_name
             # 是否更新到最新任务
-            is_latest_task = latest_task.task_release_date == datetime.strftime(datetime.now(), "%Y-%m-%d")
+            latest_task_date = datetime.strptime(latest_task.task_release_date, "%Y-%m-%d")
+            today_date = datetime.today()
+            is_latest_task = 1 if (today_date - latest_task_date).days < 1 else 0
             # is_latest_task_status = True if is_latest_task else False
-            last_update_task_date_time = datetime.strptime(latest_task.task_release_date, "%Y-%m-%d %H:%M:%S").strftime("%Y-%m-%d %H:%M:%S")
+            last_update_task_date_time = datetime.strptime(latest_task.task_release_date, "%Y-%m-%d").strftime("%Y-%m-%d")
             running_status = True if not global_var.is_running else False
             return {
                 "code": 200,

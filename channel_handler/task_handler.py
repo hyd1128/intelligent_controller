@@ -33,7 +33,7 @@ class TaskHandler(QObject):
                              f"最少运行{task_.min_execution_times}次")}
 
             today_ = datetime.now()
-            task_release_day = datetime.strptime(task_.task_release_date, "%Y-%m-%d %H:%M:%S")
+            task_release_day = datetime.strptime(task_.task_release_date, "%Y-%m-%d")
             interval_timedelta = today_ - task_release_day
             task_data.append(template_)
             if interval_timedelta.days > 0:
