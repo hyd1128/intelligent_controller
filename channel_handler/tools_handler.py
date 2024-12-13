@@ -6,7 +6,7 @@
 from PyQt6.QtCore import QObject, pyqtSlot
 from adb.adb import change_volume, change_luminance
 import global_var
-
+from client_controller.task_controller import TaskController
 
 class ToolsHandler(QObject):
     def __init__(self):
@@ -79,3 +79,20 @@ class ToolsHandler(QObject):
                 "data": "暂停执行",
                 "msg": "关闭开关，暂停执行任务"
             }
+
+    @pyqtSlot(result="QVariant")
+    def update_tasks(self):
+        update_task_result = TaskController.pull_task()
+        if update_task_result["result"]:
+            return {
+                "code": 200,
+                "data": "",
+                "msg": update_task_result["msg"]
+            }
+        else:
+            return {
+                "code": 400,
+                "data": "",
+                "msg": update_task_result["msg"]
+            }
+

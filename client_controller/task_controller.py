@@ -99,6 +99,10 @@ class TaskController:
                 "result": True,
                 "msg": "今日任务已全部更新"
             }
+        return {
+            "result": False,
+            "msg": "请稍后尝试更新任务"
+        }
 
 
 if __name__ == '__main__':
