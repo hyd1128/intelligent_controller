@@ -8,6 +8,7 @@ from adb.adb import change_volume, change_luminance
 import global_var
 from client_controller.task_controller import TaskController
 
+
 class ToolsHandler(QObject):
     def __init__(self):
         super().__init__()
@@ -95,4 +96,3 @@ class ToolsHandler(QObject):
                 "data": "",
                 "msg": update_task_result["msg"]
             }
-
