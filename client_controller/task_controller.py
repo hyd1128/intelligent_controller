@@ -84,7 +84,7 @@ class TaskController:
 
                 # 持久化一条脚本到本地数据库
                 _script_ = Script(script_name=task_["uuid"] + "_script",
-                                  script_content=str(current_task_script_content),
+                                  script_content=json.dumps(current_task_script_content),
                                   app=current_task_script["app"])
                 ScriptService().insert_script(_script_)
 
