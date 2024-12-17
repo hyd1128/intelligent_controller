@@ -1,8 +1,8 @@
-from PyQt6 import QtWidgets
 import sys
+import threading
+from PyQt6 import QtWidgets
 from window.main import Main
 from qt_material import apply_stylesheet
-import threading
 from flask import Flask, send_from_directory
 
 server = Flask(__name__, static_folder="static")
@@ -39,6 +39,7 @@ if __name__ == "__main__":
     # apply_stylesheet(app, theme='dark_teal.xml')
     # 亮色主题
     apply_stylesheet(app, theme='light_teal_500.xml', invert_secondary=True)
+
     window = Main()
     window.show()
     sys.exit(app.exec())

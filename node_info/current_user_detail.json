@@ -1,1 +1,1 @@
-{"created_time": "2024-12-16T17:35:59", "updated_time": "2024-12-17T09:54:15", "id": 2, "uuid": "DL02-C001", "company_name": "a", "company_person": "asd", "company_address": "asd", "contact_person": "a", "contact_phone": "1234", "password": "$2b$12$rN45uCsoQTT665Ii6Z1hbOxCKUVeI3O5OwGK7tOYDeMX8XjLfM5sC", "email": "123@e.com", "bank_num": "123", "receiving_bank": "123", "receiving_name": "dad", "routing_number": "123", "salt": "uXcpF", "notes": "asd", "top_accounts": "DL02", "split_ratio": 0.5, "fixed_amount": 0.0, "disable": 0}
+{}
