@@ -1,21 +1,12 @@
-import os.path
-import sys
-from datetime import date, datetime
-from typing import Any
-
+from datetime import datetime
 from PyQt6 import QtWidgets
 from PyQt6.QtGui import QIcon
 from PyQt6.QtWidgets import QMainWindow
-
 from store_service.service.service_device import DeviceService
 from store_service.service.service_task import TaskService
 from util.http_util import HttpUtils
 from util.path_util import PathUtil
-from window.navbar.main import Navbar
-from window.page.main import Page
 from watch import New, Offline
-from window.dialog.new_device import NewDeviceDialog
-from window.dialog.offline_device import OfflineDeviceDialog
 from run.run_sync import Run
 from util.utils import queue_store_device_detail_config
 from window.web.web_view import BrowserPage
@@ -67,20 +58,16 @@ class Main(QMainWindow):
         # 初始化全局队列
         queue_store_device_detail_config()
 
-        # # 引入子组件
-        # self.navbar()
-        # self.pages()
+        # 引入子组件
         self.browser = BrowserPage()
         self.layout.addWidget(self.browser)
 
         # 监听新设备
         self.watch_new = New()
-        # self.watch_new.signal.connect(self.dialog_new_device)
         self.watch_new.start()
 
         # 监听掉线设备
         self.watch_offline = Offline()
-        # self.watch_offline.signal.connect(self.dialog_offline_device)
         self.watch_offline.start()
 
         # 执行任务
@@ -143,44 +130,13 @@ class Main(QMainWindow):
         # 关闭窗口给后置空当前登录用户
         current_user_detail = {}
         FileUtil.write_file_content(current_user_detail_path, current_user_detail)
-
         event.accept()
 
-    def change_page(self, index):
-        """切换页面"""
 
-        self.page.change_page(index)
 
-    def navbar(self):
-        """菜单栏"""
 
-        Navbar(self)
 
-    def pages(self):
-        """页面"""
 
-        self.page = Page(self)
 
-    def dialog_new_device(self, msg):
-        """新设备弹窗"""
 
-        # NewDeviceDialog(msg, self).exec()
-        # msg是新设备详细信息
-        NewDeviceDialog(msg, self).add()
 
-    def set_device_page_data(self):
-        """刷新设备列表"""
-
-        self.page.set_device_page_data()
-
-    def dialog_offline_device(self, msg):
-        """掉线设备弹窗"""
-
-        # 更新设备列表
-        self.page.set_device_page_data()
-
-        # 更新，设备掉线不弹框
-        #
-        # 如果设备离线，则弹框
-        # if msg["online"] == "offline":
-        #     OfflineDeviceDialog(msg).exec()

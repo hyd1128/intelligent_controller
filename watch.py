@@ -27,18 +27,14 @@ class New(QThread):
 
             # 获得当前在线设备
             devices, _ = device_list()
-
             # 获取当前文件记录的所有设备
-            # current = DeviceStore().select()
             current = DeviceService().select()
-
             for item in devices:
                 exist = False  # 是否存在
                 for current_item in current:
                     if item == current_item.device_id:
                         exist = True
                         break
-
                 if not exist:
                     device_info, err = info(item)
                     if device_info is not None:
@@ -51,7 +47,6 @@ class New(QThread):
                         device_info["locating_app_status"] = 0
                         # 查询该设备的device_id是否存在, 不存在则为新设备
                         result = DeviceService().select_by_device_id(device_info["device_id"])
-
                         # 判断是否为新设备
                         if result is None:
                             # 实例化一个Device对象
@@ -61,8 +56,7 @@ class New(QThread):
                             new_device = DeviceService().select_by_device_id(device_.device_id)
                             DeviceQueue.put(new_device)
                         ##################
-                        # self.signal.emit(device_info)
-            time.sleep(20)  # 20秒查询一次
+            time.sleep(10)  # 20秒查询一次
 
     def stop(self):
         self.flag = True
@@ -83,17 +77,16 @@ class Offline(QThread):
                 break
             # 当前实时在线设备
             devices, _ = device_list()
-
             # 文件中的在线设备（不具备实时性）
             current = DeviceService().select()
-
             for index, item in enumerate(current):
                 online = False
                 for device in devices:
                     if item.device_id == device:
                         online = True
                         break
-                # 设备掉线，但是文件中显示为掉线或者设备在线但是设备在文件中显示是掉线
+                # 设备掉线但当前数据库中显示该设备在线
+                # 或设备在线但当前数据库中显示该设备掉线
                 if (not online and item.online_state == 1) or (online and item.online_state == 0):
                     if not online:
                         # 设备掉线，文件中更新设备
@@ -101,11 +94,9 @@ class Offline(QThread):
                     else:
                         # 设备在线，文件中更新设备在线
                         item.online_state = 1
-
                     item.task_state = 0
                     DeviceService().update(item)
-                    # self.signal.emit(item)
-            time.sleep(30)  # 30秒查询一次
+            time.sleep(10)  # 30秒查询一次
 
     def stop(self):
         self.flag = True
