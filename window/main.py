@@ -110,10 +110,15 @@ class Main(QMainWindow):
         # 关闭窗口后更新节点状态
         # 定时更新节点信息
         suitable_devices = DeviceService().select(online_state="online", task_state="all")
-        latest_task = TaskService().select_all_no_condition()[-1]
-        latest_task_release_date = datetime.strptime(latest_task.task_release_date, "%Y-%m-%d")
-        today_ = datetime.today()
-        is_update_latest = 1 if (today_ - latest_task_release_date).days < 1 else 0
+
+        latest_tasks = TaskService().select_all_no_condition()
+        is_update_latest = 0
+        latest_task = ""
+        if latest_tasks:
+            latest_task = latest_tasks[-1]
+            latest_task_release_date = datetime.strptime(latest_task.task_release_date, "%Y-%m-%d")
+            today_ = datetime.today()
+            is_update_latest = 1 if (today_ - latest_task_release_date).days < 1 else 0
         online_device = len(suitable_devices)
 
         # 当前节点信息
@@ -124,7 +129,7 @@ class Main(QMainWindow):
             "top_accounts": node_info["top_account"],  # 普通账号所属的顶级账号
             "online_device": str(online_device),  # 在线设备数
             "status": 0,  # 1:节点在线  0:节点离线
-            "task_version": latest_task.task_release_date,  # 当前执行的任务版本
+            "task_version": latest_task.task_release_date if latest_task else "",  # 当前执行的任务版本
             "update_task": is_update_latest  # 1: 已更新最新任务 0: 未更新最新任务
         }
 
