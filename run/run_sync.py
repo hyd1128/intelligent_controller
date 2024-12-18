@@ -32,7 +32,7 @@ class Run(QThread):
     def run(self):
         """开始"""
 
-        logger_run.info("***-----> 开始执行任务 <-----***")
+        logger_run.info("##### 开始执行任务 #####")
         self.__set_task()
 
     def __set_task(self):
@@ -104,7 +104,7 @@ class Run(QThread):
         with open("./thread_count.json") as f:
             data = json.loads(f.read())
         thread_count = data["thread_count"]
-        logger_run.info(f"***-----> 当前线程数: {thread_count} <-----***")
+        logger_run.info(f"##### 当前线程数: #####<-----***")
 
         with ThreadPoolExecutor(max_workers=thread_count) as executor:
             while True:
@@ -112,13 +112,12 @@ class Run(QThread):
                 if self.flag:
                     break
 
-                logger_run.info(f"***-----> 当前开关状态: {global_var.is_running} <-----***")
+                logger_run.info(f"##### 当前开关状态: {global_var.is_running} #####")
                 if global_var.is_running:
-
                     # 获取device
                     device = self.__queue_device()
                     if device:
-                        logger_run.info(f"当前设备: {device}")
+                        logger_run.info(f"##### 当前设备: {device} #####")
 
                         # 提交任务到线程池
                         executor.submit(task_worker, device)
@@ -488,13 +487,13 @@ class Run(QThread):
         """
         try:
             while True:
-                logger_run.info("获取设备...")
+                logger_run.info("##### 获取设备 #####")
                 device = DeviceQueue.get_nowait()
-                # 1、获取队列设备的device_id
+                # 1.获取队列设备的device_id
                 device_id = device.device_id
-                # 2、根据device_id查询数据库对应设备
+                # 2.根据device_id查询数据库对应设备
                 device_from_db = DeviceService().select_by_device_id(device_id)
-                # 3、判断数据库中是否有对应设备，判断该设备最新在线状态是否在线
+                # 3.判断数据库中是否有对应设备, 判断该设备最新在线状态是否在线
                 if device_from_db is not None:
                     if device_from_db.online_state == 1:
                         if device_from_db.online_state != device.online_state:
