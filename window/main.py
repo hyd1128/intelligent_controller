@@ -14,6 +14,8 @@ from window.web.web_view import BrowserPage
 from client_controller.main_controller import MainController
 from util.file_util import FileUtil
 from util.identify_util import generate_unique_node_token
+from qt_threads.new_device_monitor import NewDeviceMonitor
+from qt_threads.offline_device_monitor import OfflineDeviceMonitor
 
 
 class Main(QMainWindow):
@@ -65,11 +67,15 @@ class Main(QMainWindow):
         self.layout.addWidget(self.browser)
 
         # 监听新设备
-        self.watch_new = New()
+        # self.watch_new = New()
+        # self.watch_new.start()
+        self.watch_new = NewDeviceMonitor()
         self.watch_new.start()
 
         # 监听掉线设备
-        self.watch_offline = Offline()
+        # self.watch_offline = Offline()
+        # self.watch_offline.start()
+        self.watch_offline = OfflineDeviceMonitor()
         self.watch_offline.start()
 
         # 执行任务

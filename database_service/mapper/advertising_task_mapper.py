@@ -38,6 +38,11 @@ class AdvertisingTaskMapper:
         query = AdvertisingTask.select().paginate(page, per_page)
         return list(query)
 
+    @staticmethod
+    def select_by_task_execution_date(date_: date) -> AdvertisingTask | None:
+        """根据日期查询任务"""
+        return AdvertisingTask.get_or_none(AdvertisingTask.task_execution_date == date_)
+
 
 if __name__ == '__main__':
     pass
@@ -78,4 +83,9 @@ if __name__ == '__main__':
     # advertising_task = AdvertisingTaskMapper.select_by_id(1)
     # advertising_task.task_execution_date = date.today() + timedelta(days=10)
     # result = AdvertisingTaskMapper.update(advertising_task)
+    # print(result)
+
+    # 根据日期查询任务
+    # date = date(year=2024, month=12, day=31)
+    # result = AdvertisingTaskMapper.select_by_task_execution_date(date)
     # print(result)

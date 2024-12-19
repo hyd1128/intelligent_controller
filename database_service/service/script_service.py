@@ -3,3 +3,6 @@
 # @Time : 2024/12/18 16:10
 # @Author : limber
 # @desc :
+
+class ScriptService:
+    pass

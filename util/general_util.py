@@ -4,6 +4,7 @@
 # @Author : limber
 # @desc :
 import random
+from datetime import date, timedelta
 from typing import List
 
 
@@ -39,3 +40,20 @@ class GeneralUtil:
         new_coord = [i / 1000000 for i in new_coord]
 
         return new_coord
+
+    @staticmethod
+    def get_date(before: bool = False, n: int = 1) -> str | date:
+        """
+        获取当前或者之前的某一天日期 日期格式为 YYYY-mm-dd
+
+        :param before:
+        :param n:
+        :return:
+        """
+        today = date.today()
+        # 默认获取当日日期
+        if not before:
+            return today
+        else:
+            return today - timedelta(days=n)
+
