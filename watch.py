@@ -20,7 +20,7 @@ class New(QThread):
 
     # 监控是否有新增
     def run(self):
-        logger_watch.info("开始监控新设备")
+        logger_watch.info("##### 开始监控新设备 #####")
         while True:
             if self.flag:
                 break

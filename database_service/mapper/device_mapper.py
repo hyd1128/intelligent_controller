@@ -16,9 +16,9 @@ class DeviceMapper:
         return device.save()
 
     @staticmethod
-    def delete(app_id) -> int:
+    def delete(device_id) -> int:
         """根据给定的id删除数据库记录"""
-        device = Device.get(Device.id == app_id)
+        device = Device.get(Device.id == device_id)
         return device.delete_instance()
 
     @staticmethod
@@ -27,9 +27,10 @@ class DeviceMapper:
         return device.save()
 
     @staticmethod
-    def select_by_id(app_id: int) -> Device:
+    def select_by_id(device_id: int) -> Device | None:
         """根据id查找单条数据库记录"""
-        return Device.get(Device.id == app_id)
+        return Device.get_or_none(Device.id == device_id)
+
 
     @staticmethod
     def select_list(page, per_page) -> List[Device]:
@@ -42,6 +43,11 @@ class DeviceMapper:
         """查询全部设备"""
         query = Device.select()
         return [device_ for device_ in query]
+
+    @staticmethod
+    def select_by_device_id(device_id: str) -> Device | None:
+        """根据device_id查询合适的设备"""
+        return Device.get_or_none(Device.device_id == device_id)
 
 
 if __name__ == '__main__':
@@ -67,8 +73,9 @@ if __name__ == '__main__':
     # print(result)
 
     # 查单个
-    # app_id = 2
-    # result = DeviceMapper.select_by_id(app_id)
+    # device_id = 4
+    # result = DeviceMapper.select_by_id(device_id)
+    # print(result)
     # print(type(result))
     # print(result.device_id)
 
@@ -88,7 +95,11 @@ if __name__ == '__main__':
     # print(result)
 
     # 查询全部设备
-    result = DeviceMapper.select_all()
-    for i in result:
-        print(type(i))
-        print(i)
+    # result = DeviceMapper.select_all()
+    # for i in result:
+    #     print(type(i))
+    #     print(i)
+
+    # 根据device_id查询设备
+    result = DeviceMapper.select_by_device_id("abc4")
+    print(result)
