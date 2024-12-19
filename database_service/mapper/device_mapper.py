@@ -37,6 +37,12 @@ class DeviceMapper:
         query = Device.select().paginate(page, per_page)
         return list(query)
 
+    @staticmethod
+    def select_all() -> List[Device]:
+        """查询全部设备"""
+        query = Device.select()
+        return [device_ for device_ in query]
+
 
 if __name__ == '__main__':
     pass
@@ -80,3 +86,9 @@ if __name__ == '__main__':
     # device.manufacturer = "honor"
     # result = DeviceMapper.update(device)
     # print(result)
+
+    # 查询全部设备
+    result = DeviceMapper.select_all()
+    for i in result:
+        print(type(i))
+        print(i)

@@ -3,8 +3,8 @@
 # @Time : 2024/12/18 16:10
 # @Author : limber
 # @desc :
-from typing import List
 
+from typing import List
 from database_service.model.app_model import App
 
 
@@ -35,6 +35,11 @@ class AppMapper:
         """分页查找数据库记录"""
         query = App.select().paginate(page, per_page)
         return list(query)
+
+    @staticmethod
+    def select_by_name(app_name: str) -> App | None:
+        result = App.select().where(App.app_name == app_name).get()
+        return result
 
 
 if __name__ == '__main__':
@@ -74,4 +79,9 @@ if __name__ == '__main__':
     # app.version = "0.02"
     # result = AppMapper.update(app)
     # print(result)
+
+    # 根据名称查询数据
+    app = AppMapper.select_by_name("prism_4")
+    print(type(app))
+    print(app.app_name)
 

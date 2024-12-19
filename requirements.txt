@@ -17,6 +17,7 @@ matplotlib==3.9.2
 numpy==2.0.1
 opencv-contrib-python==4.10.0.84
 packaging==24.1
+peewee==3.17.8
 pefile==2023.2.7
 pillow==10.4.0
 pyinstaller==6.10.0

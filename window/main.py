@@ -6,6 +6,7 @@ from store_service.service.service_device import DeviceService
 from store_service.service.service_task import TaskService
 from util.http_util import HttpUtils
 from util.path_util import PathUtil
+from util.queue_util import DeviceQueueUtil
 from watch import New, Offline
 from run.run_sync import Run
 from util.utils import queue_store_device_detail_config
@@ -56,7 +57,8 @@ class Main(QMainWindow):
         self.layout.setSpacing(0)
 
         # 初始化全局队列
-        queue_store_device_detail_config()
+        # queue_store_device_detail_config()
+        DeviceQueueUtil.initialize_device_queue()
 
         # 引入子组件
         self.browser = BrowserPage()
