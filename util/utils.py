@@ -8,7 +8,7 @@ import random
 import math
 from datetime import datetime, timedelta
 
-from typing import Union, List, Set, Tuple, Dict
+from typing import Union, List, Set, Tuple, Dict, Sequence
 from util.device_queue import DeviceQueue
 from logger_zk.logger_types import logger_main
 from store_service.service.service_device import DeviceService
@@ -144,12 +144,12 @@ def is_suitable_interval(task: Task, record: Record) -> bool:
             return False
 
 
-def calculate_distance(coord_1: List[int], coord_2: List[int]) -> int:
+def calculate_distance(coord_1: Sequence[int], coord_2: Sequence[int]) -> int:
     """
         给定两个坐标 计算两个坐标之间的距离
 
-        :param coor_1:
-        :param coor_2:
+        :param coord_1:
+        :param coord_2:
         :return:
         """
 

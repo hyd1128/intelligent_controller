@@ -63,34 +63,34 @@ class ImageMatch:
                 else:
                     # 计算匹配点的中心
                     # 模板图片中心
-                    # center_src = tuple(map(int, np.mean(src_pts, axis=0)))
+                    center_src = tuple(map(int, np.mean(src_pts, axis=0)))
 
                     # 目标图片中心
                     center_dst = tuple(map(int, np.mean(filtered_pts, axis=0)))
 
                     # 打印匹配点的中心
                     # 打印模板图片匹配到的中心点
-                    # print(f"Center of matching points in small image: {center_src}")
+                    print(f"Center of matching points in small image: {center_src}")
                     # 打印目标图片匹配到的中心点
-                    # print(f"Center of matching points in large image: {center_dst}")
+                    print(f"Center of matching points in large image: {center_dst}")
 
                     # 在大图中标记匹配区域的中心点
-                    # img2_with_center = target.copy()
-                    # cv2.circle(img2_with_center, center_dst, 10, (0, 255, 0), -1)
+                    img2_with_center = target.copy()
+                    cv2.circle(img2_with_center, center_dst, 10, (0, 255, 0), -1)
 
                     # 画出匹配结果
-                    # img3 = cv2.drawMatches(template, kp1, img2_with_center, kp2, good, None,
-                    #                        flags=cv2.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS)
+                    img3 = cv2.drawMatches(template, kp1, img2_with_center, kp2, good, None,
+                                           flags=cv2.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS)
 
                     # 获取当前脚本的执行目录
-                    # current_directory = os.getcwd()
+                    current_directory = os.getcwd()
 
                     # 保存图片到当前目录
-                    # result_path = os.path.join(current_directory, 'matched_result.png')
-                    # isTrue = cv2.imwrite(result_path, img3)
-                    # if isTrue:
-                    #     print("匹配成功且将图片拉取到了本地")
-                    # print(f"Matching result saved at: {result_path}")
+                    result_path = os.path.join(current_directory, 'matched_result.png')
+                    isTrue = cv2.imwrite(result_path, img3)
+                    if isTrue:
+                        print("匹配成功且将图片拉取到了本地")
+                    print(f"Matching result saved at: {result_path}")
 
                     # 返回目标图片匹配到的中心点
                     return center_dst

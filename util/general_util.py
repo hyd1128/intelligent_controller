@@ -3,9 +3,13 @@
 # @Time : 2024/12/19 16:25
 # @Author : limber
 # @desc :
+import math
 import random
-from datetime import date, timedelta
-from typing import List
+from datetime import date, timedelta, time, datetime
+from typing import List, Any, Sequence
+
+from database_service.model.advertising_task_model import AdvertisingTask
+from database_service.model.advertising_task_record_model import AdvertisingTaskRecord
 
 
 class GeneralUtil:
@@ -57,3 +61,105 @@ class GeneralUtil:
         else:
             return today - timedelta(days=n)
 
+    @staticmethod
+    def generate_start_execution_time(iso_time_: str) -> str:
+        """
+        获取一个iso格式的时间 时间格式为HH:MM:SS 返回一个24小时制的时间
+        返回的24小时时间制+传入24小时时间制 < 24:00:00
+
+        :param iso_time_:
+        :return:
+        """
+        duration_time = time.fromisoformat(iso_time_)
+        remain_hour = time.max.hour - duration_time.hour
+        remain_minute = time.max.minute - duration_time.minute
+        remain_second = time.max.minute - duration_time.second
+
+        start_hour = random.randint(0, remain_hour)
+        start_minute = random.randint(0, remain_minute)
+        start_second = random.randint(0, remain_second)
+
+        start_run_task_time = time(hour=start_hour, minute=start_minute, second=start_second)
+        return start_run_task_time.isoformat(timespec="seconds")
+
+    @staticmethod
+    def generate_end_execution_time(iso_start_time_: str, iso_duration_time_: str) -> str:
+        start_execution_time = time.fromisoformat(iso_start_time_)
+        duration_execution_time = time.fromisoformat(iso_duration_time_)
+        end_execution_time = time(
+            hour=start_execution_time.hour + duration_execution_time.hour,
+            minute=start_execution_time.minute + duration_execution_time.minute,
+            second=start_execution_time.second + duration_execution_time.second
+        )
+        return end_execution_time.isoformat(timespec="seconds")
+
+    @staticmethod
+    def compare_time(start_: str, end_: str) -> bool:
+        """
+        传入两个24小时制，格式HH:MM:SS的时间，并判断当前时间是否位于传入时间的区间内
+
+        :param start_:
+        :param end_:
+        :return:
+        """
+        now_time = datetime.now().time()
+        if (time.fromisoformat(start_) < now_time) and (now_time < time.fromisoformat(end_)):
+            return True
+        else:
+            return False
+
+    @staticmethod
+    def is_suitable_interval(task_: AdvertisingTask, record_: AdvertisingTaskRecord) -> bool:
+        """
+        根据当前时间 判断同一任务的当此执行和上次执行的时间间隔时长是否符合
+
+        :param task_:
+        :param record_:
+        :return:
+        """
+
+        if record_.task_last_execution_time is None:
+            return True
+
+        else:
+            task_duration_time = time.fromisoformat(task_.task_execution_duration)
+            task_duration_total_second = timedelta(hours=task_duration_time.hour,
+                                                   minutes=task_duration_time.minute,
+                                                   seconds=task_duration_time.second)
+            # 最小间隔时长
+            min_duration_time = task_duration_total_second // task_.max_execution_times
+            suitable_interval_time = random.randint(min_duration_time - 100 if min_duration_time > 100 else 1,
+                                                    min_duration_time + 100)
+            last_execution_time = datetime.combine(date=date.today(),
+                                                   time=time.fromisoformat(record_.task_last_execution_time))
+            now_time = datetime.now()
+            interval_time = (now_time - last_execution_time).total_seconds()
+            if interval_time >= suitable_interval_time:
+                return False
+            else:
+                return True
+
+    @staticmethod
+    def probabilistic_output(probability: float) -> bool:
+        """
+        传入一个0-1之间的概率值 随机生成的概率值如果小于或者等于该概率值 则返回True 否则返回False
+
+        :param probability:
+        :return:
+        """
+        if probability < 0:
+            probability = 0
+        elif probability > 1:
+            probability = 1
+        return True if random.random() <= probability else False
+
+    @staticmethod
+    def calculate_distance(coord_1: Sequence[int], coord_2: Sequence[int]) -> int:
+        """
+            给定两个坐标 计算两个坐标之间的距离
+
+            :param coord_1:
+            :param coord_2:
+            :return:
+            """
+        return int(math.sqrt((coord_1[0] - coord_2[0]) ** 2 + (coord_1[1] - coord_2[1]) ** 2))

@@ -33,9 +33,8 @@ LOCATING_APP_RELOAD_INTERVAL_TIME = 1
 
 # time 格式
 TIME_FORMAT = "%H:%M:%S"
-# date 格式
-DATE_FORMAT = "%Y-%m-%d"
-# date time 格式
-DATE_TIME_FORMAT = "%Y-%m-%d %H:%M:%S"
-# google 包名
-CHROME_PACKAGE_NAME = "com.android.chrome"
+# # date 格式
+# DATE_FORMAT = "%Y-%m-%d"
+# # date time 格式
+# DATE_TIME_FORMAT = "%Y-%m-%d %H:%M:%S"
+

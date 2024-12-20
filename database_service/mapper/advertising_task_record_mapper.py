@@ -8,7 +8,9 @@ from datetime import datetime, time, date
 from typing import List
 from database_service.mapper.advertising_task_mapper import AdvertisingTaskMapper
 from database_service.mapper.device_mapper import DeviceMapper
+from database_service.model.advertising_task_model import AdvertisingTask
 from database_service.model.advertising_task_record_model import AdvertisingTaskRecord
+from database_service.model.device_model import Device
 
 
 class AdvertisingTaskRecordMapper:
@@ -39,9 +41,31 @@ class AdvertisingTaskRecordMapper:
         query = AdvertisingTaskRecord.select().paginate(page, per_page)
         return list(query)
 
+    @staticmethod
+    def select_by_multiple_conditions(task_: AdvertisingTask, device_: Device, date_: date) -> AdvertisingTaskRecord:
+        """多条件查询唯一广告记录"""
+        return AdvertisingTaskRecord.get_or_none((AdvertisingTaskRecord.task == task_) &
+                                                 (AdvertisingTaskRecord.device == device_) &
+                                                 (AdvertisingTaskRecord.date == date_))
+
+    @staticmethod
+    def select_by_device_date(device_: Device, date_: date) -> List[AdvertisingTaskRecord]:
+        """根据条件device date查询符合条件的广告运行记录"""
+        query = AdvertisingTaskRecord.select().where((AdvertisingTaskRecord.device == device_) &
+                                                     (AdvertisingTaskRecord.date == date_))
+        return list(query)
+
 
 if __name__ == '__main__':
     pass
+    # 多条件查询唯一广告记录
+    device = DeviceMapper.select_by_id(2)
+    task = AdvertisingTaskMapper.select_by_id(1)
+    date = date.today()
+    result = AdvertisingTaskRecordMapper.select_by_multiple_conditions(task, device, date)
+    print(type(result))
+    if isinstance(result, AdvertisingTaskRecord):
+        print(result.execution_times)
 
     # 添加
     # device = DeviceMapper.select_by_id(2)

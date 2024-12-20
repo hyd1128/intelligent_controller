@@ -5,6 +5,8 @@
 # @desc :
 
 from typing import List
+
+from database_service.mapper.advertising_task_mapper import AdvertisingTaskMapper
 from database_service.model.script_model import Script
 from database_service.model.app_model import App
 from database_service.mapper.app_mapper import AppMapper
@@ -38,6 +40,11 @@ class ScriptMapper:
         query = Script.select().paginate(page, per_page)
         return list(query)
 
+    @staticmethod
+    def select_by_app(app: App) -> List[Script]:
+        query = Script.select().where(Script.app == app)
+        return list(query)
+
 
 if __name__ == '__main__':
     pass
@@ -58,7 +65,6 @@ if __name__ == '__main__':
     # device_id = 1
     # result = ScriptMapper.delete(device_id)
     # print(result)
-
 
     # 查单个
     # script_id = 3
@@ -81,3 +87,8 @@ if __name__ == '__main__':
     # result = ScriptMapper.update(script)
     # print(result)
 
+    # 根据app获取脚本
+    task = AdvertisingTaskMapper.select_by_id(1)
+    task.app.id = 3
+    scripts = ScriptMapper.select_by_app(task.app)
+    print(scripts)
