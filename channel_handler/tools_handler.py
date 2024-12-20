@@ -4,17 +4,18 @@
 # @Author : limber
 # @desc :
 from PyQt6.QtCore import QObject, pyqtSlot
-from adb.adb import change_volume, change_luminance
+# from adb.adb import change_volume, change_luminance
 from client_controller.task_controller import TaskController
 from util import config_util
+from util.adb_util import AdbUtil
 
 
 class ToolsHandler(QObject):
     def __init__(self):
         super().__init__()
 
-    @pyqtSlot(str, str, result="QVariant")
-    def adjust_volume_slot(self, device_id: str, action_: str):
+    @pyqtSlot(str, int, result="QVariant")
+    def adjust_volume_slot(self, device_id: str, action_: int):
         """
         调节指定设备声音的槽函数
 
@@ -23,7 +24,7 @@ class ToolsHandler(QObject):
         :return:
         """
         try:
-            change_volume(device_id, action_)
+            AdbUtil.change_volume(device_id, action_)
             return {
                 "code": 200,
                 "data": True,
@@ -36,8 +37,8 @@ class ToolsHandler(QObject):
                 "msg": str(e)
             }
 
-    @pyqtSlot(str, str, result="QVariant")
-    def adjust_luminance_slot(self, device_id: str, action_: str):
+    @pyqtSlot(str, int, result="QVariant")
+    def adjust_luminance_slot(self, device_id: str, action_: int):
         """
         调节指定设备亮度的槽函数
 
@@ -46,7 +47,7 @@ class ToolsHandler(QObject):
         :return:
         """
         try:
-            change_luminance(device_id, action_)
+            AdbUtil.change_luminance(device_id, action_)
             return {
                 "code": 200,
                 "data": True,

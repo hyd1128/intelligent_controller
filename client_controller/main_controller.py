@@ -5,7 +5,6 @@
 # @desc :
 
 import time
-# import global_var
 from util import config_util
 from PyQt6.QtCore import QThread
 from client_controller.node_contrller import NodeController

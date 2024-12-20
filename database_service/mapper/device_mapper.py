@@ -31,7 +31,6 @@ class DeviceMapper:
         """根据id查找单条数据库记录"""
         return Device.get_or_none(Device.id == device_id)
 
-
     @staticmethod
     def select_list(page, per_page) -> List[Device]:
         """分页查找数据库记录"""
@@ -53,6 +52,15 @@ class DeviceMapper:
     def select_by_online_status(online_status: int) -> List[Device]:
         """根据网络状态查询符合条件的设备"""
         query = Device.select().where(Device.online_state == online_status)
+        return list(query)
+
+    @staticmethod
+    def select_by_online_task_paging(page: int, per_page: int, online_status: int,
+                                     task_status: int):
+        query = Device.select().where(
+            (Device.online_state == online_status) &
+            (Device.task_state == task_status)
+        ).paginate(page, per_page)
         return list(query)
 
 

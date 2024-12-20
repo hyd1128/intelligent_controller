@@ -11,21 +11,28 @@ from io import BytesIO
 
 import requests
 
+from database_service.model.advertising_task_model import AdvertisingTask
+from database_service.model.script_model import Script
+from database_service.service.advertising_task_service import AdvertisingTaskService
+from database_service.service.app_service import AppService
+from database_service.service.script_service import ScriptService
 from util.http_util import HttpUtils
 from util.path_util import PathUtil
 from util.file_util import FileUtil
-from store_service.model.model_script import Script
-from store_service.model.model_task import Task
-from store_service.service.service_script import ScriptService
-from store_service.service.service_task import TaskService
+
+
+# from store_service.model.model_script import Script
+# from store_service.model.model_task import Task
+# from store_service.service.service_script import ScriptService
+# from store_service.service.service_task import TaskService
 
 
 class TaskController:
     @staticmethod
     def pull_task():
-        tasks_ = TaskService().select_all_no_condition()
+        tasks_ = AdvertisingTaskService.select_all()
         if tasks_:
-            latest_task = TaskService().select_all_no_condition()[-1]
+            latest_task = AdvertisingTaskService.select_all()[-1]
             latest_task_release_date = datetime.strptime(latest_task.task_release_date, "%Y-%m-%d")
             today_ = datetime.now()
             duration_timedelta = today_ - latest_task_release_date
@@ -35,7 +42,7 @@ class TaskController:
                     "msg": "当前任务已为最新"
                 }
         URI = "/api/v1/root_accounts/task/download_tasks"
-        today_ = datetime.now().strftime("%Y-%m-%d")
+        today_ = datetime.now().date().strftime("%Y-%m-%d")
         json_data = {"part_task_id": today_}
         response_data = HttpUtils.post(uri=URI, json_data=json_data)
         if response_data["code"] == 200 and response_data["data"]["code"] == 200:
@@ -83,19 +90,22 @@ class TaskController:
                                                                       current_task_script_content[i])
 
                 # 持久化一条脚本到本地数据库
+                app = AppService.select_by_name(current_task_script["app"])
                 _script_ = Script(script_name=task_["uuid"] + "_script",
                                   script_content=json.dumps(current_task_script_content),
-                                  app=current_task_script["app"])
-                ScriptService().insert_script(_script_)
+                                  app=app)
+                ScriptService.add(_script_)
 
                 # 持久化一条任务到本地数据库
-                _task_detail = Task(task_name=current_task_detail_content["task_name"],
-                                    task_execution_duration=current_task_detail_content["task_execution_duration"],
-                                    min_execution_times=current_task_detail_content["min_execution_times"],
-                                    max_execution_times=current_task_detail_content["max_executions_times"],
-                                    task_release_date=current_task_detail_content["task_release_date"],
-                                    app=current_task_detail_content["app"])
-                TaskService().add_task(_task_detail)
+                app = AppService.select_by_name(current_task_detail_content["app"])
+                _task_detail = AdvertisingTask(task_name=current_task_detail_content["task_name"],
+                                               task_execution_duration=current_task_detail_content[
+                                                   "task_execution_duration"],
+                                               min_execution_times=current_task_detail_content["min_execution_times"],
+                                               max_execution_times=current_task_detail_content["max_executions_times"],
+                                               task_release_date=current_task_detail_content["task_release_date"],
+                                               app=app)
+                AdvertisingTaskService().add(_task_detail)
             return {
                 "result": True,
                 "msg": "今日任务已全部更新"

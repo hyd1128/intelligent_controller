@@ -20,3 +20,7 @@ class AdvertisingTaskService:
     def select_all() -> List[AdvertisingTask]:
         return AdvertisingTaskMapper.select_all()
 
+    @staticmethod
+    def add(advertising_task: AdvertisingTask) -> int:
+        return AdvertisingTaskMapper.add(advertising_task)
+

@@ -61,3 +61,16 @@ class DeviceService:
     @staticmethod
     def select_by_online_state(online_status: int) -> List[Device]:
         return DeviceMapper.select_by_online_status(online_status)
+
+    @staticmethod
+    def select_by_online_task_paging(page: int, per_page: int,
+                                     online_status: int, task_status: int):
+        return DeviceMapper.select_by_online_task_paging(page,
+                                                         per_page,
+                                                         online_status,
+                                                         task_status)
+
+    @staticmethod
+    def select_list(page: int, per_page: int) -> List[Device]:
+        return DeviceMapper.select_list(page=page, per_page=per_page)
+

@@ -6,7 +6,11 @@
 from datetime import datetime
 
 from PyQt6.QtCore import QObject, pyqtSlot
-from store_service.service.service_task import TaskService
+
+from database_service.service.advertising_task_service import AdvertisingTaskService
+
+
+# from store_service.service.service_task import TaskService
 
 
 class TaskHandler(QObject):
@@ -24,7 +28,7 @@ class TaskHandler(QObject):
         """
         """status: 0表示已运行 1表示正在运行 2表示未运行"""
         task_data = []
-        tasks_ = TaskService().select_all_no_condition()
+        tasks_ = AdvertisingTaskService.select_all()
         for task_ in tasks_:
             template_ = {"task_id": task_.task_name,
                          "task_content": (

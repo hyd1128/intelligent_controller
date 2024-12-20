@@ -3,7 +3,7 @@
 # @Time : 2024/11/26 7:43
 # @Author : limber
 # @desc :
-
+from util.config_util import NODE_DATA, CURRENT_USER_DETAIL
 from util.http_util import HttpUtils
 from util.path_util import PathUtil
 from util.file_util import FileUtil
@@ -24,7 +24,7 @@ class AccountController:
         if response_data["code"] == 200 and response_data["data"]["code"] == 200:
             print(f"用户 {account} 登录成功")
             root_path = PathUtil.get_current_file_absolute_path(__file__).parent.parent
-            node_info_path = root_path.joinpath("node_info").joinpath("info.json")
+            node_info_path = root_path.joinpath(NODE_DATA)
             node_info = FileUtil.read_file_content(node_info_path)
             update_node_info = {
                 "normal_account": account,
@@ -33,7 +33,7 @@ class AccountController:
             }
             node_info = {**node_info, **update_node_info}
             FileUtil.write_file_content(node_info_path, node_info)
-            current_user_info_path = root_path.joinpath("node_info").joinpath("current_user_detail.json")
+            current_user_info_path = root_path.joinpath(CURRENT_USER_DETAIL)
             FileUtil.write_file_content(current_user_info_path, response_data["data"]["data"])
             return True
         else:

@@ -7,9 +7,13 @@ from datetime import datetime, timedelta
 import random
 
 from PyQt6.QtCore import QObject, pyqtSlot
-from store_service.service.service_device import DeviceService
-from store_service.service.service_task import TaskService
+
+from database_service.service.advertising_task_service import AdvertisingTaskService
+from database_service.service.device_service import DeviceService
+# from store_service.service.service_device import DeviceService
+# from store_service.service.service_task import TaskService
 from util import config_util
+from util.config_util import NODE_DATA
 from util.http_util import HttpUtils
 from util.path_util import PathUtil
 from util.file_util import FileUtil
@@ -27,12 +31,12 @@ class BoardHandler(QObject):
         :return:
         """
         try:
-            all_device_amount = len(DeviceService().select_all_devices())
-            online_device_amount = len(DeviceService().select_online_state_devices(online_status=1))
-            offline_device_amount = len(DeviceService().select_online_state_devices(online_status=0))
+            all_device_amount = len(DeviceService.select_all())
+            online_device_amount = len(DeviceService.select_by_online_state(online_status=1))
+            offline_device_amount = len(DeviceService().select_by_online_state(online_status=0))
             # todo: 累计在线时长后期使用requests来写 当前写死
             root_path = PathUtil.get_current_file_absolute_path(__file__).parent.parent
-            node_info_path = root_path.joinpath("node_info").joinpath("info.json")
+            node_info_path = root_path.joinpath(NODE_DATA)
             node_info = FileUtil.read_file_content(node_info_path)
             total_online_times = 0
             today_online_times = 0
@@ -68,15 +72,14 @@ class BoardHandler(QObject):
         :return:
         """
         try:
-            all_task = TaskService().select_all_no_condition()
+            all_task = AdvertisingTaskService.select_all()
             latest_task = all_task[-1]
             current_task_id = latest_task.task_name
             latest_task_id = latest_task.task_name
             # 是否更新到最新任务
-            latest_task_date = datetime.strptime(latest_task.task_release_date, "%Y-%m-%d")
-            today_date = datetime.today()
-            is_latest_task = 1 if (today_date - latest_task_date).days < 1 else 0
-            # is_latest_task_status = True if is_latest_task else False
+            latest_task_date = datetime.strptime(latest_task.task_release_date, "%Y-%m-%d").date()
+            today_date = datetime.now().date()
+            is_latest_task = 1 if latest_task_date == today_date else 0
             last_update_task_date_time = datetime.strptime(latest_task.task_release_date, "%Y-%m-%d").strftime(
                 "%Y-%m-%d")
             running_status = True if not config_util.SWITCH else False

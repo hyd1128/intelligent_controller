@@ -4,9 +4,11 @@
 # @Author : limber
 # @desc :
 from typing import Optional
-from store_service.model.model_device import Device
-from store_service.service.service_device import DeviceService
+# from store_service.model.model_device import Device
+# from store_service.service.service_device import DeviceService
 from PyQt6.QtCore import QObject, pyqtSlot
+
+from database_service.service.device_service import DeviceService
 
 
 class DeviceHandler(QObject):
@@ -21,10 +23,10 @@ class DeviceHandler(QObject):
                                    online_status: int
                                    ) -> dict:
         try:
-            suitable_device = DeviceService().select_condition_device_list(page_number,
-                                                                           total_items,
-                                                                           task_status,
-                                                                           online_status)
+            suitable_device = DeviceService.select_by_online_task_paging(page=page_number,
+                                                                         per_page=total_items,
+                                                                         task_status=task_status,
+                                                                         online_status=online_status)
             for i in range(len(suitable_device)):
                 suitable_device[i] = suitable_device[i].to_dict()
 
@@ -46,8 +48,8 @@ class DeviceHandler(QObject):
                          total_items: int,
                          ) -> dict:
         try:
-            suitable_device = DeviceService().select_device_list(page_number-1,
-                                                                 total_items)
+            suitable_device = DeviceService.select_list(page=page_number,
+                                                       per_page=total_items)
             for i in range(len(suitable_device)):
                 suitable_device[i] = suitable_device[i].to_dict()
 

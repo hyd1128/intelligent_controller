@@ -14,3 +14,7 @@ class ScriptService:
     @staticmethod
     def select_by_app(app: App) -> List[Script]:
         return ScriptMapper.select_by_app(app)
+
+    @staticmethod
+    def add(script: Script) -> int:
+        return ScriptMapper.add(script)

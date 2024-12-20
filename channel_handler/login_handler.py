@@ -8,6 +8,7 @@ import sys
 
 from PyQt6.QtCore import QObject, pyqtSlot, QVariant
 from client_controller.account_controller import AccountController
+from util.config_util import CURRENT_USER_DETAIL
 from util.file_util import FileUtil
 from util.path_util import PathUtil
 
@@ -43,7 +44,7 @@ class LoginHandler(QObject):
     def get_current_user_detail(self):
         try:
             root_path = PathUtil.get_current_file_absolute_path(__file__).parent.parent
-            current_user_detail_path = root_path.joinpath("node_info").joinpath("current_user_detail.json")
+            current_user_detail_path = root_path.joinpath(CURRENT_USER_DETAIL)
             current_user_detail = FileUtil.read_file_content(current_user_detail_path)
 
             return {
