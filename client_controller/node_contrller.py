@@ -36,7 +36,7 @@ class NodeController(QThread):
             node_info = FileUtil.read_file_content(node_info_path)
 
             # 定时更新节点信息
-            suitable_devices = DeviceService.select_by_online_state(online_status=1)
+            suitable_devices = DeviceService.select_by_online_state(online_state=1)
             latest_task = AdvertisingTaskService.select_all()[-1]
             latest_task_release_date = datetime.strptime(latest_task.task_release_date, "%Y-%m-%d").date()
             today_ = datetime.now().date()

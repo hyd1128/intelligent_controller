@@ -59,8 +59,8 @@ class DeviceService:
         return DeviceMapper.update(device)
 
     @staticmethod
-    def select_by_online_state(online_status: int) -> List[Device]:
-        return DeviceMapper.select_by_online_status(online_status)
+    def select_by_online_state(online_state: int) -> List[Device]:
+        return DeviceMapper.select_by_online_state(online_state)
 
     @staticmethod
     def select_by_online_task_paging(page: int, per_page: int,

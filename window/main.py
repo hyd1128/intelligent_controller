@@ -2,8 +2,9 @@ from datetime import datetime
 from PyQt6 import QtWidgets
 from PyQt6.QtGui import QIcon
 from PyQt6.QtWidgets import QMainWindow
-from store_service.service.service_device import DeviceService
-from store_service.service.service_task import TaskService
+
+from database_service.service.advertising_task_service import AdvertisingTaskService
+from database_service.service.device_service import DeviceService
 from util.http_util import HttpUtils
 from util.path_util import PathUtil
 from util.queue_util import DeviceQueueUtil
@@ -86,8 +87,8 @@ class Main(QMainWindow):
         self.main_controller.stop()
 
         root_path = PathUtil.get_current_file_absolute_path(__file__).parent.parent
-        node_info_path = root_path.joinpath("node_info").joinpath("info.json")
-        current_user_detail_path = root_path.joinpath("node_info").joinpath("current_user_detail.json")
+        node_info_path = root_path.joinpath("NODE_DATA")
+        current_user_detail_path = root_path.joinpath("CURRENT_USER_DETAIL")
         node_info = FileUtil.read_file_content(node_info_path)
         update_node_info = {
             "normal_account": "",
@@ -97,16 +98,15 @@ class Main(QMainWindow):
 
         # 关闭窗口后更新节点状态
         # 定时更新节点信息
-        suitable_devices = DeviceService().select(online_state="online", task_state="all")
-
-        latest_tasks = TaskService().select_all_no_condition()
+        suitable_devices = DeviceService.select_by_online_state(online_state=1)
+        latest_tasks = AdvertisingTaskService.select_all()
         is_update_latest = 0
         latest_task = ""
         if latest_tasks:
             latest_task = latest_tasks[-1]
-            latest_task_release_date = datetime.strptime(latest_task.task_release_date, "%Y-%m-%d")
-            today_ = datetime.today()
-            is_update_latest = 1 if (today_ - latest_task_release_date).days < 1 else 0
+            latest_task_release_date = datetime.strptime(latest_task.task_release_date, "%Y-%m-%d").date()
+            today_ = datetime.now().date()
+            is_update_latest = 1 if today_ == latest_task_release_date else 0
         online_device = len(suitable_devices)
 
         # 当前节点信息

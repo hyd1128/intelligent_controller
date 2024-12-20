@@ -32,7 +32,7 @@ class DeviceDetailController(QThread):
 
             # 每小时发送一次设备运行任务详细, 只上传设备状态是在线的, 任务状态可以暂时忽略
             # 在线状态: 1: 在线  0: 离线
-            suitable_devices = DeviceService.select_by_online_state(online_status=1)
+            suitable_devices = DeviceService.select_by_online_state(online_state=1)
             suitable_device_data = []
             for device_ in suitable_devices:
                 suitable_device_data.append({
