@@ -7,7 +7,9 @@
 import time
 from PyQt6 import QtCore
 from PyQt6.QtCore import QThread
-from store_service.service.service_device import DeviceService
+
+from database_service.service.device_service import DeviceService
+from util.config_util import NODE_DATA
 from util.file_util import FileUtil
 from util.path_util import PathUtil
 from util.http_util import HttpUtils
@@ -32,10 +34,10 @@ class DeviceController(QThread):
                 break
             print("上传设备接口执行了一次")
             root_path = PathUtil.get_current_file_absolute_path(__file__).parent.parent
-            node_info_path = root_path.joinpath("node_info").joinpath("info.json")
+            node_info_path = root_path.joinpath(NODE_DATA)
             node_info = FileUtil.read_file_content(node_info_path)
             # 要发送的 JSON 数据
-            suitable_devices = DeviceService().select(online_state="all", task_state="all")
+            suitable_devices = DeviceService.select_all()
             suitable_device_data = []
             for device_ in suitable_devices:
                 suitable_device_data.append({"uuid": device_.device_id,
@@ -60,13 +62,4 @@ class DeviceController(QThread):
 
 
 if __name__ == '__main__':
-    # device_data = {
-    #     "uuid": "device_03",
-    #     "top_accounts": "13812345678",
-    #     "normal_accounts": "13611223344",
-    #     "node": "node_1",
-    #     "device_model": "xiaomi",
-    #     "network": 1,
-    #     "status": 1,
-    # }
     pass

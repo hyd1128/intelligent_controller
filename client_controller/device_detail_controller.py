@@ -6,7 +6,7 @@
 
 import time
 from PyQt6.QtCore import QThread
-from store_service.service.service_device import DeviceService
+from database_service.service.device_service import DeviceService
 from util.http_util import HttpUtils
 from util.file_util import FileUtil
 from util.path_util import PathUtil
@@ -30,8 +30,9 @@ class DeviceDetailController(QThread):
             node_info_path = root_path.joinpath("node_info").joinpath("info.json")
             node_info = FileUtil.read_file_content(node_info_path)
 
-            # 每小时发送一次设备运行任务详细
-            suitable_devices = DeviceService().select(online_state="online", task_state="all")
+            # 每小时发送一次设备运行任务详细, 只上传设备状态是在线的, 任务状态可以暂时忽略
+            # 在线状态: 1: 在线  0: 离线
+            suitable_devices = DeviceService.select_by_online_state(online_status=1)
             suitable_device_data = []
             for device_ in suitable_devices:
                 suitable_device_data.append({
@@ -49,15 +50,9 @@ class DeviceDetailController(QThread):
                 print("定时上传设备详细数据失败")
                 print(response_data["data"]["data"])
 
-
     def stop(self):
         self.flag = True
 
 
 if __name__ == '__main__':
-    # device_detail = {
-    #     "device": "device_02",
-    #     "node": "node_1",
-    #     "normal_account": "123"
-    # }
     pass

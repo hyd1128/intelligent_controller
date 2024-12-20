@@ -15,9 +15,6 @@ from qt_threads.new_device_monitor import NewDeviceMonitor
 from qt_threads.offline_device_monitor import OfflineDeviceMonitor
 from qt_threads.run_advertising_thread import Run
 
-# from watch import New, Offline
-# from run.run_sync import Run
-# from util.utils import queue_store_device_detail_config
 
 class Main(QMainWindow):
 
@@ -135,12 +132,3 @@ class Main(QMainWindow):
         current_user_detail = {}
         FileUtil.write_file_content(current_user_detail_path, current_user_detail)
         event.accept()
-
-
-
-
-
-
-
-
-

@@ -49,3 +49,9 @@ LOCATING_SCREENSHOT = os.path.join(RESOURCES, "locating_screenshot")
 
 # 广告模板文件夹
 ADVERTISING_TEMPLATE = os.path.join(RESOURCES, "advertising_template", "advertising_icon_template")
+
+# 当前节点信息文件路径, 相对于当前工作路径
+NODE_DATA = os.path.join(RESOURCES, "node", "data.json")
+
+# 当前登录节点的用户详细信息
+CURRENT_USER_DETAIL = os.path.join(RESOURCES, "node", "current_user.json")

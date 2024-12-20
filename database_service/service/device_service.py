@@ -57,3 +57,7 @@ class DeviceService:
         :return:
         """
         return DeviceMapper.update(device)
+
+    @staticmethod
+    def select_by_online_state(online_status: int) -> List[Device]:
+        return DeviceMapper.select_by_online_status(online_status)

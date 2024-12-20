@@ -49,6 +49,12 @@ class DeviceMapper:
         """根据device_id查询合适的设备"""
         return Device.get_or_none(Device.device_id == device_id)
 
+    @staticmethod
+    def select_by_online_status(online_status: int) -> List[Device]:
+        """根据网络状态查询符合条件的设备"""
+        query = Device.select().where(Device.online_state == online_status)
+        return list(query)
+
 
 if __name__ == '__main__':
     pass

@@ -43,6 +43,11 @@ class AdvertisingTaskMapper:
         """根据日期查询任务"""
         return AdvertisingTask.get_or_none(AdvertisingTask.task_execution_date == date_)
 
+    @staticmethod
+    def select_all() -> List[AdvertisingTask]:
+        """查询全部任务"""
+        return list(AdvertisingTask.select())
+
 
 if __name__ == '__main__':
     pass

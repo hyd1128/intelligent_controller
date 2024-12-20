@@ -5,12 +5,12 @@
 # @desc :
 
 import time
-from datetime import datetime, date
-
+from datetime import datetime
 from PyQt6 import QtCore
 from PyQt6.QtCore import QThread
-from store_service.service.service_device import DeviceService
-from store_service.service.service_task import TaskService
+from database_service.service.advertising_task_service import AdvertisingTaskService
+from database_service.service.device_service import DeviceService
+from util.config_util import NODE_DATA
 from util.file_util import FileUtil
 from util.path_util import PathUtil
 from util.http_util import HttpUtils
@@ -32,15 +32,15 @@ class NodeController(QThread):
                 break
             print("节点接口执行了一次")
             root_path = PathUtil.get_current_file_absolute_path(__file__).parent.parent
-            node_info_path = root_path.joinpath("node_info").joinpath("info.json")
+            node_info_path = root_path.joinpath(NODE_DATA)
             node_info = FileUtil.read_file_content(node_info_path)
 
             # 定时更新节点信息
-            suitable_devices = DeviceService().select(online_state="online", task_state="all")
-            latest_task = TaskService().select_all_no_condition()[-1]
-            latest_task_release_date = datetime.strptime(latest_task.task_release_date, "%Y-%m-%d")
-            today_ = datetime.today()
-            is_update_latest = 1 if (today_ - latest_task_release_date).days < 1 else 0
+            suitable_devices = DeviceService.select_by_online_state(online_status=1)
+            latest_task = AdvertisingTaskService.select_all()[-1]
+            latest_task_release_date = datetime.strptime(latest_task.task_release_date, "%Y-%m-%d").date()
+            today_ = datetime.now().date()
+            is_update_latest = 1 if today_ == latest_task_release_date else 0
             online_device = len(suitable_devices)
 
             # 当前节点信息
@@ -69,14 +69,4 @@ class NodeController(QThread):
 
 
 if __name__ == "__main__":
-    # 当前节点信息
-    # node_data = {"node_version": "v1.0",
-    #              "uuid": "node_4",
-    #              "normal_accounts": "13611223344",
-    #              "top_accounts": "13812345678",
-    #              "online_device": "100",
-    #              "status": 1,
-    #              "task_version": "2024_1128_001",
-    #              "update_task": 1
-    #              }
     pass
