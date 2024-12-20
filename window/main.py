@@ -5,6 +5,7 @@ from PyQt6.QtWidgets import QMainWindow
 
 from database_service.service.advertising_task_service import AdvertisingTaskService
 from database_service.service.device_service import DeviceService
+from util.config_util import RESOURCES, NODE_DATA
 from util.http_util import HttpUtils
 from util.path_util import PathUtil
 from util.queue_util import DeviceQueueUtil
@@ -38,11 +39,11 @@ class Main(QMainWindow):
         # 初始化窗口
         self.resize(1200, 600)
         self.setWindowTitle("智控管家")
-        self.setWindowIcon(QIcon("app/icon/quanqiu.png"))
+        self.setWindowIcon(QIcon(f"{RESOURCES}/icon/quanqiu.png"))
 
         # 判断该节点是否具有唯一标识 如何是初始打开该软件 则生成唯一ID
         root_path = PathUtil.get_current_file_absolute_path(__file__).parent.parent
-        node_info_path = root_path.joinpath("node_info").joinpath("info.json")
+        node_info_path = root_path.joinpath(NODE_DATA)
         node_info = FileUtil.read_file_content(node_info_path)
         if not node_info["node_id"]:
             node_info["node_id"] = generate_unique_node_token()
