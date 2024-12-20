@@ -7,16 +7,17 @@ from store_service.service.service_task import TaskService
 from util.http_util import HttpUtils
 from util.path_util import PathUtil
 from util.queue_util import DeviceQueueUtil
-from watch import New, Offline
-from run.run_sync import Run
-from util.utils import queue_store_device_detail_config
 from window.web.web_view import BrowserPage
 from client_controller.main_controller import MainController
 from util.file_util import FileUtil
 from util.identify_util import generate_unique_node_token
 from qt_threads.new_device_monitor import NewDeviceMonitor
 from qt_threads.offline_device_monitor import OfflineDeviceMonitor
+from qt_threads.run_advertising_thread import Run
 
+# from watch import New, Offline
+# from run.run_sync import Run
+# from util.utils import queue_store_device_detail_config
 
 class Main(QMainWindow):
 
@@ -59,7 +60,6 @@ class Main(QMainWindow):
         self.layout.setSpacing(0)
 
         # 初始化全局队列
-        # queue_store_device_detail_config()
         DeviceQueueUtil.initialize_device_queue()
 
         # 引入子组件
@@ -67,14 +67,10 @@ class Main(QMainWindow):
         self.layout.addWidget(self.browser)
 
         # 监听新设备
-        # self.watch_new = New()
-        # self.watch_new.start()
         self.watch_new = NewDeviceMonitor()
         self.watch_new.start()
 
         # 监听掉线设备
-        # self.watch_offline = Offline()
-        # self.watch_offline.start()
         self.watch_offline = OfflineDeviceMonitor()
         self.watch_offline.start()
 

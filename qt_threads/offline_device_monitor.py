@@ -6,10 +6,12 @@
 
 import time
 from PyQt6.QtCore import QThread
-from adb.adb import device_list
+from util.adb_util import AdbUtil
 from database_service.service.device_service import DeviceService
 from logger_zk.logger_types import logger_watch
 
+
+# from adb.adb import device_list
 
 class OfflineDeviceMonitor(QThread):
     def __init__(self):
@@ -23,7 +25,7 @@ class OfflineDeviceMonitor(QThread):
             if self.flag:
                 break
             # 当前实时在线设备
-            devices, _ = device_list()
+            devices, _ = AdbUtil.device_list()
             # 已备份的设备
             exist_devices = DeviceService.select_all()
             for index, item in enumerate(exist_devices):

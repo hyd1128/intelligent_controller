@@ -7,14 +7,14 @@
 
 from PyQt6.QtCore import QThread
 import time
-from adb.adb import device_list, info
 from database_service.model.device_model import Device
 from database_service.service.device_service import DeviceService
 from logger_zk.logger_types import logger_watch
+from util.adb_util import AdbUtil
 from util.config_util import COORD_ONE, COORD_TWO
 from util.device_queue import DeviceQueue
 from util.general_util import GeneralUtil
-
+# from adb.adb import device_list, info
 
 class NewDeviceMonitor(QThread):
 
@@ -29,7 +29,7 @@ class NewDeviceMonitor(QThread):
             if self.flag:
                 break
             # 获取当前在线设备
-            devices, _ = device_list()
+            devices, _ = AdbUtil.device_list()
             # 获取系统已备份设备
             exist_devices = DeviceService.select_all()
 
@@ -40,7 +40,7 @@ class NewDeviceMonitor(QThread):
                         exist = True
                         break
                 if not exist:
-                    device_info, err = info(device_)
+                    device_info, err = AdbUtil.info(device_)
                     if device_info is not None:
                         device_info["device_id"] = device_
                         device_info["coord"] = str(GeneralUtil.generate_coordinate(COORD_ONE, COORD_TWO))
