@@ -5,7 +5,8 @@
 # @desc :
 
 import time
-import global_var
+# import global_var
+from util import config_util
 from PyQt6.QtCore import QThread
 from client_controller.node_contrller import NodeController
 from client_controller.device_controller import DeviceController
@@ -24,11 +25,11 @@ class MainController(QThread):
         while True:
             if self.flog:
                 break
-            if global_var.is_running and not self.device_detail_thread.isRunning():
+            if config_util.SWITCH and not self.device_detail_thread.isRunning():
                 self.device_thread.start()
                 self.device_detail_thread.start()
                 self.node_thread.start()
-            elif not global_var.is_running and self.device_detail_thread.isRunning():
+            elif not config_util.SWITCH and self.device_detail_thread.isRunning():
                 self.device_thread.stop()
                 self.device_detail_thread.stop()
                 self.node_thread.stop()

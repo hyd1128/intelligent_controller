@@ -9,7 +9,7 @@ import random
 from PyQt6.QtCore import QObject, pyqtSlot
 from store_service.service.service_device import DeviceService
 from store_service.service.service_task import TaskService
-import global_var
+from util import config_util
 from util.http_util import HttpUtils
 from util.path_util import PathUtil
 from util.file_util import FileUtil
@@ -77,8 +77,9 @@ class BoardHandler(QObject):
             today_date = datetime.today()
             is_latest_task = 1 if (today_date - latest_task_date).days < 1 else 0
             # is_latest_task_status = True if is_latest_task else False
-            last_update_task_date_time = datetime.strptime(latest_task.task_release_date, "%Y-%m-%d").strftime("%Y-%m-%d")
-            running_status = True if not global_var.is_running else False
+            last_update_task_date_time = datetime.strptime(latest_task.task_release_date, "%Y-%m-%d").strftime(
+                "%Y-%m-%d")
+            running_status = True if not config_util.SWITCH else False
             return {
                 "code": 200,
                 "data": {
@@ -190,4 +191,3 @@ class BoardHandler(QObject):
                 "data": "",
                 "msg": str(e)
             }
-

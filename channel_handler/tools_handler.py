@@ -5,8 +5,8 @@
 # @desc :
 from PyQt6.QtCore import QObject, pyqtSlot
 from adb.adb import change_volume, change_luminance
-import global_var
 from client_controller.task_controller import TaskController
+from util import config_util
 
 
 class ToolsHandler(QObject):
@@ -67,14 +67,14 @@ class ToolsHandler(QObject):
         :return:
         """
         if action_:
-            global_var.is_running = True
+            config_util.SWITCH = True
             return {
                 "code": 200,
                 "data": "开始执行",
                 "msg": "开启开关，开始执行任务"
             }
         else:
-            global_var.is_running = False
+            config_util.SWITCH = False
             return {
                 "code": 200,
                 "data": "暂停执行",

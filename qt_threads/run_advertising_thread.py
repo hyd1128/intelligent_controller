@@ -32,7 +32,6 @@ from database_service.model.advertising_task_model import AdvertisingTask
 from database_service.model.script_model import Script
 
 import time
-import global_var
 import queue
 import json
 
@@ -145,7 +144,7 @@ class Run(QThread):
                 else:
                     logger_run.info("##### 任务暂停中 #####")
                     # 等待开关再次打开
-                    while not global_var.is_running:
+                    while not config_util.SWITCH:
                         time.sleep(2)
 
     def __run_task(self, task: AdvertisingTask, device: Device):
@@ -375,8 +374,9 @@ class Run(QThread):
                     logger_run.info(
                         f"当前匹配次数: {retry_count}---匹配结果: {point}---{script.script_content[step]}")
                 else:
-                    logger_run.info(f"当前匹配次数: {retry_count}---匹配结果: 无匹配坐标---{script.script_content[step]}")
-                
+                    logger_run.info(
+                        f"当前匹配次数: {retry_count}---匹配结果: 无匹配坐标---{script.script_content[step]}")
+
                 # 未匹配到则再重复匹配4次后结束
                 while point is None and retry_count < 5:
                     retry_count += 1
