@@ -5,7 +5,7 @@
 # @desc :
 from PyQt6.QtCore import QObject, pyqtSlot
 # from adb.adb import change_volume, change_luminance
-from client_controller.task_controller import TaskController
+from client_controller.advertising_task_controller import TaskController
 from util import config_util
 from util.adb_util import AdbUtil
 
