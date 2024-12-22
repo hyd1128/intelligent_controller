@@ -28,7 +28,7 @@ SWITCH = False
 
 
 # 广告任务截取屏幕图片储存到当前项目的位置, 相对于当前工作目录
-ADVERTISING_SCREENSHOT = os.path.join(RESOURCES, "advertising_screenshot")
+ADVERTISING_SCREENSHOT = os.path.join(RESOURCES, "screenshot")
 
 # 图片匹配结果文件夹
 MATCH_RESULT_FOLDER = os.path.join(RESOURCES, "image_match_result")
@@ -44,8 +44,6 @@ LOCATING_APP_RELOAD_INTERVAL_TIME = 1
 
 # 定位任务模板图片文件夹 (相对工作目录位置)
 LOCATING_TEMPLATE_FOLDER = os.path.join(RESOURCES, "locating_template")
-# 定位任务截取屏幕蹄片储存到当前项目的位置, 相对于当前工作目录
-LOCATING_SCREENSHOT = os.path.join(RESOURCES, "locating_screenshot")
 
 # 广告模板文件夹
 ADVERTISING_TEMPLATE = os.path.join(RESOURCES, "advertising_template", "advertising_icon_template")

@@ -17,7 +17,7 @@ from database_service.service.app_task_record_service import AppTaskRecordServic
 from database_service.service.app_task_service import AppTaskService
 from database_service.service.device_service import DeviceService
 from util.adb_util import AdbUtil
-from util.config_util import APP_TASK_TYPE_ONE, APP_TASK_TYPE_TWO, DOWNLOAD_APP_ICON
+from util.config_util import APP_TASK_TYPE_ONE, APP_TASK_TYPE_TWO, DOWNLOAD_APP_ICON, UPDATE_APP_ICON
 from util.device_queue import DeviceQueue
 from util.image_util import ImageUtil
 from util.path_util import PathUtil
@@ -107,7 +107,41 @@ class ManageAppThread(QThread):
                                         AdbUtil.back_home(device_.device_id)
 
                         elif app_task_.task_type == APP_TASK_TYPE_TWO:  # 更新任务
-
+                            """
+                                更新流程
+                                    查看device是否下载该AppTask对应的App任务
+                                        否
+                                            该设备跳过该app任务
+                                        是
+                                            打开app更新界面, 点击更新app按钮
+                                            添加一条AppTaskRecord
+                            """
+                            if app_task_.app.package_name not in json.loads(device_.download_app):
+                                continue
+                            else:
+                                AdbUtil.skip_to_app_page(app_task_.app.package_name)
+                                time.sleep(3)
+                                AdbUtil.screen_cap(device_.device_id)
+                                time.sleep(3)
+                                screen_image = AdbUtil.screen_cap_pull(device_.device_id)
+                                time.sleep(3)
+                                root_path = PathUtil.get_current_file_absolute_path(__file__).parent.parent
+                                icon_path_ = str(root_path.joinpath(UPDATE_APP_ICON))
+                                point_ = ImageUtil.match(screen_image, icon_path_)
+                                if point_:
+                                    AdbUtil.click(device_.device_id, point_[0], point_[1])
+                                    time.sleep(3)
+                                    try:
+                                        with database.atomic():
+                                            app_task_record = AppTaskRecord(
+                                                device=device_,
+                                                app_task=app_task_
+                                            )
+                                            AppTaskRecordService.add(app_task_record)
+                                    except Exception as e:
+                                        pass
+                                    finally:
+                                        AdbUtil.back_home(device_.device_id)
                         else:
                             pass
                     # 5. 该台设备今日任务执行完毕, 将其放入任务队列中
