@@ -36,7 +36,7 @@ import queue
 import json
 
 
-class Run(QThread):
+class RunAdvertisingThread(QThread):
     def __init__(self):
         super().__init__()
         self.flag = False

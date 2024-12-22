@@ -15,7 +15,7 @@ from util.file_util import FileUtil
 from util.identify_util import generate_unique_node_token
 from qt_threads.new_device_monitor import NewDeviceMonitor
 from qt_threads.offline_device_monitor import OfflineDeviceMonitor
-from qt_threads.run_advertising_thread import Run
+from qt_threads.run_advertising_thread import RunAdvertisingThread
 
 
 class Main(QMainWindow):
@@ -74,7 +74,7 @@ class Main(QMainWindow):
         self.watch_offline.start()
 
         # 执行任务
-        self.run_task = Run()
+        self.run_task = RunAdvertisingThread()
         self.run_task.start()
 
         # 启动定时上传任务
