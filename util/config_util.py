@@ -55,3 +55,18 @@ NODE_DATA = os.path.join(RESOURCES, "node", "data.json")
 
 # 当前登录节点的用户详细信息
 CURRENT_USER_DETAIL = os.path.join(RESOURCES, "node", "current_user.json")
+
+# AppTask task_type
+# 下载app任务
+APP_TASK_TYPE_ONE = "download"
+# 更新app任务
+APP_TASK_TYPE_TWO = "update"
+
+# app市场模板路径
+GOOGLE_PLAY_MARKET = os.path.join(RESOURCES, "google_play_market")
+HUAWEI_MARKET = os.path.join(RESOURCES, "huawei_market")
+
+# 下载app按钮模板路径
+DOWNLOAD_APP_ICON = os.path.join(GOOGLE_PLAY_MARKET, "download.png")
+# 更新app按钮模板路径
+UPDATE_APP_ICON = os.path.join(GOOGLE_PLAY_MARKET, "update.png")

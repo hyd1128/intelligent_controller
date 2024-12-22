@@ -262,3 +262,13 @@ class AdbUtil:
         """
         AdbUtil.run_shell_command(f"adb -s {device_id} shell input text {input_text}")
 
+    @staticmethod
+    def skip_to_app_page(app_package_name: str) -> None:
+        """
+        更具app的包名, 跳转到指定app的app market download page
+
+        :param app_package_name:
+        :return:
+        """
+        AdbUtil.run_shell_command(
+            f'adb shell am start -a android.intent.action.VIEW -d "market://details?id={app_package_name}"')

@@ -3,8 +3,11 @@
 # @Time : 2024/12/18 16:10
 # @Author : limber
 # @desc :
-
+from datetime import date
 from typing import List
+
+from peewee import fn
+
 from database_service.model.app_task_model import AppTask
 
 
@@ -34,6 +37,12 @@ class AppTaskMapper:
     def select_list(page, per_page) -> List[AppTask]:
         """分页查找数据库记录"""
         query = AppTask.select().paginate(page, per_page)
+        return list(query)
+
+    @staticmethod
+    def select_by_date(date_: date) -> List[AppTask]:
+        """根据日期(格式为: YYYY-MM-DD)查询符合条件的数据"""
+        query = AppTask.select().where(fn.Date(AppTask.create_time) == date_)
         return list(query)
 
 

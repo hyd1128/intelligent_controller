@@ -3,11 +3,14 @@
 # @Time : 2024/12/18 16:10
 # @Author : limber
 # @desc :
-from datetime import datetime
+from datetime import datetime, date
 from typing import List
+
+from peewee import fn
 
 from database_service.mapper.app_task_mapper import AppTaskMapper
 from database_service.mapper.device_mapper import DeviceMapper
+from database_service.model.app_task_model import AppTask
 from database_service.model.app_task_record_model import AppTaskRecord
 
 
@@ -37,6 +40,13 @@ class AppTaskRecordMapper:
     def select_list(page, per_page) -> List[AppTaskRecord]:
         """分页查找数据库记录"""
         query = AppTaskRecord.select().paginate(page, per_page)
+        return list(query)
+
+    @staticmethod
+    def select_by_app_task_date(app_task: AppTask, date_: date) -> List[AppTaskRecord]:
+        """根据AppTask和date查询符合条件的数据"""
+        query = AppTaskRecord.select().where((AppTaskRecord.app_task == app_task) &
+                                             (fn.Date(AppTaskRecord.create_time == date_)))
         return list(query)
 
 
