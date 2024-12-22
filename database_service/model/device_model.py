@@ -19,6 +19,7 @@ class Device(Base):
     coord = CharField()  # 经纬度坐标
     locating_app_status = SmallIntegerField(default=0)  # 定位app状态
     locating_app_last_reload_time = DateTimeField(null=True)  # 定位app上一次重启时间
+    download_app = TextField(default='[]')  # 设备储存已下载app的字段
 
     class Meta:
         table_name = "tb_device"

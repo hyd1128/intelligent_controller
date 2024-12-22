@@ -6,7 +6,7 @@
 
 from typing import List
 
-from database_service.mapper.advertising_task_mapper import AdvertisingTaskMapper
+# from database_service.mapper.advertising_task_mapper import AdvertisingTaskMapper
 from database_service.model.script_model import Script
 from database_service.model.app_model import App
 from database_service.mapper.app_mapper import AppMapper
@@ -88,7 +88,11 @@ if __name__ == '__main__':
     # print(result)
 
     # 根据app获取脚本
-    task = AdvertisingTaskMapper.select_by_id(1)
-    task.app.id = 3
-    scripts = ScriptMapper.select_by_app(task.app)
-    print(scripts)
+    # task = AdvertisingTaskMapper.select_by_id(1)
+    # task.app.id = 3
+    # scripts = ScriptMapper.select_by_app(task.app)
+    # print(scripts)
+
+    # app = AppMapper.select_by_id(2)
+    # for i in app.scripts:
+    #     print(i)

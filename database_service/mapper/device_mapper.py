@@ -3,6 +3,7 @@
 # @Time : 2024/12/18 16:11
 # @Author : limber
 # @desc :
+import json
 from datetime import datetime
 from typing import List
 
@@ -115,5 +116,26 @@ if __name__ == '__main__':
     #     print(i)
 
     # 根据device_id查询设备
-    result = DeviceMapper.select_by_device_id("abc4")
-    print(result)
+    # result = DeviceMapper.select_by_device_id("abc4")
+    # print(result)
+
+    # 查询指定设备下载的软件
+    # device = DeviceMapper.select_by_id(3)
+    # for i in json.loads(device.download_app):
+    #     print(i)
+    #
+    # download_app_list: list = json.loads(device.download_app)
+    # download_app_list.append("com.itheima.java")
+    # device.download_app = json.dumps(download_app_list)
+    # DeviceMapper.update(device)
+
+    # 移除指定设备的app
+    # device = DeviceMapper.select_by_id(3)
+    # for i in json.loads(device.download_app):
+    #     print(i)
+    #
+    # download_app_list: list = json.loads(device.download_app)
+    # download_app_list.remove("com.itheima.java")
+    # device.download_app = json.dumps(download_app_list)
+    # DeviceMapper.update(device)
+
