@@ -18,6 +18,7 @@ class AdvertisingTask(Base):
     task_release_date = DateField()  # 任务发布时间
     task_execution_date = DateField()  # 任务执行时间
     app = ForeignKeyField(App, backref="tasks")  # 任务关联的app
+    ratio = FloatField(default=1)  # 当前节点执行该任务的设备比率(0 - 1)
 
     class Meta:
         table_name = "tb_advertising_task"
