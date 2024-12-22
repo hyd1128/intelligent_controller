@@ -13,7 +13,7 @@ from database_service.model.advertising_task_model import AdvertisingTask
 
 class AdvertisingTaskService:
     @staticmethod
-    def select_by_task_execution_date(date_: date):
+    def select_by_task_execution_date(date_: date) -> List[AdvertisingTask]:
         return AdvertisingTaskMapper.select_by_task_execution_date(date_)
 
     @staticmethod

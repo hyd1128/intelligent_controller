@@ -4,6 +4,7 @@
 # @Author : limber
 # @desc :
 from datetime import date
+from typing import List
 
 from database_service.mapper.advertising_task_record_mapper import AdvertisingTaskRecordMapper
 from database_service.model.advertising_task_model import AdvertisingTask
@@ -27,3 +28,7 @@ class AdvertisingTaskRecordService:
     @staticmethod
     def update(advertising_task_record: AdvertisingTaskRecord) -> int:
         return AdvertisingTaskRecordMapper.update(advertising_task_record)
+
+    @staticmethod
+    def select_by_task_date(task_: AdvertisingTask, date_: date) -> List[AdvertisingTaskRecord]:
+        return AdvertisingTaskRecordMapper.select_by_date(task_, date_)

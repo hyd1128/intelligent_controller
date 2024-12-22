@@ -437,18 +437,52 @@ class RunAdvertisingThread(QThread):
         DeviceQueue.put(device)
 
     @staticmethod
-    def __task() -> List[AdvertisingTask]:
+    def __task(device: Device) -> List[AdvertisingTask]:
         """筛选符合条件的任务并随机返回一个"""
         today = GeneralUtil.get_date()  # 获得当天日期
         tasks = AdvertisingTaskService.select_by_task_execution_date(today)
+        ############# 新需求: 任务的执行有比例要求 ####################
+        download_app_list_ = json.loads(device.download_app)
+        # 条件1: 该任务未满足今日的执行比例
+        online_devices_amounts = len(DeviceService.select_by_online_state(online_state=1))
+        suitable_tasks = []
+        for task in tasks:
+            eligible_record_ = len(AdvertisingTaskRecordService.select_by_task_date(task, date.today()))
+            if eligible_record_ / online_devices_amounts <= task.ratio:
+                suitable_tasks.append(task)
+            elif AdvertisingTaskRecordService.select_by_device_date(device, date.today()):
+                suitable_tasks.append(task)
+            else:
+                pass
+        tasks = suitable_tasks
+        # 条件2: 在该台设备上安装了该task对应的app
+        tasks = [task for task in tasks if task.app.package_name in download_app_list_]
+        ##############################################################
         if not tasks:
             logger_run.warning(f"##### {today} 没有发布新任务 #####")
 
-        # 当日无最新发布任务，查询历史任务并执行，最多查询前7天任务
+        # 当日无最新发布任务，查询历史任务并执行
         date_ = 1
         while not tasks and date_ < 3650:
             yesterday = GeneralUtil.get_date(before=True, n=date_)
             tasks = AdvertisingTaskService.select_by_task_execution_date(yesterday)
+            ############# 新需求: 任务的执行有比例要求 ####################
+            download_app_list_ = json.loads(device.download_app)
+            # 条件1: 该任务未满足今日的执行比例
+            online_devices_amounts = len(DeviceService.select_by_online_state(online_state=1))
+            suitable_tasks = []
+            for task in tasks:
+                eligible_record_ = len(AdvertisingTaskRecordService.select_by_task_date(task, date.today()))
+                if eligible_record_ / online_devices_amounts <= task.ratio:
+                    suitable_tasks.append(task)
+                elif AdvertisingTaskRecordService.select_by_device_date(device, date.today()):
+                    suitable_tasks.append(task)
+                else:
+                    pass
+            tasks = suitable_tasks
+            # 条件2: 在该台设备上安装了该task对应的app
+            tasks = [task for task in tasks if task.app.package_name in download_app_list_]
+            ##############################################################
             if not tasks:
                 logger_run.info(f"##### {yesterday} 没有发布新任务 #####")
                 date_ += 1

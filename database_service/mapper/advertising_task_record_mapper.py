@@ -55,6 +55,13 @@ class AdvertisingTaskRecordMapper:
                                                      (AdvertisingTaskRecord.date == date_))
         return list(query)
 
+    @staticmethod
+    def select_by_date(task_: AdvertisingTask, date_: date) -> List[AdvertisingTaskRecord]:
+        """根据日期查询符合条件的广告任务运行记录"""
+        query = AdvertisingTaskRecord.select().where((AdvertisingTaskRecord.task == task_)
+                                                     & (AdvertisingTaskRecord.date == date_))
+        return list(query)
+
 
 if __name__ == '__main__':
     pass
