@@ -9,7 +9,7 @@ from util.config_util import RESOURCES, NODE_DATA
 from util.http_util import HttpUtils
 from util.path_util import PathUtil
 from util.queue_util import DeviceQueueUtil
-from window.web.web_view import BrowserPage
+from window_webview.web.web_view import BrowserPage
 from client_controller.main_controller import MainController
 from util.file_util import FileUtil
 from util.identify_util import generate_unique_node_token
