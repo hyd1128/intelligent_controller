@@ -6,11 +6,13 @@
 import math
 from typing import Any
 
-from PyQt6 import QtWidgets
+from PyQt6 import QtWidgets, QtCore
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QHBoxLayout, QTableWidgetItem, QWidget, QVBoxLayout
 from qfluentwidgets import TableWidget, PrimaryPushButton, ComboBox, BodyLabel, MessageBoxBase, LineEdit
 
+from database_service.model.app_model import App
+from database_service.service.app_service import AppService
 from window_pyqt.component.general_widget import Widget
 from window_pyqt.component.message_widget import MessageWidget
 from window_pyqt.component.paging_widget import PagingWidget
@@ -43,8 +45,11 @@ class AppTableView(Widget):
         self.tableView.setBorderRadius(8)
 
         self.tableView.setWordWrap(False)
-        self.tableView.setColumnCount(5)
+        self.tableView.setColumnCount(6)
         self.vBoxLayout.setContentsMargins(50, 30, 50, 30)
+        self.tableView.verticalHeader().hide()
+        self.tableView.setHorizontalHeaderLabels(
+            ['app name', 'package name', 'version', 'download_link', 'download_method', 'operation'])
 
         self.primaryButton1 = PrimaryPushButton('添加应用', self)
         self.primaryButton1.clicked.connect(self.show_add_app_dialog)
@@ -60,55 +65,58 @@ class AppTableView(Widget):
 
     def init_table_data(self, page_number: int = 1):
         self.tableView.setRowCount(15)
-        songInfos = [
-            ['かばん', 'aiko', 'かばん', '2004', '5:04'],
-            ['爱你', '王心凌', '爱你', '2004', '3:39'],
-            ['星のない世界', 'aiko', '星のない世界/横顔', '2007', '5:30'],
-            ['横顔', 'aiko', '星のない世界/横顔', '2007', '5:06'],
-            ['秘密', 'aiko', '秘密', '2008', '6:27'],
-            ['シアワセ', 'aiko', '秘密', '2008', '5:25'],
-            ['二人', 'aiko', '二人', '2008', '5:00'],
-            ['スパークル', 'RADWIMPS', '君の名は。', '2016', '8:54'],
-            ['なんでもないや', 'RADWIMPS', '君の名は。', '2016', '3:16'],
-            ['前前前世', 'RADWIMPS', '人間開花', '2016', '4:35'],
-            ['恋をしたのは', 'aiko', '恋をしたのは', '2016', '6:02'],
-            ['夏バテ', 'aiko', '恋をしたのは', '2016', '4:41'],
-            ['もっと', 'aiko', 'もっと', '2016', '4:50'],
-            ['問題集', 'aiko', 'もっと', '2016', '4:18'],
-            ['半袖', 'aiko', 'もっと', '2016', '5:50'],
-            ['ひねくれ', '鎖那', 'Hush a by little girl', '2017', '3:54'],
-            ['シュテルン', '鎖那', 'Hush a by little girl', '2017', '3:16'],
-            ['愛は勝手', 'aiko', '湿った夏の始まり', '2018', '5:31'],
-            ['ドライブモード', 'aiko', '湿った夏の始まり', '2018', '3:37'],
-            ['うん。', 'aiko', '湿った夏の始まり', '2018', '5:48'],
-            ['キラキラ', 'aikoの詩。', '2019', '5:08', 'aiko'],
-            ['恋のスーパーボール', 'aiko', 'aikoの詩。', '2019', '4:31'],
-            ['磁石', 'aiko', 'どうしたって伝えられないから', '2021', '4:24'],
-            ['食べた愛', 'aiko', '食べた愛/あたしたち', '2021', '5:17'],
-            ['列車', 'aiko', '食べた愛/あたしたち', '2021', '4:18'],
-            ['花の塔', 'さユり', '花の塔', '2022', '4:35'],
-            ['夏恋のライフ', 'aiko', '夏恋のライフ', '2022', '5:03'],
-            ['あかときリロード', 'aiko', 'あかときリロード', '2023', '4:04'],
-            ['荒れた唇は恋を失くす', 'aiko', '今の二人をお互いが見てる', '2023', '4:07'],
-            ['ワンツースリー', 'aiko', '今の二人をお互いが見てる', '2023', '4:47'],
-        ]
-        self.paging_widget.update_page_amount(math.ceil(len(songInfos) / 15))
-        start_ = 15 * (page_number - 1)
-        end_ = start_ + 15
-        songInfos = songInfos[start_:end_]
-        for i, songInfo in enumerate(songInfos):
-            for j in range(5):
-                self.tableView.setItem(i, j, QTableWidgetItem(songInfo[j]))
+        total_data_nums = AppService.select_count()
+        app_list_obj = AppService.select_list(page_number, 15)
 
-        self.tableView.verticalHeader().hide()
+        self.paging_widget.update_page_amount(math.ceil(total_data_nums / 15))
+
+        # 清空现有数据
+        self.tableView.clearContents()
+        # start_ = 15 * (page_number - 1)
+        # end_ = start_ + 15
+        # songInfos = songInfos[start_:end_]
+        for i, obj_ in enumerate(app_list_obj):
+            self.tableView.setItem(i, 0, QTableWidgetItem(obj_.app_name))
+            self.tableView.setItem(i, 1, QTableWidgetItem(obj_.package_name))
+            self.tableView.setItem(i, 2, QTableWidgetItem(obj_.version))
+            self.tableView.setItem(i, 3, QTableWidgetItem(obj_.download_link))
+            self.tableView.setItem(i, 4, QTableWidgetItem(obj_.download_method))
+
+            delete_btn = QtWidgets.QPushButton("删除")
+            delete_btn.setStyleSheet("background:red;color:white;")
+            delete_btn.setFixedSize(70, 20)
+            delete_btn.clicked.connect(lambda checked, current=obj_: self.delete_app(current.id))
+
+            # 创建一个容器和布局
+            widget = QtWidgets.QWidget()
+            layout = QtWidgets.QVBoxLayout(widget)
+            layout.setContentsMargins(0, 0, 0, 0)
+
+            # 添加上下左右的弹性空白并居中按钮
+            layout.addStretch()  # 顶部弹性
+            layout.addWidget(delete_btn, alignment=QtCore.Qt.AlignmentFlag.AlignCenter)  # 居中按钮
+            layout.addStretch()  # 底部弹性
+
+            self.tableView.setCellWidget(i, 5, widget)
+
+
         self.tableView.resizeColumnsToContents()
-        self.tableView.setHorizontalHeaderLabels(['Title', 'Artist', 'Album', 'Year', 'Duration'])
         # self.tableView.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
         # self.tableView.setSortingEnabled(True)
 
         self.setStyleSheet("Demo{background: rgb(255, 255, 255)} ")
 
+    def delete_app(self, app_id):
+        # 删除数据
+        result = AppService.delete_app(app_id)
+        if result:
+            # 立即重新加载当前页数据
+            current_page = self.paging_widget.page_number_
+            self.tableView.clearContents()  # 清空当前表格内容
+            self.init_table_data(current_page)  # 重新加载数据
+
     def update_page(self, page_number):
+        self.tableView.clearContents()  # 清空当前表格内容
         self.init_table_data(page_number)
 
     def show_add_app_dialog(self):
@@ -117,6 +125,12 @@ class AppTableView(Widget):
             MessageWidget.success_message(self, content="添加成功")
         else:
             MessageWidget.error_message(self, content="添加失败")
+        self.add_app()
+
+    def add_app(self):
+        current_page = self.paging_widget.page_number_
+        self.tableView.clearContents()  # 清空当前表格内容
+        self.init_table_data(current_page)  # 重新加载数据
 
 
 class AddAppDialog(MessageBoxBase):
@@ -169,6 +183,20 @@ class AddAppDialog(MessageBoxBase):
 
         self.widget.setMinimumWidth(500)
 
+    def validate(self):
+        app = App(
+            app_name=self.app_name_edit.text().strip(),
+            package_name=self.app_package_edit.text().strip(),
+            version=self.app_version_edit.text().strip(),
+            download_link=self.download_url_edit.text().strip(),
+            download_method=self.download_method_edit.get_selected_method()
+        )
+        AppService.add(app)
+        # MessageWidget.success_message(self, f"添加 {self.app_name_edit.text().strip()}成功")
+        return True
+
+
+
 
 class RadioButtonWidget(QWidget):
     def __init__(self, parent=None):
@@ -187,3 +215,7 @@ class RadioButtonWidget(QWidget):
         # 将 ComboBox 添加到布局中
         layout.addWidget(self.comboBox)
         layout.setContentsMargins(0, 0, 0, 0)  # 设置边距为0
+
+    def get_selected_method(self) -> str:
+        """获取选择的下载方式"""
+        return self.comboBox.currentText()

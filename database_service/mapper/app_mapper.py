@@ -41,6 +41,12 @@ class AppMapper:
         result = App.select().where(App.app_name == app_name).get()
         return result
 
+    @staticmethod
+    def select_count() -> int:
+        """查询数据条数"""
+        result = App.select().count()
+        return result
+
 
 if __name__ == '__main__':
     pass
