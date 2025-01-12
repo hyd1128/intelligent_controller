@@ -64,6 +64,11 @@ class DeviceMapper:
         ).paginate(page, per_page)
         return list(query)
 
+    @staticmethod
+    def select_count() -> int:
+        """获取设备总数"""
+        return Device.select().count()
+
 
 if __name__ == '__main__':
     pass

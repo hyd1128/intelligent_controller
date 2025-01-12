@@ -74,3 +74,11 @@ class DeviceService:
     def select_list(page: int, per_page: int) -> List[Device]:
         return DeviceMapper.select_list(page=page, per_page=per_page)
 
+    @staticmethod
+    def select_count() -> int:
+        return DeviceMapper.select_count()
+
+    @staticmethod
+    def delete_device(id: int) -> int:
+        return DeviceMapper.delete(id)
+
