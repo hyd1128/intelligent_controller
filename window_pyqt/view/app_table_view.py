@@ -25,7 +25,7 @@ class AppTableView(Widget):
         self.paging_widget = PagingWidget(parent=self)
         self.init_table()
         self.init_table_data()
-        self.paging_widget.update_page_signal.connect(self.update_page)
+        self.paging_widget.update_page_signal.connect(self.update_page_slot)
 
     def init_table(self):
         """初始化表头"""
@@ -82,7 +82,7 @@ class AppTableView(Widget):
 
             detail_btn = QtWidgets.QPushButton("详细")
             detail_btn.setStyleSheet("background-color: green; color: black;")
-            detail_btn.clicked.connect(lambda checked, current=obj_: self.show_detail_app_dialog(app_obj=current))
+            detail_btn.clicked.connect(lambda checked, current=obj_: self.show_detail_app_dialog(obj_=current))
             delete_btn = QtWidgets.QPushButton("删除")
             delete_btn.setStyleSheet("background-color: red; color: black;")
             delete_btn.clicked.connect(lambda checked, current=obj_: self.delete_app(current.id))
@@ -112,12 +112,13 @@ class AppTableView(Widget):
         # 删除数据
         result = AppService.delete_app(app_id)
         if result:
-            # 立即重新加载当前页数据
-            current_page = self.paging_widget.page_number_
-            self.tableView.clearContents()  # 清空当前表格内容
-            self.init_table_data(current_page)  # 重新加载数据
+            # # 立即重新加载当前页数据
+            # current_page = self.paging_widget.page_number_
+            # self.tableView.clearContents()  # 清空当前表格内容
+            # self.init_table_data(current_page)  # 重新加载数据
+            self.update_page()
 
-    def update_page(self, page_number):
+    def update_page_slot(self, page_number):
         self.tableView.clearContents()  # 清空当前表格内容
         self.init_table_data(page_number)
 
@@ -127,16 +128,16 @@ class AppTableView(Widget):
             MessageWidget.success_message(self, content="添加成功")
         else:
             MessageWidget.error_message(self, content="添加失败")
-        self.add_app()
+        self.update_page()
 
-    def show_detail_app_dialog(self, app_obj):
-        w = DetailAppDialog(self, app_obj=app_obj)
+    def show_detail_app_dialog(self, obj_):
+        w = DetailAppDialog(self, obj_=obj_)
         if w.exec():
             pass
         else:
             pass
 
-    def add_app(self):
+    def update_page(self):
         current_page = self.paging_widget.page_number_
         self.tableView.clearContents()  # 清空当前表格内容
         self.init_table_data(current_page)  # 重新加载数据
@@ -192,11 +193,24 @@ class AddAppDialog(MessageBoxBase):
 
         self.widget.setMinimumWidth(500)
 
+    def validate(self):
+        """重写dialog框的yes验证程序"""
+        app = App(
+            app_name=self.app_name_edit.text().strip(),
+            package_name=self.app_package_edit.text().strip(),
+            version=self.app_version_edit.text().strip(),
+            download_link=self.download_url_edit.text().strip(),
+            download_method=self.download_method_edit.get_selected_method()
+        )
+        AppService.add(app)
+        # MessageWidget.success_message(self, f"添加 {self.app_name_edit.text().strip()}成功")
+        return True
+
 
 class DetailAppDialog(MessageBoxBase):
     """ Custom message box """
 
-    def __init__(self, parent=None, app_obj: App = None):
+    def __init__(self, parent=None, obj_: App = None):
         super().__init__(parent)
         # self.resize(1000, 600)
         vbox1 = QVBoxLayout()
@@ -221,11 +235,11 @@ class DetailAppDialog(MessageBoxBase):
         self.download_url_edit = LineEdit(self)
         self.download_method_edit = LineEdit(self)
 
-        self.app_name_edit.setText(app_obj.app_name)
-        self.app_package_edit.setText(app_obj.package_name)
-        self.app_version_edit.setText(app_obj.version)
-        self.download_url_edit.setText(app_obj.download_link)
-        self.download_method_edit.setText(app_obj.download_method)
+        self.app_name_edit.setText(obj_.app_name)
+        self.app_package_edit.setText(obj_.package_name)
+        self.app_version_edit.setText(obj_.version)
+        self.download_url_edit.setText(obj_.download_link)
+        self.download_method_edit.setText(obj_.download_method)
 
         self.app_name_edit.setReadOnly(True)
         self.app_package_edit.setReadOnly(True)
@@ -239,37 +253,27 @@ class DetailAppDialog(MessageBoxBase):
         vbox2.addWidget(self.download_url_edit)
         vbox2.addWidget(self.download_method_edit)
 
-
-
         hbox1.addLayout(vbox1)
         hbox1.addLayout(vbox2)
-
 
         self.viewLayout.addLayout(hbox1)
 
         # change the text of button
         self.yesButton.setText('确定')
         self.yesButton.disconnect()
-        self.yesButton.clicked.connect(self.validate_detail)
+        self.yesButton.clicked.connect(self.validate)
         self.cancelButton.setText('关闭')
 
         self.widget.setMinimumWidth(500)
 
     def validate(self):
-        """重写dialog框的yes验证程序"""
-        app = App(
-            app_name=self.app_name_edit.text().strip(),
-            package_name=self.app_package_edit.text().strip(),
-            version=self.app_version_edit.text().strip(),
-            download_link=self.download_url_edit.text().strip(),
-            download_method=self.download_method_edit.get_selected_method()
-        )
-        AppService.add(app)
-        # MessageWidget.success_message(self, f"添加 {self.app_name_edit.text().strip()}成功")
-        return True
-
-    def validate_detail(self):
         self.accept()
+
+
+
+
+
+
 
 
 class RadioButtonWidget(QWidget):
