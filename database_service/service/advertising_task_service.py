@@ -24,3 +24,15 @@ class AdvertisingTaskService:
     def add(advertising_task: AdvertisingTask) -> int:
         return AdvertisingTaskMapper.add(advertising_task)
 
+    @staticmethod
+    def select_list(page, per_page) -> List[AdvertisingTask]:
+        return AdvertisingTaskMapper.select_list(page, per_page)
+
+    @staticmethod
+    def select_count() -> int:
+        return AdvertisingTaskMapper.select_count()
+
+    @staticmethod
+    def delete(id) -> int:
+        return AdvertisingTaskMapper.delete(id)
+

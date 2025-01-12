@@ -29,3 +29,7 @@ class AppService:
     @staticmethod
     def delete_app(app_id: int) -> int:
         return AppMapper.delete(app_id)
+
+    @staticmethod
+    def select_all() -> List[App]:
+        return AppMapper.select_all()

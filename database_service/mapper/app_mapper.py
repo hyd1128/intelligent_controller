@@ -47,6 +47,11 @@ class AppMapper:
         result = App.select().count()
         return result
 
+    @staticmethod
+    def select_all() -> List[App]:
+        result = App.select()
+        return list(result)
+
 
 if __name__ == '__main__':
     pass

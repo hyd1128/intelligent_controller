@@ -49,6 +49,11 @@ class AdvertisingTaskMapper:
         """查询全部任务"""
         return list(AdvertisingTask.select())
 
+    @staticmethod
+    def select_count() -> int:
+        """查询全部任务总数"""
+        return AdvertisingTask.select().count()
+
 
 if __name__ == '__main__':
     pass

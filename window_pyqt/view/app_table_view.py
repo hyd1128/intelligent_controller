@@ -270,12 +270,6 @@ class DetailAppDialog(MessageBoxBase):
         self.accept()
 
 
-
-
-
-
-
-
 class RadioButtonWidget(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
