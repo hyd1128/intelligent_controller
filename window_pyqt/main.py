@@ -179,10 +179,11 @@ class Window(FramelessWindow):
     def onCurrentInterfaceChanged(self, index):
         widget = self.stackWidget.widget(index)
         if widget.objectName() != 'Home-View':
-            print(widget.objectName())
+            # print(widget.objectName())
             widget.update_page()
         else:
-            print(widget.objectName())
+            # print(widget.objectName())
+            pass
         self.navigationInterface.setCurrentItem(widget.objectName())
         qrouter.push(self.stackWidget, widget.objectName())
 

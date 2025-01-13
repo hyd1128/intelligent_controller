@@ -282,7 +282,7 @@ class RadioButtonWidget(QWidget):
         items = ['store', 'apk']
         self.comboBox.addItems(items)
         self.comboBox.setCurrentIndex(-1)
-        self.comboBox.currentTextChanged.connect(print)
+        # self.comboBox.currentTextChanged.connect(print)
 
         # 将 ComboBox 添加到布局中
         layout.addWidget(self.comboBox)

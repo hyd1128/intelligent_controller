@@ -261,7 +261,7 @@ class RadioButtonWidget(QWidget):
         app_name_list = [app_.app_name for app_ in app_list]
         self.comboBox.addItems(app_name_list)
         self.comboBox.setCurrentIndex(-1)
-        self.comboBox.currentTextChanged.connect(print)
+        # self.comboBox.currentTextChanged.connect(print)
 
         # 将 ComboBox 添加到布局中
         layout.addWidget(self.comboBox)
@@ -286,7 +286,7 @@ class AppTaskTypeRadioButtonWidget(QWidget):
         task_type_list = ["download", "update", "delete"]
         self.comboBox.addItems(task_type_list)
         self.comboBox.setCurrentIndex(-1)
-        self.comboBox.currentTextChanged.connect(print)
+        # self.comboBox.currentTextChanged.connect(print)
 
         # 将 ComboBox 添加到布局中
         layout.addWidget(self.comboBox)
