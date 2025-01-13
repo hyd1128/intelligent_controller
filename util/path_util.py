@@ -26,12 +26,10 @@ class PathUtil:
 
         if getattr(sys, 'frozen', False):
             exe_dir = os.path.dirname(sys.executable)
-            print("当前是打包环境")
             return Path(exe_dir)
 
         else:
             path = Path(file_path)
-            print(path)
             for i in range(depth):
                 path = path.parent
             return path

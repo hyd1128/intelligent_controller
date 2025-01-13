@@ -50,7 +50,7 @@ class DeviceTableView(Widget):
         self.vBoxLayout.setContentsMargins(50, 30, 50, 30)
         self.tableView.verticalHeader().hide()
         self.tableView.setHorizontalHeaderLabels(
-            ['设备ID', '设备品牌', '连接状态', '任务状态', 'operation'])
+            ['设备ID', '设备品牌', '连接状态', '任务状态', '操作'])
 
         self.vBoxLayout.addWidget(self.tableView, 2)
         self.vBoxLayout.addWidget(self.paging_widget)

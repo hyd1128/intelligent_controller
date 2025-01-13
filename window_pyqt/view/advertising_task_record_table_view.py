@@ -55,7 +55,7 @@ class AdvertisingTaskRecordTableView(Widget):
         self.vBoxLayout.setContentsMargins(50, 30, 50, 30)
         self.tableView.verticalHeader().hide()
         self.tableView.setHorizontalHeaderLabels(
-            ['日期', '已执行次数', '关联设备', "关联任务"])
+            ['日期', '已执行次数', '关联设备', "关联任务", "操作"])
 
         # self.primaryButton1 = PrimaryPushButton('添加广告任务', self)
         # self.primaryButton1.clicked.connect(self.show_add_advertising_task_dialog)

@@ -49,7 +49,7 @@ class AppTableView(Widget):
         self.vBoxLayout.setContentsMargins(50, 30, 50, 30)
         self.tableView.verticalHeader().hide()
         self.tableView.setHorizontalHeaderLabels(
-            ['app name', 'package name', 'version', 'download_link', 'download_method', 'operation'])
+            ['应用名称', '包名', '版本号', '下载连接', '下载方法', '操作'])
 
         self.primaryButton1 = PrimaryPushButton('添加应用', self)
         self.primaryButton1.clicked.connect(self.show_add_app_dialog)
