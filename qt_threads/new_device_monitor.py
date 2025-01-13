@@ -5,7 +5,7 @@
 # @desc :
 
 
-from PyQt6.QtCore import QThread
+from PyQt6.QtCore import QThread, pyqtSignal
 import time
 from database_service.model.device_model import Device
 from database_service.service.device_service import DeviceService
@@ -14,9 +14,12 @@ from util.adb_util import AdbUtil
 from util.config_util import COORD_ONE, COORD_TWO
 from util.device_queue import DeviceQueue
 from util.general_util import GeneralUtil
+
+
 # from adb.adb import device_list, info
 
 class NewDeviceMonitor(QThread):
+    new_device_signal = pyqtSignal(Device)
 
     def __init__(self):
         super().__init__()
@@ -57,6 +60,9 @@ class NewDeviceMonitor(QThread):
                             # 将新设备添加到队列
                             new_device = DeviceService.select_by_device_id(device_.device_id)
                             DeviceQueue.put(new_device)
+
+                            # 新设备触发信号
+                            self.new_device_signal.emit(new_device)
             # 20秒查询一次
             time.sleep(10)
 

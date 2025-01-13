@@ -13,7 +13,7 @@ class Device(Base):
     device_id = CharField(unique=True, null=False)  # 设备id
     brand = CharField()  # 品牌
     manufacturer = CharField()  # 厂商
-    resolution_ration = CharField()  # 分辨率
+    resolution_ratio = CharField()  # 分辨率
     online_state = SmallIntegerField(default=0)  # 在线状态
     task_state = SmallIntegerField(default=0)  # 任务状态
     coord = CharField()  # 经纬度坐标

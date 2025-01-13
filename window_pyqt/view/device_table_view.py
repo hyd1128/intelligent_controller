@@ -178,7 +178,7 @@ class DetailDeviceDialog(MessageBoxBase):
         self.device_edit.setText(obj_.device_id)
         self.brand_edit.setText(obj_.brand)
         self.manufacturer_edit.setText(obj_.manufacturer)
-        self.resolution_edit.setText(obj_.resolution_ration)
+        self.resolution_edit.setText(obj_.resolution_ratio)
         self.online_state_edit.setText("在线" if int(obj_.online_state) == 1 else "离线")
         self.task_state_edit.setText("任务中" if int(obj_.task_state) == 1 else "无任务")
         self.locating_app_status_edit.setText("开启" if int(obj_.locating_app_status) else "关闭")

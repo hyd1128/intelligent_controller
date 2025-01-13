@@ -16,6 +16,7 @@ from util.queue_util import DeviceQueueUtil
 from window_pyqt.component.avator_widget import AvatarWidget
 from window_pyqt.component.custom_title_bar_widget import CustomTitleBar
 from window_pyqt.component.general_widget import Widget
+from window_pyqt.component.message_widget import MessageWidget
 from window_pyqt.view.advertising_task_record_table_view import AdvertisingTaskRecordTableView
 from window_pyqt.view.advertising_task_table_view import AdvertisingTaskTableView
 from window_pyqt.view.app_table_view import AppTableView
@@ -60,10 +61,13 @@ class Window(FramelessWindow):
         DeviceQueueUtil.initialize_device_queue()
         # 监听新设备
         self.watch_new = NewDeviceMonitor()
+        self.watch_new.new_device_signal.connect(self.new_device_signal)
         self.watch_new.start()
 
         # 监听掉线设备
         self.watch_offline = OfflineDeviceMonitor()
+        self.watch_offline.device_online_signal.connect(self.device_online_signal)
+        self.watch_offline.device_offline_signal.connect(self.device_offline_signal)
         self.watch_offline.start()
 
         # 执行任务
@@ -185,6 +189,18 @@ class Window(FramelessWindow):
     def resizeEvent(self, e):
         self.titleBar.move(46, 0)
         self.titleBar.resize(self.width() - 46, self.titleBar.height())
+
+    def new_device_signal(self, device_):
+        self.deviceView.update_page()
+        MessageWidget.info_message(self, f"发现新设备, 设备名称为 {device_.device_id}")
+
+    def device_online_signal(self, device_):
+        self.deviceView.update_page()
+        MessageWidget.info_message(self, f"设备 {device_.device_id}已连接")
+
+    def device_offline_signal(self, device_):
+        self.deviceView.update_page()
+        MessageWidget.info_message(self, f"设备 {device_.device_id}已掉线")
 
     def closeEvent(self, event):
         self.watch_new.stop()

@@ -5,7 +5,9 @@
 # @desc :
 
 import time
-from PyQt6.QtCore import QThread
+from PyQt6.QtCore import QThread, pyqtSignal
+
+from database_service.model.device_model import Device
 from util.adb_util import AdbUtil
 from database_service.service.device_service import DeviceService
 from logger_zk.logger_types import logger_watch
@@ -14,6 +16,9 @@ from logger_zk.logger_types import logger_watch
 # from adb.adb import device_list
 
 class OfflineDeviceMonitor(QThread):
+    device_online_signal = pyqtSignal(Device)
+    device_offline_signal = pyqtSignal(Device)
+
     def __init__(self):
         super().__init__()
         self.flag = False
@@ -40,9 +45,11 @@ class OfflineDeviceMonitor(QThread):
                     if not online:
                         # 当前设备掉线
                         item.online_state = 0
+                        self.device_offline_signal.emit(item)
                     else:
                         # 当前设备在线
                         item.online_state = 1
+                        self.device_online_signal.emit(item)
                     item.task_state = 0
                     DeviceService.update(item)
             time.sleep(10)  # 30秒查询一次
