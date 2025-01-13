@@ -62,6 +62,10 @@ class AdvertisingTaskRecordMapper:
                                                      & (AdvertisingTaskRecord.date == date_))
         return list(query)
 
+    @staticmethod
+    def select_count() -> int:
+        return AdvertisingTaskRecord.select().count()
+
 
 if __name__ == '__main__':
     pass

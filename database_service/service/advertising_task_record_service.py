@@ -32,3 +32,16 @@ class AdvertisingTaskRecordService:
     @staticmethod
     def select_by_task_date(task_: AdvertisingTask, date_: date) -> List[AdvertisingTaskRecord]:
         return AdvertisingTaskRecordMapper.select_by_date(task_, date_)
+
+    @staticmethod
+    def select_count() -> int:
+        return AdvertisingTaskRecordMapper.select_count()
+
+    @staticmethod
+    def select_list(page, per_page) -> List[AdvertisingTaskRecord]:
+        return AdvertisingTaskRecordMapper.select_list(page, per_page)
+
+    @staticmethod
+    def delete(id_) -> int:
+        return AdvertisingTaskRecordMapper.delete(id_)
+
