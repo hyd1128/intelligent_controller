@@ -18,3 +18,15 @@ class ScriptService:
     @staticmethod
     def add(script: Script) -> int:
         return ScriptMapper.add(script)
+
+    @staticmethod
+    def select_count() -> int:
+        return ScriptMapper.select_count()
+
+    @staticmethod
+    def select_list(page, per_page) -> List[Script]:
+        return ScriptMapper.select_list(page, per_page)
+
+    @staticmethod
+    def delete(script_id) -> int:
+        return ScriptMapper.delete(script_id)

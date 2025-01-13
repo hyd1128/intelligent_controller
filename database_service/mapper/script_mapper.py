@@ -45,6 +45,11 @@ class ScriptMapper:
         query = Script.select().where(Script.app == app)
         return list(query)
 
+    @staticmethod
+    def select_count() -> int:
+        result = Script.select().count()
+        return result
+
 
 if __name__ == '__main__':
     pass
