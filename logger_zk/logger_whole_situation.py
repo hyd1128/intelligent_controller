@@ -31,13 +31,13 @@ class LoggerUtil:
             datefmt='%Y-%m-%d %H:%M:%S'
         )
 
-        # 创建控制台处理器，输出到标准输出
-        console_handler = logging.StreamHandler()
-        # 控制台输出级别
-        console_handler.setLevel(logging.DEBUG)
-        console_handler.setFormatter(formatter)
-        # 设置格式器
-        self.logger.addHandler(console_handler)
+        # # 创建控制台处理器，输出到标准输出
+        # console_handler = logging.StreamHandler()
+        # # 控制台输出级别
+        # console_handler.setLevel(logging.DEBUG)
+        # console_handler.setFormatter(formatter)
+        # # 设置格式器
+        # self.logger.addHandler(console_handler)
 
         # 创建文件处理器，输出到文件，支持日志轮转
         file_handler = RotatingFileHandler(
