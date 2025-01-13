@@ -20,3 +20,15 @@ class AppTaskRecordService:
     def add(app_task_record: AppTaskRecord) -> int:
         return AppTaskRecordMapper.add(app_task_record)
 
+    @staticmethod
+    def delete(app_task_record_id) -> int:
+        return AppTaskRecordMapper.delete(app_task_record_id)
+
+    @staticmethod
+    def select_count() -> int:
+        return AppTaskRecordMapper.select_count()
+
+    @staticmethod
+    def select_list(page, per_page) -> List[AppTaskRecord]:
+        return AppTaskRecordMapper.select_list(page, per_page)
+
