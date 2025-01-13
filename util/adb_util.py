@@ -83,7 +83,7 @@ class AdbUtil:
 
     @staticmethod
     def get_screenshot_catalog_path(file_dir: str, file_name: str) -> str | Path:
-        root_path = PathUtil.get_current_file_absolute_path(__file__).parent.parent
+        root_path = PathUtil.get_root_path(__file__, 2)
         return str(root_path.joinpath(file_dir).joinpath(file_name))
 
     @staticmethod

@@ -74,7 +74,7 @@ class ImageUtil:
                     # img3 = cv2.drawMatches(template, kp1, img2_with_center, kp2, good, None,
                     #                        flags=cv2.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS)
                     # # 保存图片
-                    # root_path = PathUtil.get_current_file_absolute_path(__file__).parent.parent
+                    # root_path = PathUtil.get_root_path(__file__, 2)
                     # image_store_path = str(root_path.joinpath(MATCH_RESULT_FOLDER).joinpath('match_image_result.png'))
                     # cv2.imwrite(image_store_path, img3)
                     ######################################################
@@ -87,7 +87,7 @@ class ImageUtil:
 
 
 if __name__ == '__main__':
-    root_path = PathUtil.get_current_file_absolute_path(__file__).parent.parent
+    root_path = PathUtil.get_root_path(__file__, 2)
     target_path = str(root_path.joinpath(RESOURCES).joinpath("test").joinpath("target.png"))
     template_path = str(root_path.joinpath(RESOURCES).joinpath("test").joinpath("template.png"))
     result = ImageUtil.match(target_path, template_path)

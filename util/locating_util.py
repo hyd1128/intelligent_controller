@@ -36,7 +36,7 @@ class LocatingUtil:
         time.sleep(1)
 
         # 3. 模板匹配
-        root_path = PathUtil.get_current_file_absolute_path(__file__).parent.parent
+        root_path = PathUtil.get_root_path(__file__, 2)
         template_path = str(root_path.joinpath(LOCATING_TEMPLATE_FOLDER).joinpath("logo.png"))
         point = ImageUtil.match(target_path=target_path,
                                 template_path=template_path)
