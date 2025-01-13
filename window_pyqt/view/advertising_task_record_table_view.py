@@ -229,7 +229,8 @@ class DetailAdvertisingTaskRecordDialog(MessageBoxBase):
 
     def validate(self) -> bool:
         time_ = self.adv_task_last_execution_time.text()
-        self.obj_.task_last_execution_time = time_
+        if time_ is not None and time_ != "None":
+            self.obj_.task_last_execution_time = time_
         AdvertisingTaskRecordService.update(self.obj_)
         self.parent.update_page()
         return True
