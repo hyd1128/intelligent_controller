@@ -57,7 +57,7 @@ class ScriptTableView(Widget):
         self.tableView.setHorizontalHeaderLabels(
             ['脚本名称', '关联app', '操作'])
 
-        self.primaryButton1 = PrimaryPushButton('添加广告任务', self)
+        self.primaryButton1 = PrimaryPushButton('添加脚本', self)
         self.primaryButton1.clicked.connect(self.show_add_script_dialog)
         self.hBoxLayout = QtWidgets.QHBoxLayout()
         spacer_item_1 = QtWidgets.QSpacerItem(174, 20, QtWidgets.QSizePolicy.Policy.Expanding,
@@ -253,7 +253,7 @@ class DetailScriptDialog(MessageBoxBase):
         self.viewLayout.addLayout(hbox1)
 
         # change the text of button
-        self.yesButton.setText('添加')
+        self.yesButton.setText('确定')
         self.cancelButton.setText('取消')
 
         self.widget.setMinimumWidth(500)

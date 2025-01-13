@@ -212,7 +212,7 @@ class DetailAdvertisingTaskRecordDialog(MessageBoxBase):
         self.viewLayout.addLayout(hbox1)
 
         # change the text of button
-        self.yesButton.setText('添加')
+        self.yesButton.setText('确定')
         self.cancelButton.setText('取消')
 
         self.widget.setMinimumWidth(500)

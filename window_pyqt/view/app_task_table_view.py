@@ -57,7 +57,7 @@ class AppTaskTableView(Widget):
         self.tableView.setHorizontalHeaderLabels(
             ['app任务类型', '执行任务比率', '关联app', '操作'])
 
-        self.primaryButton1 = PrimaryPushButton('添加', self)
+        self.primaryButton1 = PrimaryPushButton('添加app任务', self)
         self.primaryButton1.clicked.connect(self.show_add_app_task_dialog)
         self.hBoxLayout = QtWidgets.QHBoxLayout()
         spacer_item_1 = QtWidgets.QSpacerItem(174, 20, QtWidgets.QSizePolicy.Policy.Expanding,
