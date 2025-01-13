@@ -113,7 +113,7 @@ class RunAdvertisingThread(QThread):
                     DeviceQueue.put(_device)
 
         # 创建的线程池
-        root_path = PathUtil.get_current_file_absolute_path(__file__).parent.parent
+        root_path = PathUtil.get_root_path(__file__, 2)
         target_file_path = root_path.joinpath(RESOURCES).joinpath(POOL_FILE_NAME)
         content = FileUtil.read_file_content(target_file_path)
         thread_pool_size = content[THREAD_POOL_SIZE]
@@ -251,7 +251,7 @@ class RunAdvertisingThread(QThread):
                 screen_image = AdbUtil.screen_cap_pull(device.device_id)
                 time.sleep(5)
                 logger_run.info("##### 已拉取图片到电脑端 #####")
-                root_path = PathUtil.get_current_file_absolute_path(__file__).parent.parent
+                root_path = PathUtil.get_root_path(__file__, 2)
                 if not is_click_adv_button:
                     # 1、写死两种广告的匹配图标，后期优化
                     adv_icon_path = ["icon_1.png", "icon_2.png"]
@@ -325,7 +325,7 @@ class RunAdvertisingThread(QThread):
                     screen_image = AdbUtil.screen_cap_pull(device.device_id)
                     time.sleep(5)
                     logger_run.info("##### 已拉取图片到电脑端 #####")
-                    root_path = PathUtil.get_current_file_absolute_path(__file__).parent.parent
+                    root_path = PathUtil.get_root_path(__file__, 2)
                     adv_button_type_one = str(root_path.joinpath(ADVERTISING_TEMPLATE).joinpath("icon_3.png"))
                     adv_button_type_two = str(root_path.joinpath(ADVERTISING_TEMPLATE).joinpath("icon_4.png"))
                     match_point = None

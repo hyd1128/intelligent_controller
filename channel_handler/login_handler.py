@@ -43,7 +43,7 @@ class LoginHandler(QObject):
     @pyqtSlot(result="QVariant")
     def get_current_user_detail(self):
         try:
-            root_path = PathUtil.get_current_file_absolute_path(__file__).parent.parent
+            root_path = PathUtil.get_root_path(__file__, 2)
             current_user_detail_path = root_path.joinpath(CURRENT_USER_DETAIL)
             current_user_detail = FileUtil.read_file_content(current_user_detail_path)
 

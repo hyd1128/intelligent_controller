@@ -23,7 +23,7 @@ class AccountController:
 
         if response_data["code"] == 200 and response_data["data"]["code"] == 200:
             print(f"用户 {account} 登录成功")
-            root_path = PathUtil.get_current_file_absolute_path(__file__).parent.parent
+            root_path = PathUtil.get_root_path(__file__, 2)
             node_info_path = root_path.joinpath(NODE_DATA)
             node_info = FileUtil.read_file_content(node_info_path)
             update_node_info = {

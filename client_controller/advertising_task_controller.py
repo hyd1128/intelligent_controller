@@ -57,7 +57,7 @@ class TaskController:
                 current_task_script_template_url = task_["task_url"]
                 response_content = requests.get(current_task_script_template_url)
 
-                root_path = PathUtil.get_current_file_absolute_path(__file__).parent.parent
+                root_path = PathUtil.get_root_path(__file__, 2)
                 store_template_path = root_path.joinpath("app").joinpath("script_template")
                 current_task_store_template_folder_name = task_["uuid"]
                 current_task_store_template_path = store_template_path.joinpath(current_task_store_template_folder_name)

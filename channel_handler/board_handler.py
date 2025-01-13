@@ -35,7 +35,7 @@ class BoardHandler(QObject):
             online_device_amount = len(DeviceService.select_by_online_state(online_state=1))
             offline_device_amount = len(DeviceService().select_by_online_state(online_state=0))
             # todo: 累计在线时长后期使用requests来写 当前写死
-            root_path = PathUtil.get_current_file_absolute_path(__file__).parent.parent
+            root_path = PathUtil.get_root_path(__file__, 2)
             node_info_path = root_path.joinpath(NODE_DATA)
             node_info = FileUtil.read_file_content(node_info_path)
             total_online_times = 0

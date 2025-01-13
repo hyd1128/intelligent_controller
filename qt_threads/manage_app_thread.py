@@ -84,7 +84,7 @@ class ManageAppThread(QThread):
                                 time.sleep(3)
                                 screen_image = AdbUtil.screen_cap_pull(device_.device_id)
                                 time.sleep(3)
-                                root_path = PathUtil.get_current_file_absolute_path(__file__).parent.parent
+                                root_path = PathUtil.get_root_path(__file__, 2)
                                 icon_path_ = str(root_path.joinpath(DOWNLOAD_APP_ICON))
                                 point_ = ImageUtil.match(screen_image, icon_path_)
                                 if point_:
@@ -125,7 +125,7 @@ class ManageAppThread(QThread):
                                 time.sleep(3)
                                 screen_image = AdbUtil.screen_cap_pull(device_.device_id)
                                 time.sleep(3)
-                                root_path = PathUtil.get_current_file_absolute_path(__file__).parent.parent
+                                root_path = PathUtil.get_root_path(__file__, 2)
                                 icon_path_ = str(root_path.joinpath(UPDATE_APP_ICON))
                                 point_ = ImageUtil.match(screen_image, icon_path_)
                                 if point_:
