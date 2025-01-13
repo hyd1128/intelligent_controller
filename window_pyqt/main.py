@@ -9,6 +9,10 @@ from qfluentwidgets import (NavigationInterface, NavigationItemPosition, Navigat
 from qfluentwidgets import FluentIcon as FIF
 from qframelesswindow import FramelessWindow, TitleBar
 
+from qt_threads.new_device_monitor import NewDeviceMonitor
+from qt_threads.offline_device_monitor import OfflineDeviceMonitor
+from qt_threads.run_advertising_thread import RunAdvertisingThread
+from util.queue_util import DeviceQueueUtil
 from window_pyqt.component.avator_widget import AvatarWidget
 from window_pyqt.component.custom_title_bar_widget import CustomTitleBar
 from window_pyqt.component.general_widget import Widget
@@ -48,10 +52,23 @@ class Window(FramelessWindow):
         self.scriptView = ScriptTableView('Script TableView', self)
 
         """
-        这里添加各类线程
+        这里添加各类线程和初始化
+        界面以外的东西这里启动
         """
         ##################################
+        # 初始化全局队列
+        DeviceQueueUtil.initialize_device_queue()
+        # 监听新设备
+        self.watch_new = NewDeviceMonitor()
+        self.watch_new.start()
 
+        # 监听掉线设备
+        self.watch_offline = OfflineDeviceMonitor()
+        self.watch_offline.start()
+
+        # 执行任务
+        self.run_task = RunAdvertisingThread()
+        self.run_task.start()
 
         ##################################
 
@@ -169,8 +186,11 @@ class Window(FramelessWindow):
         self.titleBar.move(46, 0)
         self.titleBar.resize(self.width() - 46, self.titleBar.height())
 
-    def closeEvent(self, a0):
-        pass
+    def closeEvent(self, event):
+        self.watch_new.stop()
+        self.watch_offline.stop()
+        self.run_task.stop()
+        event.accept()
 
 
 if __name__ == '__main__':
