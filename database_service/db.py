@@ -5,11 +5,11 @@
 # @desc :
 
 from peewee import SqliteDatabase
-from pathlib import Path
 
 from util.config_util import RESOURCES
+from util.path_util import PathUtil
 
 db_file = "database.db"
-root_path = Path(__file__).parent.parent
+root_path = PathUtil.get_root_path(__file__, 2)
 db_file_path = root_path.joinpath(RESOURCES).joinpath("database").joinpath(db_file)
 database = SqliteDatabase(db_file_path)
