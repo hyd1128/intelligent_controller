@@ -41,7 +41,7 @@ class AdvertisingTaskMapper:
     @staticmethod
     def select_by_task_execution_date(date_: date) -> List[AdvertisingTask]:
         """根据日期查询任务"""
-        query = AdvertisingTask.select().where(AdvertisingTask.task_execution_date == date)
+        query = AdvertisingTask.select().where(AdvertisingTask.task_execution_date == date_)
         return list(query)
 
     @staticmethod

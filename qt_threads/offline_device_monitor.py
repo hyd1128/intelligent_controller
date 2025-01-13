@@ -45,13 +45,16 @@ class OfflineDeviceMonitor(QThread):
                     if not online:
                         # 当前设备掉线
                         item.online_state = 0
+                        item.task_state = 0
+                        DeviceService.update(item)
                         self.device_offline_signal.emit(item)
                     else:
                         # 当前设备在线
                         item.online_state = 1
+                        item.task_state = 0
+                        DeviceService.update(item)
                         self.device_online_signal.emit(item)
-                    item.task_state = 0
-                    DeviceService.update(item)
+
             time.sleep(10)  # 30秒查询一次
 
     def stop(self):

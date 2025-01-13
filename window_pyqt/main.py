@@ -25,6 +25,7 @@ from window_pyqt.view.app_task_table_view import AppTaskTableView
 from window_pyqt.view.device_table_view import DeviceTableView
 from window_pyqt.view.home_view import HomeView
 from window_pyqt.view.script_table_view import ScriptTableView
+from util import config_util
 
 
 class Window(FramelessWindow):
@@ -51,6 +52,12 @@ class Window(FramelessWindow):
         self.advertisingTaskView = AdvertisingTaskTableView('Advertising Task Table View', self)
         self.advertisingTaskRecordView = AdvertisingTaskRecordTableView('Advertising Task Record Table View', self)
         self.scriptView = ScriptTableView('Script TableView', self)
+
+        """
+        槽函数关联信号
+        """
+        self.homeView.run_advertising_switch_signal.connect(self.run_advertising_signal)
+
 
         """
         这里添加各类线程和初始化
@@ -201,6 +208,14 @@ class Window(FramelessWindow):
     def device_offline_signal(self, device_):
         self.deviceView.update_page()
         MessageWidget.info_message(self, f"设备 {device_.device_id}已掉线")
+
+    def run_advertising_signal(self, is_open):
+        if is_open:
+            print("####启动广告任务...####")
+            config_util.SWITCH = True
+        else:
+            print("####关闭广告任务...####")
+            config_util.SWITCH = False
 
     def closeEvent(self, event):
         self.watch_new.stop()

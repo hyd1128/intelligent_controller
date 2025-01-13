@@ -81,7 +81,7 @@ class RunAdvertisingThread(QThread):
                             task=task_,
                             start_execution_time=today_start_execution_time,
                             end_execution_time=today_end_execution_time,
-                            specify_device_execution_times=random.randint(task_.min_execution_times,
+                            specify_device_execution_time=random.randint(task_.min_execution_times,
                                                                           task_.max_execution_times),
                         )
                         # 将record对象存入数据库
@@ -443,6 +443,10 @@ class RunAdvertisingThread(QThread):
         tasks = AdvertisingTaskService.select_by_task_execution_date(today)
         ############# 新需求: 任务的执行有比例要求 ####################
         download_app_list_ = json.loads(device.download_app)
+
+        if not download_app_list_:
+            return None
+
         # 条件1: 该任务未满足今日的执行比例
         online_devices_amounts = len(DeviceService.select_by_online_state(online_state=1))
         suitable_tasks = []

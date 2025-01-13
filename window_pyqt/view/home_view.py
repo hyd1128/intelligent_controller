@@ -6,7 +6,7 @@
 from typing import Any
 
 from PyQt6 import QtWidgets
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtWidgets import QLabel, QWidget, QHBoxLayout
 
 from qfluentwidgets import SwitchButton
@@ -16,6 +16,8 @@ from window_pyqt.component.message_widget import MessageWidget
 
 
 class HomeView(Widget):
+    run_advertising_switch_signal = pyqtSignal(bool)
+
     def __init__(self, text: str, parent: Any = None):
         super().__init__(text=text, parent=parent)
         self.init_ui()
@@ -53,5 +55,8 @@ class HomeView(Widget):
         self.switchButton.setText(text)
         if isChecked:
             MessageWidget.success_message(self, "正在执行广告任务", duration=5000)
+            self.run_advertising_switch_signal.emit(True)
         else:
             MessageWidget.warning_message(self, "关闭广告任务", duration=5000)
+            self.run_advertising_switch_signal.emit(False)
+
