@@ -49,7 +49,7 @@ class RunAdvertisingThread(QThread):
         """筛选任务"""
 
         def task_worker(_device: Device):
-            tasks = self.__task()
+            tasks = self.__task(_device)
 
             # 无符合条件任务,设备放回队列,线程结束,线程池回收线程
             if not tasks:
