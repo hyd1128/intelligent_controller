@@ -13,7 +13,7 @@ class AvatarWidget(NavigationWidget):
 
     def __init__(self, parent=None):
         super().__init__(isSelectable=False, parent=parent)
-        self.avatar = QImage(r'D:\desktop\intellectual_controller_client\window\resource\shoko.png').scaled(
+        self.avatar = QImage('resources/resource/shoko.png').scaled(
             24, 24, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
 
     def paintEvent(self, e):

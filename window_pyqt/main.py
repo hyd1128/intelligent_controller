@@ -145,7 +145,7 @@ class Window(FramelessWindow):
 
     def initWindow(self):
         self.resize(900, 700)
-        self.setWindowIcon(QIcon('window_pyqt/resource/logo.png'))
+        self.setWindowIcon(QIcon('resources/resource/logo.png'))
         # self.setWindowTitle('PyQt-Fluent-Widgets')
         self.setWindowTitle('智控管家app')
         self.titleBar.setAttribute(Qt.WidgetAttribute.WA_StyledBackground)
@@ -170,7 +170,7 @@ class Window(FramelessWindow):
 
     def setQss(self):
         color = 'dark' if isDarkTheme() else 'light'
-        with open(f'window_pyqt/resource/{color}/demo.qss', encoding='utf-8') as f:
+        with open(f'resources/resource/{color}/demo.qss', encoding='utf-8') as f:
             self.setStyleSheet(f.read())
 
     def switchTo(self, widget):
