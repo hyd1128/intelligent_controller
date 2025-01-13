@@ -4,8 +4,10 @@ certifi==2024.8.30
 charset-normalizer==3.4.0
 click==8.1.7
 colorama==0.4.6
+colorthief==0.2.1
 contourpy==1.3.0
 cycler==0.12.1
+darkdetect==0.8.0
 Flask==3.1.0
 fonttools==4.53.1
 idna==3.10
@@ -24,12 +26,15 @@ pyinstaller==6.10.0
 pyinstaller-hooks-contrib==2024.8
 pyparsing==3.1.4
 PyQt6==6.7.1
+PyQt6-Fluent-Widgets==1.7.4
+PyQt6-Frameless-Window==0.4.5
 PyQt6-Qt6==6.7.2
 PyQt6-WebEngine==6.7.0
 PyQt6-WebEngine-Qt6==6.7.3
 PyQt6-WebEngineSubwheel-Qt6==6.7.3
 PyQt6_sip==13.8.0
 python-dateutil==2.9.0.post0
+pywin32==308
 pywin32-ctypes==0.2.2
 qt-material==2.14
 requests==2.32.3
