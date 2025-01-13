@@ -158,6 +158,8 @@ class DetailAdvertisingTaskRecordDialog(MessageBoxBase):
         vbox1 = QVBoxLayout()
         vbox2 = QVBoxLayout()
         hbox1 = QHBoxLayout()
+        self.obj_ = obj_
+        self.parent = parent
 
         self.adv_task_name_label = BodyLabel('日期: ', self)
         self.adv_task_execution_duration_label = BodyLabel('关联设备: ', self)
@@ -166,7 +168,7 @@ class DetailAdvertisingTaskRecordDialog(MessageBoxBase):
         self.adv_task_release_date = BodyLabel('需执行次数: ', self)
         self.adv_task_execution_date = BodyLabel('开始执行时间: ', self)
         self.app = BodyLabel('结束执行时间: ', self)
-        self.ratio = BodyLabel('任务上一次执行时间: ', self)
+        self.adv_task_last_execution_time = BodyLabel('任务上一次执行时间: ', self)
 
         vbox1.addWidget(self.adv_task_name_label)
         vbox1.addWidget(self.adv_task_execution_duration_label)
@@ -175,7 +177,7 @@ class DetailAdvertisingTaskRecordDialog(MessageBoxBase):
         vbox1.addWidget(self.adv_task_release_date)
         vbox1.addWidget(self.adv_task_execution_date)
         vbox1.addWidget(self.app)
-        vbox1.addWidget(self.ratio)
+        vbox1.addWidget(self.adv_task_last_execution_time)
 
         ###############################
 
@@ -186,7 +188,7 @@ class DetailAdvertisingTaskRecordDialog(MessageBoxBase):
         self.adv_task_release_date = LineEdit(self)
         self.adv_task_execution_date = LineEdit(self)
         self.app = LineEdit(self)
-        self.ratio = LineEdit(self)
+        self.adv_task_last_execution_time = LineEdit(self)
 
         self.adv_task_name_edit.setText(str(obj_.date))
         self.adv_task_execution_duration_edit.setText(str(obj_.device.device_id))
@@ -195,7 +197,15 @@ class DetailAdvertisingTaskRecordDialog(MessageBoxBase):
         self.adv_task_release_date.setText(str(obj_.specify_device_execution_time))
         self.adv_task_execution_date.setText(str(obj_.start_execution_time))
         self.app.setText(str(obj_.end_execution_time))
-        self.ratio.setText(str(obj_.task_last_execution_time))
+        self.adv_task_last_execution_time.setText(str(obj_.task_last_execution_time))
+
+        self.adv_task_name_edit.setReadOnly(True)
+        self.adv_task_execution_duration_edit.setReadOnly(True)
+        self.adv_min_execution_edit.setReadOnly(True)
+        self.adv_max_execution_edit.setReadOnly(True)
+        self.adv_task_release_date.setReadOnly(True)
+        self.adv_task_execution_date.setReadOnly(True)
+        self.app.setReadOnly(True)
 
         vbox2.addWidget(self.adv_task_name_edit)
         vbox2.addWidget(self.adv_task_execution_duration_edit)
@@ -204,7 +214,7 @@ class DetailAdvertisingTaskRecordDialog(MessageBoxBase):
         vbox2.addWidget(self.adv_task_release_date)
         vbox2.addWidget(self.adv_task_execution_date)
         vbox2.addWidget(self.app)
-        vbox2.addWidget(self.ratio)
+        vbox2.addWidget(self.adv_task_last_execution_time)
 
         hbox1.addLayout(vbox1)
         hbox1.addLayout(vbox2)
@@ -218,12 +228,8 @@ class DetailAdvertisingTaskRecordDialog(MessageBoxBase):
         self.widget.setMinimumWidth(500)
 
     def validate(self) -> bool:
+        time_ = self.adv_task_last_execution_time.text()
+        self.obj_.task_last_execution_time = time_
+        AdvertisingTaskRecordService.update(self.obj_)
+        self.parent.update_page()
         return True
-
-
-
-
-
-
-
-
