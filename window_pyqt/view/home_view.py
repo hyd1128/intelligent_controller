@@ -33,7 +33,7 @@ class HomeView(Widget):
         self.horizontalLayout = QtWidgets.QHBoxLayout(self.widget_)
         self.label_one = QLabel(parent=self.widget_)
         self.label_one.setText("广告开关 ")
-        self.label_one.setStyleSheet("font-size: 16px;  font-weight: bold;")
+        self.label_one.setStyleSheet("font-size: 16px;")
         self.horizontalLayout.addWidget(self.label_one)
         self.switchButton = SwitchButton(parent=self.widget_)
         self.horizontalLayout.addWidget(self.switchButton)
@@ -44,6 +44,7 @@ class HomeView(Widget):
         spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Policy.Minimum,
                                            QtWidgets.QSizePolicy.Policy.Expanding)
 
+        self.vBoxLayout.setContentsMargins(50, 30, 50, 30)
         self.vBoxLayout.addWidget(self.widget_)
         self.vBoxLayout.addItem(spacerItem)
 

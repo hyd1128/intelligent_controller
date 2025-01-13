@@ -38,7 +38,7 @@ class Window(FramelessWindow):
 
         # create sub interface
         # self.searchInterface = Widget('Search Interface', self)
-        self.homeView = HomeView('Home View111', self)
+        self.homeView = HomeView('Home View', self)
         self.deviceView = DeviceTableView('Device Table View', self)
         self.appView = AppTableView('App Table View', self)
         self.appTaskView = AppTaskTableView('App Task Table View', self)
@@ -46,6 +46,14 @@ class Window(FramelessWindow):
         self.advertisingTaskView = AdvertisingTaskTableView('Advertising Task Table View', self)
         self.advertisingTaskRecordView = AdvertisingTaskRecordTableView('Advertising Task Record Table View', self)
         self.scriptView = ScriptTableView('Script TableView', self)
+
+        """
+        这里添加各类线程
+        """
+        ##################################
+
+
+        ##################################
 
         # initialize layout
         self.initLayout()

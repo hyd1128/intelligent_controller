@@ -132,6 +132,7 @@ class ScriptTableView(Widget):
             MessageWidget.success_message(self, content="添加成功")
         else:
             MessageWidget.error_message(self, content="添加失败")
+        self.update_page()
 
     def show_detail_script_dialog(self, obj_):
         w = DetailScriptDialog(self, obj_=obj_)
