@@ -125,7 +125,7 @@ class GeneralUtil:
             task_duration_time = time.fromisoformat(task_.task_execution_duration)
             task_duration_total_second = timedelta(hours=task_duration_time.hour,
                                                    minutes=task_duration_time.minute,
-                                                   seconds=task_duration_time.second)
+                                                   seconds=task_duration_time.second).total_seconds()
             # 最小间隔时长
             min_duration_time = task_duration_total_second // task_.max_execution_times
             suitable_interval_time = random.randint(min_duration_time - 100 if min_duration_time > 100 else 1,
@@ -135,9 +135,9 @@ class GeneralUtil:
             now_time = datetime.now()
             interval_time = (now_time - last_execution_time).total_seconds()
             if interval_time >= suitable_interval_time:
-                return False
-            else:
                 return True
+            else:
+                return False
 
     @staticmethod
     def probabilistic_output(probability: float) -> bool:

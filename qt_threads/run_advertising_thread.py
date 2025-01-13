@@ -425,7 +425,7 @@ class RunAdvertisingThread(QThread):
         device.task_state = 0
         # 当前手机的任务执行完之后 关闭模拟定位应用进程
         # 判断当前是否需要关闭定位软件
-        last_reload_time = datetime.strptime(device.locating_app_last_reload_time, DATE_TIME_FORMAT)
+        last_reload_time = datetime.strptime(str(device.locating_app_last_reload_time), DATE_TIME_FORMAT)
         now_time = datetime.now()
         interval_second = (now_time - last_reload_time).total_seconds()
         if (LOCATING_APP_RELOAD_INTERVAL_TIME * 3600) < interval_second:
