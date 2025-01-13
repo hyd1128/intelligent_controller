@@ -45,6 +45,11 @@ class AppTaskMapper:
         query = AppTask.select().where(fn.Date(AppTask.create_time) == date_)
         return list(query)
 
+    @staticmethod
+    def select_count() -> int:
+        return AppTask.select().count()
+
+
 
 if __name__ == '__main__':
     pass

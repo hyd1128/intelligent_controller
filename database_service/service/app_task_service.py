@@ -15,3 +15,19 @@ class AppTaskService:
     @staticmethod
     def select_by_date(date_: date) -> List[AppTask]:
         return AppTaskMapper.select_by_date(date_)
+
+    @staticmethod
+    def select_count() -> int:
+        return AppTaskMapper.select_count()
+
+    @staticmethod
+    def select_list(page, per_page) -> List[AppTask]:
+        return AppTaskMapper.select_list(page, per_page)
+
+    @staticmethod
+    def delete(id_) -> int:
+        return AppTaskMapper.delete(id_)
+
+    @staticmethod
+    def add(app_task) -> int:
+        return AppTaskMapper.add(app_task)
