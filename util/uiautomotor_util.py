@@ -134,3 +134,7 @@ class UIAutoMotorUtil:
         except Exception as e:
             print(e)
             raise e
+
+    @staticmethod
+    def generate_uam(device_id: str) -> uam2.Device:
+        return uam2.connect(serial=device_id)
