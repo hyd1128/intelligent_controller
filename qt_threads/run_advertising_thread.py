@@ -35,6 +35,8 @@ import time
 import queue
 import json
 
+from util.uiautomotor_util import UIAutoMotorUtil
+
 
 class RunAdvertisingThread(QThread):
     def __init__(self):
@@ -82,7 +84,7 @@ class RunAdvertisingThread(QThread):
                             start_execution_time=today_start_execution_time,
                             end_execution_time=today_end_execution_time,
                             specify_device_execution_time=random.randint(task_.min_execution_times,
-                                                                          task_.max_execution_times),
+                                                                         task_.max_execution_times),
                         )
                         # 将record对象存入数据库
                         AdvertisingTaskRecordService.add(advertising_record_)
@@ -204,244 +206,546 @@ class RunAdvertisingThread(QThread):
             设备执行
 
             当前程序写的一些脚本命令:
-                - home：返回主界面
-                - waiting: 等待广告时间
-                - adv: 广告退出坐标匹配
-                - swipe: 滑动
-                - back: 返回上一级
-                - kill: 杀死对应程序进程
+                - click
+                - home
+                - back
+                - start_app
+                - stop_app
+                - delete_app
+                - wait
+                - swipe
+                - input
+                - enter
         """
         logger_run.info(f"##### 设备 {device.device_id} 开始执行 {script.script_name} 脚本 #####")
         # 按步骤执行
-        script_content = json.loads(script.script_content)
-        script.script_content = script_content
+        script.script_content = json.loads(script.script_content)
+
         # 统计脚本步骤
         total_steps = len(script.script_content)
-
-        # 点击广告下载应用的概率小于等于5%
-        is_execute_all_steps = GeneralUtil.probabilistic_output(random.randint(1, 5) / 100)
-        is_click_adv_button = False
-        if is_execute_all_steps:
-            is_click_adv_button = True
-
-        step = 0
-        while step < total_steps:
-            # 返回主界面
-            if script.script_content[step] == "home":
-                AdbUtil.back_home(device.device_id)
-                time.sleep(3)
-                step += 1
-
-            # 广告时间等待功能
-            elif script.script_content[step] == "waiting":
-                # 范围随机广告等待时间
-                adv_time = random.randint(45, 70)
-                logger_run.info(f"##### 广告时间 {adv_time}s ######")
-                time.sleep(adv_time)
-                # 步骤+1
-                step += 1
-
-            # 匹配广告图标并退出广告界面
-            elif script.script_content[step] == "adv":
-                # 截屏
-                AdbUtil.screen_cap(device.device_id)
+        ############################################################################################
+        # 新版本执行脚本程序
+        ##################
+        try:
+            for current_step, current_script in enumerate(script.script_content):
+                # 每一个步骤之间停顿两秒
                 time.sleep(2)
-                logger_run.info("##### 已截屏 #####")
-                # 拉取屏幕图片
-                screen_image = AdbUtil.screen_cap_pull(device.device_id)
-                time.sleep(5)
-                logger_run.info("##### 已拉取图片到电脑端 #####")
-                root_path = PathUtil.get_root_path(__file__, 2)
-                if not is_click_adv_button:
-                    # 1、写死两种广告的匹配图标，后期优化
-                    adv_icon_path = ["icon_1.png", "icon_2.png"]
-                    # 2、通过匹配不同广告的退出坐标，获得一个最合适的坐标
-                    best_distance = 250  # 定义的一个范围阀值
-                    best_point = None
-                    device_h_resolution = int(device.resolution_ratio.split("x")[0])  # 获取设备横向分辨率
-                    device_top_right_corner = [device_h_resolution, 0]  # 获取设备右上角坐标
-                    # 匹配
-                    logger_run.info("##### 正在进行模板匹配... #####")
-                    for icon_path in adv_icon_path:
-                        icon_path_ = str(root_path.joinpath(ADVERTISING_TEMPLATE).joinpath(icon_path))
-                        point_ = ImageUtil.match(screen_image, icon_path_)
-                        if point_ is not None:
-                            distance_ = GeneralUtil.calculate_distance(point_, device_top_right_corner)
-                            if distance_ < best_distance:
-                                best_distance = distance_
-                                best_point = point_
 
-                    # 获得广告退出坐标按钮
-                    if best_point is not None:
-                        AdbUtil.click(device.device_id, best_point[0], best_point[1])
-                    # 未获得广告退出坐标按钮
+                """
+                    current_script: {
+                        "action": "",  # 动作
+                        "pattern": "",    # 执行方式
+                        "dat`a": "",     # 具体数据
+                        "wait_time": 0, # 睡眠时间
+                        "execute_probability": 1   # 执行概率
+                    }
+                """
+
+                ######################################
+                # 点击操作
+                ########
+                if current_script["action"] == 'click':
+                    if GeneralUtil.probability_tool(current_script["execute_probability"]):
+
+                        ########
+                        # 模板匹配
+                        ########
+                        if current_script["pattern"] == "IM":
+                            """
+                               "data": "模板图片文件名" 
+                            """
+                            # 截屏
+                            AdbUtil.screen_cap(device.device_id)
+                            # 拉取截图
+                            screen_image = AdbUtil.screen_cap_pull(device.device_id)
+                            template_image_path = (PathUtil.get_root_path(__file__, 2)
+                                                   .joinpath(RESOURCES)
+                                                   .joinpath("advertising_template").
+                                                   joinpath("train_account").
+                                                   joinpath(current_script["data"]))
+                            point = ImageUtil.match(screen_image, str(template_image_path))
+                            if point:
+                                AdbUtil.click(device.device_id, point[0], point[1])
+                            else:
+                                retry = 2
+                                while retry <= 3:
+                                    AdbUtil.screen_cap(device.device_id)
+                                    screen_image = AdbUtil.screen_cap_pull(device.device_id)
+                                    template_image_path = (PathUtil.get_root_path(__file__, 2)
+                                                           .joinpath(RESOURCES)
+                                                           .joinpath("advertising_template").
+                                                           joinpath("train_account").
+                                                           joinpath(current_script["data"]))
+                                    point = ImageUtil.match(screen_image, str(template_image_path))
+                                    if point:
+                                        AdbUtil.click(device.device_id, point[0], point[1])
+                                        break
+                                    retry += 1
+                                    time.sleep(2)
+                                raise Exception("坐标未找到")
+
+                        ########
+                        # UI定位
+                        ########
+                        elif current_script["pattern"] == "UD":
+                            """
+                                "data": "该元素的xpath定位"
+                            """
+                            UIAutoMotorUtil.click_by_xpath(device.device_id, current_script["data"])
+
+                        ########
+                        # 绝对定位
+                        ########
+                        elif current_script["pattern"] == "SRC":
+                            """
+                                "data": {
+                                    "分辨率": ["横坐标", "纵坐标"],
+                                    ...
+                                } 
+                                
+                            """
+                            if isinstance(current_script["data"], dict):
+                                key_list = list(current_script["data"])
+                                if device.resolution_ratio in key_list:
+                                    position = current_script["data"][device.resolution_ratio]
+                                    AdbUtil.click(device.device_id, position[0], position[1])
+                        else:
+                            pass
                     else:
-                        # 点击返回按钮关闭广告
-                        AdbUtil.back(device.device_id)
-                    time.sleep(3)
-                    step += 1
-                else:
-                    adv_button_type_one = str(root_path.joinpath(ADVERTISING_TEMPLATE).joinpath("icon_3.png"))
-                    adv_button_type_two = str(root_path.joinpath(ADVERTISING_TEMPLATE).joinpath("icon_4.png"))
-                    match_point = None
-                    point_one = ImageUtil.match(screen_image, adv_button_type_one)
-                    if point_one:
-                        match_point = point_one
+                        # 该动作为概率动作 如果这一次的概率不在默认概率中 则认为后续步骤不再继续执行
+                        break
+                    if current_script["wait_time"] >= 0:
+                        wait_time = int(current_script["wait_time"])
+                        if isinstance(wait_time, int):
+                            time.sleep(wait_time)
+                ######################################
+
+                ######################################
+                # 输入操作
+                ########
+                elif current_script["action"] == 'input':
+                    if GeneralUtil.probability_tool(current_script["execute_probability"]):
+                        """
+                            "data": "输入的内容"
+                        """
+                        UIAutoMotorUtil.input_text(device.device_id, current_script["data"])
                     else:
-                        point_two = ImageUtil.match(screen_image, adv_button_type_two)
-                        if point_two:
-                            match_point = point_two
+                        break
+                    if current_script["wait_time"] >= 0:
+                        wait_time = int(current_script["wait_time"])
+                        if isinstance(wait_time, int):
+                            time.sleep(wait_time)
+                ######################################
 
-                    if match_point:
-                        AdbUtil.click(device.device_id, match_point[0], match_point[1])
-                        time.sleep(3)
-                        AdbUtil.stop_app(device.device_id, CHROME_PACKAGE_NAME)
-                        step = total_steps - 3
+                ######################################
+                # 返回桌面
+                ########
+                elif current_script["action"] == 'home':
+                    if GeneralUtil.probability_tool(current_script["execute_probability"]):
+                        """
+                            "data": ""
+                        """
+                        UIAutoMotorUtil.home(device.device_id)
                     else:
-                        # 点击返回按钮关闭广告
-                        AdbUtil.back_home(device.device_id)
-                        time.sleep(3)
-                        step = total_steps - 3
+                        break
+                    if current_script["wait_time"] >= 0:
+                        wait_time = int(current_script["wait_time"])
+                        if isinstance(wait_time, int):
+                            time.sleep(wait_time)
+                ######################################
 
-            # 滑动页面
-            elif script.script_content[step] == "swipe":
-                start_coord = [540, 1600]
-                end_coord = [540, 800]
-                duration_time = 100  # ms
-                AdbUtil.swipe(device.device_id, start_coord, end_coord, duration_time)
-                time.sleep(3)
-                step += 1
-
-            # back 返回上一级或者退出广告界面
-            elif script.script_content[step] == "back":
-                if not is_click_adv_button:
-                    AdbUtil.back(device.device_id)
-                    step += 1
-                else:
-                    # 截屏
-                    AdbUtil.screen_cap(device.device_id)
-                    time.sleep(2)
-                    logger_run.info("##### 已截屏 #####")
-                    screen_image = AdbUtil.screen_cap_pull(device.device_id)
-                    time.sleep(5)
-                    logger_run.info("##### 已拉取图片到电脑端 #####")
-                    root_path = PathUtil.get_root_path(__file__, 2)
-                    adv_button_type_one = str(root_path.joinpath(ADVERTISING_TEMPLATE).joinpath("icon_3.png"))
-                    adv_button_type_two = str(root_path.joinpath(ADVERTISING_TEMPLATE).joinpath("icon_4.png"))
-                    match_point = None
-                    point_one = ImageUtil.match(screen_image, adv_button_type_one)
-                    if point_one:
-                        match_point = point_one
+                ######################################
+                # 返回
+                ########
+                elif current_script["action"] == 'back':
+                    if GeneralUtil.probability_tool(current_script["execute_probability"]):
+                        """
+                            "data": "输入的内容"
+                        """
+                        UIAutoMotorUtil.back(device.device_id)
                     else:
-                        point_two = ImageUtil.match(screen_image, adv_button_type_two)
-                        if point_two:
-                            match_point = point_two
+                        break
+                    if current_script["wait_time"] >= 0:
+                        wait_time = int(current_script["wait_time"])
+                        if isinstance(wait_time, int):
+                            time.sleep(wait_time)
+                ######################################
 
-                    if match_point:
-                        AdbUtil.click(device.device_id, match_point[0], match_point[1])
-                        time.sleep(3)
-                        AdbUtil.stop_app(device.device_id, CHROME_PACKAGE_NAME)
-                        step = total_steps - 3
+                ######################################
+                # 关闭软件
+                ########
+                elif current_script["action"] == 'stop_app':
+                    if GeneralUtil.probability_tool(current_script["execute_probability"]):
+                        """
+                            "data": "app_package_name"
+                        """
+                        UIAutoMotorUtil.stop_app(device.device_id, current_script["data"])
                     else:
-                        # 点击返回按钮关闭广告
-                        AdbUtil.back_home(device.device_id)
-                        time.sleep(3)
-                        step = total_steps - 3
+                        break
+                    if current_script["wait_time"] >= 0:
+                        wait_time = int(current_script["wait_time"])
+                        if isinstance(wait_time, int):
+                            time.sleep(wait_time)
 
-            # kill进程
-            elif script.script_content[step] == "kill":
-                if script.app.app_name == "prism":
-                    AdbUtil.stop_app(device.device_id, PRISM_PACKAGE_NAME)
-                    step += 1
-                else:
-                    step += 1
-
-            else:
-                retry_count = 1
-                # 截屏
-                AdbUtil.screen_cap(device.device_id)
-                time.sleep(2)
-                logger_run.info("##### 已截屏 #####")
-
-                # 拉取屏幕图片
-                screen_image = AdbUtil.screen_cap_pull(device.device_id)
-                time.sleep(5)
-                logger_run.info("##### 已拉取图片到电脑端 #####")
-
-                # 匹配
-                point = ImageUtil.match(screen_image, script.script_content[step])
-                if point:
-                    logger_run.info(
-                        f"当前匹配次数: {retry_count}---匹配结果: {point}---{script.script_content[step]}")
-                else:
-                    logger_run.info(
-                        f"当前匹配次数: {retry_count}---匹配结果: 无匹配坐标---{script.script_content[step]}")
-
-                # 未匹配到则再重复匹配4次后结束
-                while point is None and retry_count < 5:
-                    retry_count += 1
-                    # 截屏
-                    AdbUtil.screen_cap(device.device_id)
-                    time.sleep(1)
-                    # 拉取屏幕图片
-                    screen_image = AdbUtil.screen_cap_pull(device.device_id)
-                    time.sleep(2)
-                    point = ImageUtil.match(screen_image, script.script_content[step])
-                    if point:
-                        logger_run.info(
-                            f"当前匹配次数: {retry_count}---匹配结果: {point}---{script.script_content[step]}")
+                ######################################
+                # 启动软件
+                ########
+                elif current_script["action"] == 'start_app':
+                    if GeneralUtil.probability_tool(current_script["execute_probability"]):
+                        """
+                            "data": "app包名"
+                        """
+                        UIAutoMotorUtil.start_app(device.device_id, current_script["data"])
                     else:
-                        logger_run.info(
-                            f"当前匹配次数: {retry_count}---匹配结果: 无匹配坐标---{script.script_content[step]}")
+                        break
+                    if current_script["wait_time"] >= 0:
+                        wait_time = int(current_script["wait_time"])
+                        if isinstance(wait_time, int):
+                            time.sleep(wait_time)
+                ######################################
 
-                # 未匹配到则不再执行且返回首页
-                if point is None:
+                ######################################
+                # 删除软件
+                ########
+                elif current_script["action"] == 'delete_app':
                     """
-                    此时这种情况已经无法匹配对应点，后续步骤已经无法按计划进行，所以这个脚本暂停执行
-                          1、返回桌面
-                          2、更新手机状态，并将手机放回到全局队列中
-                          3、关闭模拟定位后台进程
-                          4、关闭被操作软件进程
+                        "data": "app包名"
                     """
-                    AdbUtil.back_home(device.device_id)
-                    # 更新手机任务状态
-                    device.task_state = 0  # 将设备重新放回到全局设备队列中
-                    DeviceQueue.put(device)
-                    # 更新设备信息
-                    DeviceService.update(device)
-                    # 当前手机的任务执行完之后 关闭模拟定位应用进程
-                    AdbUtil.stop_app(device.device_id, LOCATING_APP_PACKAGE_NAME)
-                    # 判断包名kill进程
-                    if script.app.app_name == "prism":
-                        AdbUtil.stop_app(device.device_id, PRISM_PACKAGE_NAME)
-                    return
-                # 已匹配到则点击
-                AdbUtil.click(device.device_id, point[0], point[1])
-                time.sleep(5)
-                # 执行下一步
-                step += 1
+                    if GeneralUtil.probability_tool(current_script["execute_probability"]):
+                        UIAutoMotorUtil.delete_app(device.device_id, current_script["data"])
+                    else:
+                        break
+                    if current_script["wait_time"] >= 0:
+                        wait_time = int(current_script["wait_time"])
+                        if isinstance(wait_time, int):
+                            time.sleep(wait_time)
+                ######################################
 
-        # 更新手机任务状态
-        device.task_state = 0
-        # 当前手机的任务执行完之后 关闭模拟定位应用进程
-        # 判断当前是否需要关闭定位软件
-        last_reload_time = datetime.strptime(str(device.locating_app_last_reload_time), DATE_TIME_FORMAT)
-        now_time = datetime.now()
-        interval_second = (now_time - last_reload_time).total_seconds()
-        if (LOCATING_APP_RELOAD_INTERVAL_TIME * 3600) < interval_second:
-            AdbUtil.stop_app(device.device_id, LOCATING_APP_PACKAGE_NAME)
-            device.locating_app_status = 0
-        # 更新设备信息
-        DeviceService.update(device)
-        # 将设备重新放回到全局设备队列中
-        DeviceQueue.put(device)
+                ######################################
+                # 滑动操作
+                ########
+                elif current_script["action"] == 'swipe':
+                    """
+                        "data": {
+                            "position": [["开始x", "开始y"], ["结束x", "结束y"]]，
+                            "duration": float
+                        }
+                    """
+                    if GeneralUtil.probability_tool(current_script["execute_probability"]):
+                        if isinstance(current_script["data"], dict):
+                            position = [
+                                tuple(current_script["data"]["position"][0]),
+                                tuple(current_script["data"]["position"][1])
+                            ]
+                            UIAutoMotorUtil.swipe_by_coord(device.device_id, position,
+                                                           current_script["data"]["duration"])
+                    else:
+                        break
+                    if current_script["wait_time"] >= 0:
+                        wait_time = int(current_script["wait_time"])
+                        if isinstance(wait_time, int):
+                            time.sleep(wait_time)
+                ######################################
+
+                ######################################
+                # 确认操作
+                ########
+                elif current_script["action"] == 'enter':
+                    if GeneralUtil.probability_tool(current_script["execute_probability"]):
+                        """
+                            "data": ""
+                        """
+                        UIAutoMotorUtil.enter(device.device_id)
+                    else:
+                        break
+                if current_script["wait_time"] >= 0:
+                    wait_time = int(current_script["wait_time"])
+                    if isinstance(wait_time, int):
+                        time.sleep(wait_time)
+                ######################################
+
+                ######################################
+                # 等待操作
+                ########
+                elif current_script["action"] == 'wait':
+                    """
+                        "data": int
+                    """
+                    if GeneralUtil.probability_tool(current_script["execute_probability"]):
+                        time.sleep(current_script["data"])
+                    else:
+                        break
+                if current_script["wait_time"] >= 0:
+                    wait_time = int(current_script["wait_time"])
+                    if isinstance(wait_time, int):
+                        time.sleep(wait_time)
+                ######################################
+
+                ######################################
+                # 未知操作
+                ########
+                else:
+                    if GeneralUtil.probability_tool(current_script["execute_probability"]):
+                        pass
+                    else:
+                        pass
+                if current_script["wait_time"] >= 0:
+                    wait_time = int(current_script["wait_time"])
+                    if isinstance(wait_time, int):
+                        time.sleep(wait_time)
+                ######################################
+
+        except Exception as e:
+            # 如果是在执行任务的过程中出现了异常, 则需要停止app并返回到手机主界面
+            UIAutoMotorUtil.home(device.device_id)
+            UIAutoMotorUtil.stop_app(device.device_id, script.app.package_name)
+            print(f"error: {str(e)}")
+
+        finally:
+            # 更新手机任务状态
+            device.task_state = 0
+            # 判断当前是否需要关闭定位软件
+            last_reload_time = datetime.strptime(str(device.locating_app_last_reload_time), DATE_TIME_FORMAT)
+            now_time = datetime.now()
+            interval_second = (now_time - last_reload_time).total_seconds()
+            if (LOCATING_APP_RELOAD_INTERVAL_TIME * 3600) < interval_second:
+                AdbUtil.stop_app(device.device_id, LOCATING_APP_PACKAGE_NAME)
+                device.locating_app_status = 0
+            # 更新设备信息
+            DeviceService.update(device)
+            # 将设备重新放回到全局设备队列中
+            DeviceQueue.put(device)
+
+        ############################################################################################
+
+        ############################################################################################
+        # 老版本执行脚本流程
+        ###################
+        # # 点击广告下载应用的概率小于等于5%
+        # is_execute_all_steps = GeneralUtil.probability_tool(random.randint(1, 30) / 100)
+        # is_click_adv_button = False
+        # if is_execute_all_steps:
+        #     is_click_adv_button = True
+        #
+        # step = 0
+        # while step < total_steps:
+        #     # 返回主界面
+        #     if script.script_content[step] == "home":
+        #         AdbUtil.back_home(device.device_id)
+        #         time.sleep(3)
+        #         step += 1
+        #
+        #     # 广告时间等待功能
+        #     elif script.script_content[step] == "waiting":
+        #         # 范围随机广告等待时间
+        #         adv_time = random.randint(45, 70)
+        #         logger_run.info(f"##### 广告时间 {adv_time}s ######")
+        #         time.sleep(adv_time)
+        #         # 步骤+1
+        #         step += 1
+        #
+        #     # 匹配广告图标并退出广告界面
+        #     elif script.script_content[step] == "adv":
+        #         # 截屏
+        #         AdbUtil.screen_cap(device.device_id)
+        #         time.sleep(2)
+        #         logger_run.info("##### 已截屏 #####")
+        #         # 拉取屏幕图片
+        #         screen_image = AdbUtil.screen_cap_pull(device.device_id)
+        #         time.sleep(5)
+        #         logger_run.info("##### 已拉取图片到电脑端 #####")
+        #         root_path = PathUtil.get_root_path(__file__, 2)
+        #         if not is_click_adv_button:
+        #             # 1、写死两种广告的匹配图标，后期优化
+        #             adv_icon_path = ["icon_1.png", "icon_2.png"]
+        #             # 2、通过匹配不同广告的退出坐标，获得一个最合适的坐标
+        #             best_distance = 250  # 定义的一个范围阀值
+        #             best_point = None
+        #             device_h_resolution = int(device.resolution_ratio.split("x")[0])  # 获取设备横向分辨率
+        #             device_top_right_corner = [device_h_resolution, 0]  # 获取设备右上角坐标
+        #             # 匹配
+        #             logger_run.info("##### 正在进行模板匹配... #####")
+        #             for icon_path in adv_icon_path:
+        #                 icon_path_ = str(root_path.joinpath(ADVERTISING_TEMPLATE).joinpath(icon_path))
+        #                 point_ = ImageUtil.match(screen_image, icon_path_)
+        #                 if point_ is not None:
+        #                     distance_ = GeneralUtil.calculate_distance(point_, device_top_right_corner)
+        #                     if distance_ < best_distance:
+        #                         best_distance = distance_
+        #                         best_point = point_
+        #
+        #             # 获得广告退出坐标按钮
+        #             if best_point is not None:
+        #                 AdbUtil.click(device.device_id, best_point[0], best_point[1])
+        #             # 未获得广告退出坐标按钮
+        #             else:
+        #                 # 点击返回按钮关闭广告
+        #                 AdbUtil.back(device.device_id)
+        #             time.sleep(3)
+        #             step += 1
+        #         else:
+        #             adv_button_type_one = str(root_path.joinpath(ADVERTISING_TEMPLATE).joinpath("icon_3.png"))
+        #             adv_button_type_two = str(root_path.joinpath(ADVERTISING_TEMPLATE).joinpath("icon_4.png"))
+        #             match_point = None
+        #             point_one = ImageUtil.match(screen_image, adv_button_type_one)
+        #             if point_one:
+        #                 match_point = point_one
+        #             else:
+        #                 point_two = ImageUtil.match(screen_image, adv_button_type_two)
+        #                 if point_two:
+        #                     match_point = point_two
+        #
+        #             if match_point:
+        #                 AdbUtil.click(device.device_id, match_point[0], match_point[1])
+        #                 time.sleep(3)
+        #                 AdbUtil.stop_app(device.device_id, CHROME_PACKAGE_NAME)
+        #                 step = total_steps - 3
+        #             else:
+        #                 # 点击返回按钮关闭广告
+        #                 AdbUtil.back_home(device.device_id)
+        #                 time.sleep(3)
+        #                 step = total_steps - 3
+        #
+        #     # 滑动页面
+        #     elif script.script_content[step] == "swipe":
+        #         start_coord = [540, 1600]
+        #         end_coord = [540, 800]
+        #         duration_time = 100  # ms
+        #         AdbUtil.swipe(device.device_id, start_coord, end_coord, duration_time)
+        #         time.sleep(3)
+        #         step += 1
+        #
+        #     # back 返回上一级或者退出广告界面
+        #     elif script.script_content[step] == "back":
+        #         if not is_click_adv_button:
+        #             AdbUtil.back(device.device_id)
+        #             step += 1
+        #         else:
+        #             # 截屏
+        #             AdbUtil.screen_cap(device.device_id)
+        #             time.sleep(2)
+        #             logger_run.info("##### 已截屏 #####")
+        #             screen_image = AdbUtil.screen_cap_pull(device.device_id)
+        #             time.sleep(5)
+        #             logger_run.info("##### 已拉取图片到电脑端 #####")
+        #             root_path = PathUtil.get_root_path(__file__, 2)
+        #             adv_button_type_one = str(root_path.joinpath(ADVERTISING_TEMPLATE).joinpath("icon_3.png"))
+        #             adv_button_type_two = str(root_path.joinpath(ADVERTISING_TEMPLATE).joinpath("icon_4.png"))
+        #             match_point = None
+        #             point_one = ImageUtil.match(screen_image, adv_button_type_one)
+        #             if point_one:
+        #                 match_point = point_one
+        #             else:
+        #                 point_two = ImageUtil.match(screen_image, adv_button_type_two)
+        #                 if point_two:
+        #                     match_point = point_two
+        #
+        #             if match_point:
+        #                 AdbUtil.click(device.device_id, match_point[0], match_point[1])
+        #                 time.sleep(3)
+        #                 AdbUtil.stop_app(device.device_id, CHROME_PACKAGE_NAME)
+        #                 step = total_steps - 3
+        #             else:
+        #                 # 点击返回按钮关闭广告
+        #                 AdbUtil.back_home(device.device_id)
+        #                 time.sleep(3)
+        #                 step = total_steps - 3
+        #
+        #     # kill进程
+        #     elif script.script_content[step] == "kill":
+        #         if script.app.app_name == "prism":
+        #             AdbUtil.stop_app(device.device_id, PRISM_PACKAGE_NAME)
+        #             step += 1
+        #         else:
+        #             step += 1
+        #
+        #     else:
+        #         retry_count = 1
+        #         # 截屏
+        #         AdbUtil.screen_cap(device.device_id)
+        #         time.sleep(2)
+        #         logger_run.info("##### 已截屏 #####")
+        #
+        #         # 拉取屏幕图片
+        #         screen_image = AdbUtil.screen_cap_pull(device.device_id)
+        #         time.sleep(5)
+        #         logger_run.info("##### 已拉取图片到电脑端 #####")
+        #
+        #         # 匹配
+        #         point = ImageUtil.match(screen_image, script.script_content[step])
+        #         if point:
+        #             logger_run.info(
+        #                 f"当前匹配次数: {retry_count}---匹配结果: {point}---{script.script_content[step]}")
+        #         else:
+        #             logger_run.info(
+        #                 f"当前匹配次数: {retry_count}---匹配结果: 无匹配坐标---{script.script_content[step]}")
+        #
+        #         # 未匹配到则再重复匹配4次后结束
+        #         while point is None and retry_count < 5:
+        #             retry_count += 1
+        #             # 截屏
+        #             AdbUtil.screen_cap(device.device_id)
+        #             time.sleep(1)
+        #             # 拉取屏幕图片
+        #             screen_image = AdbUtil.screen_cap_pull(device.device_id)
+        #             time.sleep(2)
+        #             point = ImageUtil.match(screen_image, script.script_content[step])
+        #             if point:
+        #                 logger_run.info(
+        #                     f"当前匹配次数: {retry_count}---匹配结果: {point}---{script.script_content[step]}")
+        #             else:
+        #                 logger_run.info(
+        #                     f"当前匹配次数: {retry_count}---匹配结果: 无匹配坐标---{script.script_content[step]}")
+        #
+        #         # 未匹配到则不再执行且返回首页
+        #         if point is None:
+        #             """
+        #             此时这种情况已经无法匹配对应点，后续步骤已经无法按计划进行，所以这个脚本暂停执行
+        #                   1、返回桌面
+        #                   2、更新手机状态，并将手机放回到全局队列中
+        #                   3、关闭模拟定位后台进程
+        #                   4、关闭被操作软件进程
+        #             """
+        #             AdbUtil.back_home(device.device_id)
+        #             # 更新手机任务状态
+        #             device.task_state = 0  # 将设备重新放回到全局设备队列中
+        #             DeviceQueue.put(device)
+        #             # 更新设备信息
+        #             DeviceService.update(device)
+        #             # 当前手机的任务执行完之后 关闭模拟定位应用进程
+        #             AdbUtil.stop_app(device.device_id, LOCATING_APP_PACKAGE_NAME)
+        #             # 判断包名kill进程
+        #             if script.app.app_name == "prism":
+        #                 AdbUtil.stop_app(device.device_id, PRISM_PACKAGE_NAME)
+        #             return
+        #         # 已匹配到则点击
+        #         AdbUtil.click(device.device_id, point[0], point[1])
+        #         time.sleep(5)
+        #         # 执行下一步
+        #         step += 1
+
+        # # 更新手机任务状态
+        # device.task_state = 0
+        # # 当前手机的任务执行完之后 关闭模拟定位应用进程
+        # # 判断当前是否需要关闭定位软件
+        # last_reload_time = datetime.strptime(str(device.locating_app_last_reload_time), DATE_TIME_FORMAT)
+        # now_time = datetime.now()
+        # interval_second = (now_time - last_reload_time).total_seconds()
+        # if (LOCATING_APP_RELOAD_INTERVAL_TIME * 3600) < interval_second:
+        #     AdbUtil.stop_app(device.device_id, LOCATING_APP_PACKAGE_NAME)
+        #     device.locating_app_status = 0
+        # # 更新设备信息
+        # DeviceService.update(device)
+        # # 将设备重新放回到全局设备队列中
+        # DeviceQueue.put(device)
+        ############################################################################################
 
     @staticmethod
-    def __task(device: Device) -> List[AdvertisingTask]:
+    def __task(device: Device) -> List[AdvertisingTask] | None:
         """筛选符合条件的任务并随机返回一个"""
         today = GeneralUtil.get_date()  # 获得当天日期
         tasks = AdvertisingTaskService.select_by_task_execution_date(today)
-        ############# 新需求: 任务的执行有比例要求 ####################
+        ############# 新需求: 任务的执行有比例要求 #############
         download_app_list_ = json.loads(device.download_app)
 
         if not download_app_list_:
@@ -470,7 +774,7 @@ class RunAdvertisingThread(QThread):
         while not tasks and date_ < 3650:
             yesterday = GeneralUtil.get_date(before=True, n=date_)
             tasks = AdvertisingTaskService.select_by_task_execution_date(yesterday)
-            ############# 新需求: 任务的执行有比例要求 ####################
+            ############# 新需求: 任务的执行有比例要求 #############
             download_app_list_ = json.loads(device.download_app)
             # 条件1: 该任务未满足今日的执行比例
             online_devices_amounts = len(DeviceService.select_by_online_state(online_state=1))

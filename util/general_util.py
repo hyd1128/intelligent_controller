@@ -140,7 +140,7 @@ class GeneralUtil:
                 return False
 
     @staticmethod
-    def probabilistic_output(probability: float) -> bool:
+    def probability_tool(probability: float) -> bool:
         """
         传入一个0-1之间的概率值 随机生成的概率值如果小于或者等于该概率值 则返回True 否则返回False
 

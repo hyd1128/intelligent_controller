@@ -19,7 +19,7 @@ class UIAutoMotorUtil:
             return True
         except Exception as e:
             print(e)
-            return False
+            raise e
 
     @staticmethod
     def back(device_id: str) -> bool:
@@ -29,7 +29,7 @@ class UIAutoMotorUtil:
             return True
         except Exception as e:
             print(e)
-            return False
+            raise e
 
     @staticmethod
     def click_by_xpath(device_id: str, element_xpath: str) -> bool:
@@ -39,7 +39,8 @@ class UIAutoMotorUtil:
             return True
         except Exception as e:
             print(e)
-            return False
+            raise e
+
 
     @staticmethod
     def click_by_coord(device_id: str, coord_: List[int]) -> bool:
@@ -49,7 +50,7 @@ class UIAutoMotorUtil:
             return True
         except Exception as e:
             print(e)
-            return False
+            raise e
 
     @staticmethod
     def swipe_by_coord(device_id: str, coord_: List[Tuple[int, int]], duration: float = 0.5) -> bool:
@@ -59,7 +60,7 @@ class UIAutoMotorUtil:
             return True
         except Exception as e:
             print(e)
-            return False
+            raise e
 
     @staticmethod
     def start_app(device_id: str, app_package_name: str) -> bool:
@@ -69,7 +70,7 @@ class UIAutoMotorUtil:
             return True
         except Exception as e:
             print(e)
-            return False
+            raise e
 
     @staticmethod
     def stop_app(device_id: str, app_package_name: str) -> bool:
@@ -79,7 +80,7 @@ class UIAutoMotorUtil:
             return True
         except Exception as e:
             print(e)
-            return False
+            raise e
 
     @staticmethod
     def delete_app(device_id: str, app_package_name: str) -> bool:
@@ -89,7 +90,7 @@ class UIAutoMotorUtil:
             return True
         except Exception as e:
             print(e)
-            return False
+            raise e
 
     @staticmethod
     def input_text(device_id: str, text_content: str) -> bool:
@@ -99,7 +100,7 @@ class UIAutoMotorUtil:
             return True
         except Exception as e:
             print(e)
-            return False
+            raise e
 
     @staticmethod
     def enter(device_id: str):
@@ -109,7 +110,7 @@ class UIAutoMotorUtil:
             return True
         except Exception as e:
             print(e)
-            return False
+            raise e
 
     @staticmethod
     def app_list(device_id: str) -> List:
@@ -119,7 +120,7 @@ class UIAutoMotorUtil:
             return app_list
         except Exception as e:
             print(e)
-            return []
+            raise e
 
     @staticmethod
     def is_download_app(device_id: str, app_package_name: str) -> bool:
@@ -132,4 +133,4 @@ class UIAutoMotorUtil:
                 return False
         except Exception as e:
             print(e)
-            return False
+            raise e
