@@ -500,6 +500,7 @@ class RunAdvertisingThread(QThread):
             UIAutoMotorUtil.home(device.device_id)
             UIAutoMotorUtil.stop_app(device.device_id, script.app.package_name)
             print(f"error: {str(e)}")
+            logger_run.error(str(e))
 
         finally:
             # 更新手机任务状态
