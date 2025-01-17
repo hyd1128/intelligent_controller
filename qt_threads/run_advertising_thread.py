@@ -9,6 +9,7 @@ from typing import List
 from PyQt6.QtCore import QThread
 from util import config_util
 from util.adb_util import AdbUtil
+from util.comment_util import CommentUtil
 from util.config_util import RESOURCES, POOL_FILE_NAME, THREAD_POOL_SIZE, LOCATING_APP_PACKAGE_NAME, DATE_TIME_FORMAT, \
     ADVERTISING_TEMPLATE, CHROME_PACKAGE_NAME, PRISM_PACKAGE_NAME, LOCATING_APP_RELOAD_INTERVAL_TIME
 from util.device_queue import DeviceQueue
@@ -473,6 +474,79 @@ class RunAdvertisingThread(QThread):
                     """
                     if GeneralUtil.probability_tool(current_script["execute_probability"]):
                         time.sleep(current_script["data"])
+                    else:
+                        break
+                if current_script["wait_time"] >= 0:
+                    wait_time = int(current_script["wait_time"])
+                    if isinstance(wait_time, int):
+                        time.sleep(wait_time)
+                ######################################
+
+                ######################################
+                # 刷短视频操作
+                ########
+                elif current_script["action"] == 'browse':
+                    """
+                        当前默认为的操作流程为 滑动短视频 概率评论 概率点赞 概率收藏
+                        "data": {
+                            "browse_type": "", # 可选值 vedio和place 1. 短视频类 2.地图索引类
+                            "total_duration_time": int, # 秒为单位
+                            "once_duration_time": int, # 秒为单位
+                            "review_probability": float, # 0-1
+                            "review_button_xpath": str,
+                            "review_input_xpath": str,
+                            "like_probability": float, # 0-1
+                            "like_button_xpath": str,
+                            "collect_probability": float, # 0-1
+                            "collect_button_xpath": str
+                        }
+                    """
+                    if GeneralUtil.probability_tool(current_script["execute_probability"]):
+                        start_browse_time = datetime.now()
+                        duration_browse_time = 0
+                        while duration_browse_time <= current_step["data"]["total_duration_time"]:
+                            time.sleep(current_step["data"]["once_duration_time"])
+                            if GeneralUtil.probability_tool(current_step["data"]["review_probability"]):
+                                UIAutoMotorUtil.click_by_xpath(device.device_id,
+                                                               current_script["data"]["review_button_xpath"])
+                                UIAutoMotorUtil.click_by_xpath(device.device_id,
+                                                               current_script["data"]["review_input_xpath"])
+                                if current_script["data"]["browse_type"] == "vedio":
+                                    text_ = CommentUtil.multi_media_review()
+                                    UIAutoMotorUtil.input_text(device.device_id, text_)
+                                    UIAutoMotorUtil.enter(device.device_id)
+                                else:
+                                    text_ = CommentUtil.place_review()
+                                    UIAutoMotorUtil.input_text(device.device_id, text_)
+                                    UIAutoMotorUtil.enter(device.device_id)
+
+                            if GeneralUtil.probability_tool(current_step["data"]["like_probability"]):
+                                UIAutoMotorUtil.click_by_xpath(device.device_id,
+                                                               current_step["data"]["like_button_xpath"])
+                            if GeneralUtil.probability_tool(current_script["data"]["collect_probability"]):
+                                UIAutoMotorUtil.click_by_xpath(device.device_id,
+                                                               current_step["data"]["collect_button_xpath"])
+                            duration_browse_time = (datetime.now() - start_browse_time).total_seconds()
+
+                    else:
+                        break
+                if current_script["wait_time"] >= 0:
+                    wait_time = int(current_script["wait_time"])
+                    if isinstance(wait_time, int):
+                        time.sleep(wait_time)
+
+                ######################################
+
+                ######################################
+                # 评论操作
+                ########
+                elif current_script["action"] == 'wait':
+                    """
+                        "data": ""
+                    """
+                    if GeneralUtil.probability_tool(current_script["execute_probability"]):
+                        text_ = CommentUtil.place_review()
+                        UIAutoMotorUtil.input_text(device.device_id, text_)
                     else:
                         break
                 if current_script["wait_time"] >= 0:
