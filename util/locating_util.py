@@ -78,9 +78,10 @@ class LocatingUtil:
             UIAutoMotorUtil.home(device_id)
             UIAutoMotorUtil.home(device_id)
             time.sleep(2)
-            UIAutoMotorUtil.stop_app(package_name)
+            UIAutoMotorUtil.stop_app(device_id, package_name)
             time.sleep(2)
-            UIAutoMotorUtil.start_app(package_name)
+            UIAutoMotorUtil.start_app(device_id, package_name)
+            UIAutoMotorUtil.home(device_id)
             return True
         except Exception as e:
             logger_run.error(f"启动定位软件过程中出现异常, 异常详情: {str(e)}")

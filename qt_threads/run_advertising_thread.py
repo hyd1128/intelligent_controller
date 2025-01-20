@@ -538,7 +538,9 @@ class RunAdvertisingThread(QThread):
 
                                 if GeneralUtil.probability_tool(current_script["data"]["collect_probability"]):
                                     UIAutoMotorUtil.click_by_xpath(device.device_id,
-                                                                   '//android.view.ViewGroup[@text="Subscribe"]').click()
+                                                                   '//android.view.ViewGroup[@text="Subscribe"]')
+
+                                UIAutoMotorUtil.swipe_by_coord(device.device_id, [(584, 1630), (584, 240)], 0.2)
                                 duration_browse_time = (datetime.now() - start_browse_time).total_seconds()
                         else:
                             pass
