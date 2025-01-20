@@ -576,7 +576,7 @@ class RunAdvertisingThread(QThread):
                                           resourceId="com.google.android.youtube:id/elements_button_bar_container").child(
                                             className="android.widget.ImageView")[0].click()
 
-                                UIAutoMotorUtil.swipe_by_coord(device.device_id, [(584, 1630), (584, 240)], 0.2)
+                                UIAutoMotorUtil.swipe_by_coord(device.device_id, [(500, 1200), (500, 300)], 0.3)
                                 duration_browse_time = (datetime.now() - start_browse_time).total_seconds()
                         else:
                             pass
