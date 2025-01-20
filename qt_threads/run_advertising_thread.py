@@ -504,7 +504,7 @@ class RunAdvertisingThread(QThread):
                     if GeneralUtil.probability_tool(current_script["execute_probability"]):
                         start_browse_time = datetime.now()
                         duration_browse_time = 0
-                        if current_script["app_name"] == "youtube":
+                        if current_script["data"]["app_name"] == "youtube":
                             while duration_browse_time <= current_step["data"]["total_duration_time"]:
                                 time.sleep(current_step["data"]["once_duration_time"])
 
@@ -547,10 +547,10 @@ class RunAdvertisingThread(QThread):
 
                     else:
                         break
-                if current_script["wait_time"] >= 0:
-                    wait_time = int(current_script["wait_time"])
-                    if isinstance(wait_time, int):
-                        time.sleep(wait_time)
+                # if current_script["wait_time"] >= 0:
+                #     wait_time = int(current_script["wait_time"])
+                #     if isinstance(wait_time, int):
+                #         time.sleep(wait_time)
 
                 ######################################
 
@@ -566,10 +566,10 @@ class RunAdvertisingThread(QThread):
                         UIAutoMotorUtil.input_text(device.device_id, text_)
                     else:
                         break
-                if current_script["wait_time"] >= 0:
-                    wait_time = int(current_script["wait_time"])
-                    if isinstance(wait_time, int):
-                        time.sleep(wait_time)
+                # if current_script["wait_time"] >= 0:
+                #     wait_time = int(current_script["wait_time"])
+                #     if isinstance(wait_time, int):
+                #         time.sleep(wait_time)
                 ######################################
 
                 ######################################
