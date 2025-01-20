@@ -526,27 +526,17 @@ class RunAdvertisingThread(QThread):
                                     if current_script["data"]["browse_type"] == "vedio":
                                         text_ = CommentUtil.multi_media_review()
                                         d.send_keys(text_)
-                                        d.send_action("done")
-                                        # d(className="android.widget.FrameLayout",
-                                        #   resourceId="com.google.android.youtube:id/interstitials_container").child(
-                                        #     className="android.widget.ImageView")[1].click()
-                                        # time.sleep(2)
-                                        # AdbUtil.screen_cap(device.device_id)
-                                        # target_image_path = AdbUtil.screen_cap_pull(device.device_id)
-                                        # resources/comment_template/enter.png
-                                        # template_image_path = (PathUtil.get_root_path(__file__, 2).joinpath(RESOURCES).
-                                        #                        joinpath("comment_template").joinpath("enter.png"))
-                                        # point = ImageUtil.match(target_image_path, str(template_image_path))
-                                        # if point:
-                                        #     AdbUtil.click(device.device_id, point[0], point[1])
-                                        # else:
-                                        #     raise Exception("未找到坐标")
-
                                         time.sleep(2)
-                                        # d(className="android.widget.ImageView", resourceId="com.google.android.youtube:id/close_button").click()
-                                        # UIAutoMotorUtil.click_by_xpath(device.device_id, '//*[@resource-id="com.google.android.youtube:id/close_button"]')
-                                        # UIAutoMotorUtil.back(device.device_id)
-                                        AdbUtil.back(device.device_id)
+                                        if d(className="android.widget.FrameLayout",
+                                             resourceId="com.google.android.youtube:id/interstitials_container").child(
+                                            className="android.widget.ImageView")[2].exists:
+                                            d(className="android.widget.FrameLayout",
+                                              resourceId="com.google.android.youtube:id/interstitials_container").child(
+                                                className="android.widget.ImageView")[2].click()
+                                        else:
+                                            d(className="android.widget.FrameLayout",
+                                              resourceId="com.google.android.youtube:id/interstitials_container").child(
+                                                className="android.widget.ImageView")[1].click()
 
                                         time.sleep(2)
                                         AdbUtil.back(device.device_id)
@@ -554,26 +544,19 @@ class RunAdvertisingThread(QThread):
                                     else:
                                         text_ = CommentUtil.place_review()
                                         d.send_keys(text_)
-                                        d.send_action("done")
-                                        # d(className="android.widget.FrameLayout",
-                                        #   resourceId="com.google.android.youtube:id/interstitials_container").child(
-                                        #     className="android.widget.ImageView")[1].click()
-                                        # time.sleep(2)
-                                        # AdbUtil.screen_cap(device.device_id)
-                                        # target_image_path = AdbUtil.screen_cap_pull(device.device_id)
-                                        # resources/comment_template/enter.png
-                                        # template_image_path = (PathUtil.get_root_path(__file__, 2).joinpath(RESOURCES).
-                                        #                        joinpath("comment_template").joinpath("enter.png"))
-                                        # point = ImageUtil.match(target_image_path, str(template_image_path))
-                                        # if point:
-                                        #     AdbUtil.click(device.device_id, point[0], point[1])
-                                        # else:
-                                        #     raise Exception("未找到坐标")
+                                        time.sleep(2)
+                                        if d(className="android.widget.FrameLayout",
+                                             resourceId="com.google.android.youtube:id/interstitials_container").child(
+                                            className="android.widget.ImageView")[2].exists:
+                                            d(className="android.widget.FrameLayout",
+                                              resourceId="com.google.android.youtube:id/interstitials_container").child(
+                                                className="android.widget.ImageView")[2].click()
+                                        else:
+                                            d(className="android.widget.FrameLayout",
+                                              resourceId="com.google.android.youtube:id/interstitials_container").child(
+                                                className="android.widget.ImageView")[1].click()
 
                                         time.sleep(2)
-                                        # d(className="android.widget.ImageView", resourceId="com.google.android.youtube:id/close_button").click()
-                                        # UIAutoMotorUtil.click_by_xpath(device.device_id, '//*[@resource-id="com.google.android.youtube:id/close_button"]')
-                                        # UIAutoMotorUtil.back(device.device_id)
                                         AdbUtil.back(device.device_id)
 
                                 if GeneralUtil.probability_tool(current_script["data"]["like_probability"]):

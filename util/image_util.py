@@ -58,26 +58,26 @@ class ImageUtil:
                     center_dst = tuple(map(int, np.mean(filtered_pts, axis=0)))
 
                     # 需要输出匹配结果就打开下面这段代码注释
+                    ####################################################
+                    # 模板图片中心
+                    center_src = tuple(map(int, np.mean(src_pts, axis=0)))
+                    # 打印匹配点的中心
+                    # 打印模板图片匹配到的中心点
+                    print(f"Center of matching points in small image: {center_src}")
+                    # 打印目标图片匹配到的中心点
+                    print(f"Center of matching points in large image: {center_dst}")
+
+                    # 在大图中标记匹配区域的中心点
+                    img2_with_center = target.copy()
+                    cv2.circle(img2_with_center, center_dst, 10, (0, 0, 255), -1)
+                    # 画出匹配结果
+                    img3 = cv2.drawMatches(template, kp1, img2_with_center, kp2, good, None,
+                                           flags=cv2.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS)
+                    # 保存图片
+                    root_path = PathUtil.get_root_path(__file__, 2)
+                    image_store_path = str(root_path.joinpath(MATCH_RESULT_FOLDER).joinpath('match_image_result.png'))
+                    cv2.imwrite(image_store_path, img3)
                     #####################################################
-                    # # 模板图片中心
-                    # center_src = tuple(map(int, np.mean(src_pts, axis=0)))
-                    # # 打印匹配点的中心
-                    # # 打印模板图片匹配到的中心点
-                    # print(f"Center of matching points in small image: {center_src}")
-                    # # 打印目标图片匹配到的中心点
-                    # print(f"Center of matching points in large image: {center_dst}")
-                    #
-                    # # 在大图中标记匹配区域的中心点
-                    # img2_with_center = target.copy()
-                    # cv2.circle(img2_with_center, center_dst, 10, (0, 0, 255), -1)
-                    # # 画出匹配结果
-                    # img3 = cv2.drawMatches(template, kp1, img2_with_center, kp2, good, None,
-                    #                        flags=cv2.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS)
-                    # # 保存图片
-                    # root_path = PathUtil.get_root_path(__file__, 2)
-                    # image_store_path = str(root_path.joinpath(MATCH_RESULT_FOLDER).joinpath('match_image_result.png'))
-                    # cv2.imwrite(image_store_path, img3)
-                    ######################################################
                     # 输出中心点
                     return center_dst
             else:
