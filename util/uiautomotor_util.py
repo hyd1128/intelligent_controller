@@ -135,6 +135,5 @@ class UIAutoMotorUtil:
             print(e)
             raise e
 
-    @staticmethod
-    def generate_uam(device_id: str) -> uam2.Device:
+    def generate_uam(self, device_id: str) -> uam2.Device:
         return uam2.connect(serial=device_id)

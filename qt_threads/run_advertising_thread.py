@@ -505,14 +505,20 @@ class RunAdvertisingThread(QThread):
                         start_browse_time = datetime.now()
                         duration_browse_time = 0
                         if current_script["data"]["app_name"] == "youtube":
-                            while duration_browse_time <= current_step["data"]["total_duration_time"]:
-                                time.sleep(current_step["data"]["once_duration_time"])
+                            print(type(current_script["data"]))
+                            print(current_script["data"])
+                            print(current_script["data"]["total_duration_time"])
+                            total_browse_time = current_script["data"]["total_duration_time"]
+                            while duration_browse_time <= total_browse_time:
+                                time.sleep(current_script["data"]["once_duration_time"])
 
-                                if GeneralUtil.probability_tool(current_step["data"]["review_probability"]):
-                                    d = UIAutoMotorUtil.generate_uam(device.device_id)
+                                if GeneralUtil.probability_tool(current_script["data"]["review_probability"]):
+                                    time.sleep(2)
+                                    d = UIAutoMotorUtil().generate_uam(device.device_id)
                                     d(className="android.widget.FrameLayout",
                                       resourceId="com.google.android.youtube:id/elements_button_bar_container").child(
-                                        className="android.widget.Button")[2].click()
+                                        className="android.widget.ImageView")[2].click()
+                                    time.sleep(2)
                                     d(className="android.widget.FrameLayout",
                                       resourceId="com.google.android.youtube:id/footer").child(
                                         className="android.widget.EditText")[0].click()
@@ -520,25 +526,35 @@ class RunAdvertisingThread(QThread):
                                     if current_script["data"]["browse_type"] == "vedio":
                                         text_ = CommentUtil.multi_media_review()
                                         d.send_keys(text_)
+                                        time.sleep(2)
                                         d(className="android.widget.FrameLayout",
                                           resourceId="com.google.android.youtube:id/interstitials_container").child(
-                                            className="android.widget.Button")[0].click()
+                                            className="android.widget.ImageView")[1].click()
+                                        time.sleep(2)
+                                        AdbUtil.back(device.device_id)
+
                                     else:
                                         text_ = CommentUtil.place_review()
                                         d.send_keys(text_)
                                         d(className="android.widget.FrameLayout",
                                           resourceId="com.google.android.youtube:id/interstitials_container").child(
-                                            className="android.widget.Button")[0].click()
+                                            className="android.widget.ImageView")[1].click()
+                                        time.sleep(2)
+                                        # d(className="android.widget.ImageView", resourceId="com.google.android.youtube:id/close_button").click()
+                                        # UIAutoMotorUtil.click_by_xpath(device.device_id, '//*[@resource-id="com.google.android.youtube:id/close_button"]')
+                                        # UIAutoMotorUtil.back(device.device_id)
+                                        AdbUtil.back(device.device_id)
 
-                                if GeneralUtil.probability_tool(current_step["data"]["like_probability"]):
-                                    d = UIAutoMotorUtil.generate_uam(device.device_id)
+                                if GeneralUtil.probability_tool(current_script["data"]["like_probability"]):
+                                    time.sleep(2)
+                                    d = UIAutoMotorUtil().generate_uam(device.device_id)
                                     d(className="android.widget.FrameLayout",
                                       resourceId="com.google.android.youtube:id/elements_button_bar_container").child(
-                                        className="android.widget.Button")[0].click()
+                                        className="android.widget.ImageView")[0].click()
 
-                                if GeneralUtil.probability_tool(current_script["data"]["collect_probability"]):
-                                    UIAutoMotorUtil.click_by_xpath(device.device_id,
-                                                                   '//android.view.ViewGroup[@text="Subscribe"]')
+                                # if GeneralUtil.probability_tool(current_script["data"]["collect_probability"]):
+                                #     UIAutoMotorUtil.click_by_xpath(device.device_id,
+                                #                                    '//android.view.ViewGroup[@text="Subscribe"]')
 
                                 UIAutoMotorUtil.swipe_by_coord(device.device_id, [(584, 1630), (584, 240)], 0.2)
                                 duration_browse_time = (datetime.now() - start_browse_time).total_seconds()
