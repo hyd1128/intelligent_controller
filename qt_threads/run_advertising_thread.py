@@ -520,15 +520,13 @@ class RunAdvertisingThread(QThread):
                                                        resourceId="com.google.android.youtube:id/elements_button_bar_container").child(
                                         className="android.widget.ImageView")[2].exists
 
-                                    view_two_exist = d(className="android.widget.FrameLayout",
-                                                       resourceId="com.google.android.youtube:id/elements_button_bar_container").child(
-                                        className="android.widget.ImageView")[0].exists
-
-                                    if view_one_exist and view_two_exist:
+                                    if view_one_exist:
+                                        print("存在评论元素")
                                         d(className="android.widget.FrameLayout",
                                           resourceId="com.google.android.youtube:id/elements_button_bar_container").child(
                                             className="android.widget.ImageView")[2].click()
                                         time.sleep(2)
+
                                         d(className="android.widget.FrameLayout",
                                           resourceId="com.google.android.youtube:id/footer").child(
                                             className="android.widget.EditText")[0].click()
@@ -540,13 +538,24 @@ class RunAdvertisingThread(QThread):
                                             if d(className="android.widget.FrameLayout",
                                                  resourceId="com.google.android.youtube:id/interstitials_container").child(
                                                 className="android.widget.ImageView")[2].exists:
+
+                                                print("发送元素1")
+
                                                 d(className="android.widget.FrameLayout",
                                                   resourceId="com.google.android.youtube:id/interstitials_container").child(
                                                     className="android.widget.ImageView")[2].click()
-                                            else:
+                                            elif d(className="android.widget.FrameLayout",
+                                                   resourceId="com.google.android.youtube:id/interstitials_container").child(
+                                                className="android.widget.ImageView")[1].exists:
                                                 d(className="android.widget.FrameLayout",
                                                   resourceId="com.google.android.youtube:id/interstitials_container").child(
                                                     className="android.widget.ImageView")[1].click()
+
+                                                print("发送元素2")
+
+                                            else:
+                                                print("不存在相关元素")
+                                                pass
 
                                         else:
                                             text_ = CommentUtil.place_review()
@@ -555,13 +564,24 @@ class RunAdvertisingThread(QThread):
                                             if d(className="android.widget.FrameLayout",
                                                  resourceId="com.google.android.youtube:id/interstitials_container").child(
                                                 className="android.widget.ImageView")[2].exists:
+
+                                                print("发送元素1")
+
                                                 d(className="android.widget.FrameLayout",
                                                   resourceId="com.google.android.youtube:id/interstitials_container").child(
                                                     className="android.widget.ImageView")[2].click()
-                                            else:
+                                            elif d(className="android.widget.FrameLayout",
+                                                   resourceId="com.google.android.youtube:id/interstitials_container").child(
+                                                className="android.widget.ImageView")[1].exists:
                                                 d(className="android.widget.FrameLayout",
                                                   resourceId="com.google.android.youtube:id/interstitials_container").child(
                                                     className="android.widget.ImageView")[1].click()
+
+                                                print("发送元素2")
+
+                                            else:
+                                                print("不存在相关元素")
+                                                pass
 
                                     time.sleep(2)
                                     AdbUtil.back(device.device_id)
@@ -572,11 +592,13 @@ class RunAdvertisingThread(QThread):
                                     if d(className="android.widget.FrameLayout",
                                          resourceId="com.google.android.youtube:id/elements_button_bar_container").child(
                                         className="android.widget.ImageView")[0].exists:
+
+                                        print("存在like元素")
                                         d(className="android.widget.FrameLayout",
                                           resourceId="com.google.android.youtube:id/elements_button_bar_container").child(
                                             className="android.widget.ImageView")[0].click()
 
-                                UIAutoMotorUtil.swipe_by_coord(device.device_id, [(500, 1200), (500, 300)], 0.3)
+                                UIAutoMotorUtil.swipe_by_coord(device.device_id, [(500, 1200), (500, 300)], 0.2)
                                 duration_browse_time = (datetime.now() - start_browse_time).total_seconds()
                         else:
                             pass
