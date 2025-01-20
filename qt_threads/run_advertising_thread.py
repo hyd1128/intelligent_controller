@@ -515,60 +515,66 @@ class RunAdvertisingThread(QThread):
                                 if GeneralUtil.probability_tool(current_script["data"]["review_probability"]):
                                     time.sleep(2)
                                     d = UIAutoMotorUtil().generate_uam(device.device_id)
-                                    d(className="android.widget.FrameLayout",
-                                      resourceId="com.google.android.youtube:id/elements_button_bar_container").child(
-                                        className="android.widget.ImageView")[2].click()
+
+                                    view_one_exist = d(className="android.widget.FrameLayout",
+                                                       resourceId="com.google.android.youtube:id/elements_button_bar_container").child(
+                                        className="android.widget.ImageView")[2].exists
+
+                                    view_two_exist = d(className="android.widget.FrameLayout",
+                                                       resourceId="com.google.android.youtube:id/elements_button_bar_container").child(
+                                        className="android.widget.ImageView")[0].exists
+
+                                    if view_one_exist and view_two_exist:
+                                        d(className="android.widget.FrameLayout",
+                                          resourceId="com.google.android.youtube:id/elements_button_bar_container").child(
+                                            className="android.widget.ImageView")[2].click()
+                                        time.sleep(2)
+                                        d(className="android.widget.FrameLayout",
+                                          resourceId="com.google.android.youtube:id/footer").child(
+                                            className="android.widget.EditText")[0].click()
+
+                                        if current_script["data"]["browse_type"] == "vedio":
+                                            text_ = CommentUtil.multi_media_review()
+                                            d.send_keys(text_)
+                                            time.sleep(2)
+                                            if d(className="android.widget.FrameLayout",
+                                                 resourceId="com.google.android.youtube:id/interstitials_container").child(
+                                                className="android.widget.ImageView")[2].exists:
+                                                d(className="android.widget.FrameLayout",
+                                                  resourceId="com.google.android.youtube:id/interstitials_container").child(
+                                                    className="android.widget.ImageView")[2].click()
+                                            else:
+                                                d(className="android.widget.FrameLayout",
+                                                  resourceId="com.google.android.youtube:id/interstitials_container").child(
+                                                    className="android.widget.ImageView")[1].click()
+
+                                        else:
+                                            text_ = CommentUtil.place_review()
+                                            d.send_keys(text_)
+                                            time.sleep(2)
+                                            if d(className="android.widget.FrameLayout",
+                                                 resourceId="com.google.android.youtube:id/interstitials_container").child(
+                                                className="android.widget.ImageView")[2].exists:
+                                                d(className="android.widget.FrameLayout",
+                                                  resourceId="com.google.android.youtube:id/interstitials_container").child(
+                                                    className="android.widget.ImageView")[2].click()
+                                            else:
+                                                d(className="android.widget.FrameLayout",
+                                                  resourceId="com.google.android.youtube:id/interstitials_container").child(
+                                                    className="android.widget.ImageView")[1].click()
+
                                     time.sleep(2)
-                                    d(className="android.widget.FrameLayout",
-                                      resourceId="com.google.android.youtube:id/footer").child(
-                                        className="android.widget.EditText")[0].click()
-
-                                    if current_script["data"]["browse_type"] == "vedio":
-                                        text_ = CommentUtil.multi_media_review()
-                                        d.send_keys(text_)
-                                        time.sleep(2)
-                                        if d(className="android.widget.FrameLayout",
-                                             resourceId="com.google.android.youtube:id/interstitials_container").child(
-                                            className="android.widget.ImageView")[2].exists:
-                                            d(className="android.widget.FrameLayout",
-                                              resourceId="com.google.android.youtube:id/interstitials_container").child(
-                                                className="android.widget.ImageView")[2].click()
-                                        else:
-                                            d(className="android.widget.FrameLayout",
-                                              resourceId="com.google.android.youtube:id/interstitials_container").child(
-                                                className="android.widget.ImageView")[1].click()
-
-                                        time.sleep(2)
-                                        AdbUtil.back(device.device_id)
-
-                                    else:
-                                        text_ = CommentUtil.place_review()
-                                        d.send_keys(text_)
-                                        time.sleep(2)
-                                        if d(className="android.widget.FrameLayout",
-                                             resourceId="com.google.android.youtube:id/interstitials_container").child(
-                                            className="android.widget.ImageView")[2].exists:
-                                            d(className="android.widget.FrameLayout",
-                                              resourceId="com.google.android.youtube:id/interstitials_container").child(
-                                                className="android.widget.ImageView")[2].click()
-                                        else:
-                                            d(className="android.widget.FrameLayout",
-                                              resourceId="com.google.android.youtube:id/interstitials_container").child(
-                                                className="android.widget.ImageView")[1].click()
-
-                                        time.sleep(2)
-                                        AdbUtil.back(device.device_id)
+                                    AdbUtil.back(device.device_id)
 
                                 if GeneralUtil.probability_tool(current_script["data"]["like_probability"]):
                                     time.sleep(2)
                                     d = UIAutoMotorUtil().generate_uam(device.device_id)
-                                    d(className="android.widget.FrameLayout",
-                                      resourceId="com.google.android.youtube:id/elements_button_bar_container").child(
-                                        className="android.widget.ImageView")[0].click()
-
-                                # if GeneralUtil.probability_tool(current_script["data"]["collect_probability"]):
-                                #     UIAutoMotorUtil.click_by_xpath(device.device_id,
-                                #                                    '//android.view.ViewGroup[@text="Subscribe"]')
+                                    if d(className="android.widget.FrameLayout",
+                                         resourceId="com.google.android.youtube:id/elements_button_bar_container").child(
+                                        className="android.widget.ImageView")[0].exists:
+                                        d(className="android.widget.FrameLayout",
+                                          resourceId="com.google.android.youtube:id/elements_button_bar_container").child(
+                                            className="android.widget.ImageView")[0].click()
 
                                 UIAutoMotorUtil.swipe_by_coord(device.device_id, [(584, 1630), (584, 240)], 0.2)
                                 duration_browse_time = (datetime.now() - start_browse_time).total_seconds()
