@@ -317,10 +317,10 @@ class RunAdvertisingThread(QThread):
                     else:
                         # 该动作为概率动作 如果这一次的概率不在默认概率中 则认为后续步骤不再继续执行
                         break
-                    if current_script["wait_time"] >= 0:
-                        wait_time = int(current_script["wait_time"])
-                        if isinstance(wait_time, int):
-                            time.sleep(wait_time)
+                    # if current_script["wait_time"] >= 0:
+                    #     wait_time = int(current_script["wait_time"])
+                    #     if isinstance(wait_time, int):
+                    #         time.sleep(wait_time)
                 ######################################
 
                 ######################################
@@ -334,10 +334,10 @@ class RunAdvertisingThread(QThread):
                         UIAutoMotorUtil.input_text(device.device_id, current_script["data"])
                     else:
                         break
-                    if current_script["wait_time"] >= 0:
-                        wait_time = int(current_script["wait_time"])
-                        if isinstance(wait_time, int):
-                            time.sleep(wait_time)
+                    # if current_script["wait_time"] >= 0:
+                    #     wait_time = int(current_script["wait_time"])
+                    #     if isinstance(wait_time, int):
+                    #         time.sleep(wait_time)
                 ######################################
 
                 ######################################
@@ -351,10 +351,10 @@ class RunAdvertisingThread(QThread):
                         UIAutoMotorUtil.home(device.device_id)
                     else:
                         break
-                    if current_script["wait_time"] >= 0:
-                        wait_time = int(current_script["wait_time"])
-                        if isinstance(wait_time, int):
-                            time.sleep(wait_time)
+                    # if current_script["wait_time"] >= 0:
+                    #     wait_time = int(current_script["wait_time"])
+                    #     if isinstance(wait_time, int):
+                    #         time.sleep(wait_time)
                 ######################################
 
                 ######################################
@@ -368,10 +368,10 @@ class RunAdvertisingThread(QThread):
                         UIAutoMotorUtil.back(device.device_id)
                     else:
                         break
-                    if current_script["wait_time"] >= 0:
-                        wait_time = int(current_script["wait_time"])
-                        if isinstance(wait_time, int):
-                            time.sleep(wait_time)
+                    # if current_script["wait_time"] >= 0:
+                    #     wait_time = int(current_script["wait_time"])
+                    #     if isinstance(wait_time, int):
+                    #         time.sleep(wait_time)
                 ######################################
 
                 ######################################
@@ -385,10 +385,10 @@ class RunAdvertisingThread(QThread):
                         UIAutoMotorUtil.stop_app(device.device_id, current_script["data"])
                     else:
                         break
-                    if current_script["wait_time"] >= 0:
-                        wait_time = int(current_script["wait_time"])
-                        if isinstance(wait_time, int):
-                            time.sleep(wait_time)
+                    # if current_script["wait_time"] >= 0:
+                    #     wait_time = int(current_script["wait_time"])
+                    #     if isinstance(wait_time, int):
+                    #         time.sleep(wait_time)
 
                 ######################################
                 # 启动软件
@@ -401,10 +401,10 @@ class RunAdvertisingThread(QThread):
                         UIAutoMotorUtil.start_app(device.device_id, current_script["data"])
                     else:
                         break
-                    if current_script["wait_time"] >= 0:
-                        wait_time = int(current_script["wait_time"])
-                        if isinstance(wait_time, int):
-                            time.sleep(wait_time)
+                    # if current_script["wait_time"] >= 0:
+                    #     wait_time = int(current_script["wait_time"])
+                    #     if isinstance(wait_time, int):
+                    #         time.sleep(wait_time)
                 ######################################
 
                 ######################################
@@ -418,10 +418,10 @@ class RunAdvertisingThread(QThread):
                         UIAutoMotorUtil.delete_app(device.device_id, current_script["data"])
                     else:
                         break
-                    if current_script["wait_time"] >= 0:
-                        wait_time = int(current_script["wait_time"])
-                        if isinstance(wait_time, int):
-                            time.sleep(wait_time)
+                    # if current_script["wait_time"] >= 0:
+                    #     wait_time = int(current_script["wait_time"])
+                    #     if isinstance(wait_time, int):
+                    #         time.sleep(wait_time)
                 ######################################
 
                 ######################################
@@ -444,10 +444,10 @@ class RunAdvertisingThread(QThread):
                                                            current_script["data"]["duration"])
                     else:
                         break
-                    if current_script["wait_time"] >= 0:
-                        wait_time = int(current_script["wait_time"])
-                        if isinstance(wait_time, int):
-                            time.sleep(wait_time)
+                    # if current_script["wait_time"] >= 0:
+                    #     wait_time = int(current_script["wait_time"])
+                    #     if isinstance(wait_time, int):
+                    #         time.sleep(wait_time)
                 ######################################
 
                 ######################################
@@ -461,10 +461,10 @@ class RunAdvertisingThread(QThread):
                         UIAutoMotorUtil.enter(device.device_id)
                     else:
                         break
-                if current_script["wait_time"] >= 0:
-                    wait_time = int(current_script["wait_time"])
-                    if isinstance(wait_time, int):
-                        time.sleep(wait_time)
+                    # if current_script["wait_time"] >= 0:
+                    #     wait_time = int(current_script["wait_time"])
+                    #     if isinstance(wait_time, int):
+                    #         time.sleep(wait_time)
                 ######################################
 
                 ######################################
@@ -478,10 +478,10 @@ class RunAdvertisingThread(QThread):
                         time.sleep(current_script["data"])
                     else:
                         break
-                if current_script["wait_time"] >= 0:
-                    wait_time = int(current_script["wait_time"])
-                    if isinstance(wait_time, int):
-                        time.sleep(wait_time)
+                    # if current_script["wait_time"] >= 0:
+                    #     wait_time = int(current_script["wait_time"])
+                    #     if isinstance(wait_time, int):
+                    #         time.sleep(wait_time)
                 ######################################
 
                 ######################################
