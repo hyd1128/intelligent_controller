@@ -935,14 +935,16 @@ class RunAdvertisingThread(QThread):
                 device_from_db = DeviceService.select_by_device_id(device_id=device.device_id)
                 # 2.判断数据库中是否有对应设备, 判断该设备最新在线状态是否在线
                 if device_from_db is not None:
-                    if device_from_db.online_state == 1:
+                    if device_from_db.online_state == 1 and device_from_db.task_state == 0:
                         if device_from_db.online_state != device.online_state:
                             device.online_state = 1
+                            device.task_state = 0
                         return device
 
                     else:
                         if device_from_db.online_state != device.online_state:
                             device.online_state = device_from_db.online_state
+                            device.task_state = device_from_db.task_state
 
                         # 将设备放回队列
                         DeviceQueue.put(device)
