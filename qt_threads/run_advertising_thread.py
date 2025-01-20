@@ -317,10 +317,6 @@ class RunAdvertisingThread(QThread):
                     else:
                         # 该动作为概率动作 如果这一次的概率不在默认概率中 则认为后续步骤不再继续执行
                         break
-                    # if current_script["wait_time"] >= 0:
-                    #     wait_time = int(current_script["wait_time"])
-                    #     if isinstance(wait_time, int):
-                    #         time.sleep(wait_time)
                 ######################################
 
                 ######################################
@@ -334,10 +330,6 @@ class RunAdvertisingThread(QThread):
                         UIAutoMotorUtil.input_text(device.device_id, current_script["data"])
                     else:
                         break
-                    # if current_script["wait_time"] >= 0:
-                    #     wait_time = int(current_script["wait_time"])
-                    #     if isinstance(wait_time, int):
-                    #         time.sleep(wait_time)
                 ######################################
 
                 ######################################
@@ -351,10 +343,6 @@ class RunAdvertisingThread(QThread):
                         UIAutoMotorUtil.home(device.device_id)
                     else:
                         break
-                    # if current_script["wait_time"] >= 0:
-                    #     wait_time = int(current_script["wait_time"])
-                    #     if isinstance(wait_time, int):
-                    #         time.sleep(wait_time)
                 ######################################
 
                 ######################################
@@ -368,10 +356,6 @@ class RunAdvertisingThread(QThread):
                         UIAutoMotorUtil.back(device.device_id)
                     else:
                         break
-                    # if current_script["wait_time"] >= 0:
-                    #     wait_time = int(current_script["wait_time"])
-                    #     if isinstance(wait_time, int):
-                    #         time.sleep(wait_time)
                 ######################################
 
                 ######################################
@@ -385,10 +369,7 @@ class RunAdvertisingThread(QThread):
                         UIAutoMotorUtil.stop_app(device.device_id, current_script["data"])
                     else:
                         break
-                    # if current_script["wait_time"] >= 0:
-                    #     wait_time = int(current_script["wait_time"])
-                    #     if isinstance(wait_time, int):
-                    #         time.sleep(wait_time)
+                ######################################
 
                 ######################################
                 # 启动软件
@@ -401,10 +382,6 @@ class RunAdvertisingThread(QThread):
                         UIAutoMotorUtil.start_app(device.device_id, current_script["data"])
                     else:
                         break
-                    # if current_script["wait_time"] >= 0:
-                    #     wait_time = int(current_script["wait_time"])
-                    #     if isinstance(wait_time, int):
-                    #         time.sleep(wait_time)
                 ######################################
 
                 ######################################
@@ -418,10 +395,6 @@ class RunAdvertisingThread(QThread):
                         UIAutoMotorUtil.delete_app(device.device_id, current_script["data"])
                     else:
                         break
-                    # if current_script["wait_time"] >= 0:
-                    #     wait_time = int(current_script["wait_time"])
-                    #     if isinstance(wait_time, int):
-                    #         time.sleep(wait_time)
                 ######################################
 
                 ######################################
@@ -444,10 +417,6 @@ class RunAdvertisingThread(QThread):
                                                            current_script["data"]["duration"])
                     else:
                         break
-                    # if current_script["wait_time"] >= 0:
-                    #     wait_time = int(current_script["wait_time"])
-                    #     if isinstance(wait_time, int):
-                    #         time.sleep(wait_time)
                 ######################################
 
                 ######################################
@@ -461,10 +430,6 @@ class RunAdvertisingThread(QThread):
                         UIAutoMotorUtil.enter(device.device_id)
                     else:
                         break
-                    # if current_script["wait_time"] >= 0:
-                    #     wait_time = int(current_script["wait_time"])
-                    #     if isinstance(wait_time, int):
-                    #         time.sleep(wait_time)
                 ######################################
 
                 ######################################
@@ -505,9 +470,6 @@ class RunAdvertisingThread(QThread):
                         start_browse_time = datetime.now()
                         duration_browse_time = 0
                         if current_script["data"]["app_name"] == "youtube":
-                            print(type(current_script["data"]))
-                            print(current_script["data"])
-                            print(current_script["data"]["total_duration_time"])
                             total_browse_time = current_script["data"]["total_duration_time"]
                             while duration_browse_time <= total_browse_time:
                                 time.sleep(current_script["data"]["once_duration_time"])
@@ -521,66 +483,75 @@ class RunAdvertisingThread(QThread):
                                         className="android.widget.ImageView")[2].exists
 
                                     if view_one_exist:
-                                        print("存在评论元素")
+                                        logger_run.info(f"##### 设备 {device.device_id} 存在评论元素")
                                         d(className="android.widget.FrameLayout",
                                           resourceId="com.google.android.youtube:id/elements_button_bar_container").child(
                                             className="android.widget.ImageView")[2].click()
                                         time.sleep(2)
 
-                                        d(className="android.widget.FrameLayout",
-                                          resourceId="com.google.android.youtube:id/footer").child(
-                                            className="android.widget.EditText")[0].click()
+                                        view_two_exist = d(className="android.widget.FrameLayout",
+                                                           resourceId="com.google.android.youtube:id/footer").child(
+                                            className="android.widget.EditText")[0].exists
 
-                                        if current_script["data"]["browse_type"] == "vedio":
-                                            text_ = CommentUtil.multi_media_review()
-                                            d.send_keys(text_)
-                                            time.sleep(2)
-                                            if d(className="android.widget.FrameLayout",
-                                                 resourceId="com.google.android.youtube:id/interstitials_container").child(
-                                                className="android.widget.ImageView")[2].exists:
+                                        if view_two_exist:
+                                            logger_run.info(f"##### 设备 {device.device_id} 存在输入文本元素")
+                                            d(className="android.widget.FrameLayout",
+                                              resourceId="com.google.android.youtube:id/footer").child(
+                                                className="android.widget.EditText")[0].click()
 
-                                                print("发送元素1")
+                                            if current_script["data"]["browse_type"] == "vedio":
+                                                text_ = CommentUtil.multi_media_review()
+                                                d.send_keys(text_)
+                                                time.sleep(2)
+                                                if d(className="android.widget.FrameLayout",
+                                                     resourceId="com.google.android.youtube:id/interstitials_container").child(
+                                                    className="android.widget.ImageView")[2].exists:
 
-                                                d(className="android.widget.FrameLayout",
-                                                  resourceId="com.google.android.youtube:id/interstitials_container").child(
-                                                    className="android.widget.ImageView")[2].click()
-                                            elif d(className="android.widget.FrameLayout",
-                                                   resourceId="com.google.android.youtube:id/interstitials_container").child(
-                                                className="android.widget.ImageView")[1].exists:
-                                                d(className="android.widget.FrameLayout",
-                                                  resourceId="com.google.android.youtube:id/interstitials_container").child(
-                                                    className="android.widget.ImageView")[1].click()
+                                                    logger_run.info(f"设备 {device.device_id} 存在发送元素1")
 
-                                                print("发送元素2")
+                                                    d(className="android.widget.FrameLayout",
+                                                      resourceId="com.google.android.youtube:id/interstitials_container").child(
+                                                        className="android.widget.ImageView")[2].click()
 
-                                            else:
-                                                print("不存在相关元素")
-                                                pass
+                                                elif d(className="android.widget.FrameLayout",
+                                                       resourceId="com.google.android.youtube:id/interstitials_container").child(
+                                                    className="android.widget.ImageView")[1].exists:
+                                                    d(className="android.widget.FrameLayout",
+                                                      resourceId="com.google.android.youtube:id/interstitials_container").child(
+                                                        className="android.widget.ImageView")[1].click()
 
-                                        else:
-                                            text_ = CommentUtil.place_review()
-                                            d.send_keys(text_)
-                                            time.sleep(2)
-                                            if d(className="android.widget.FrameLayout",
-                                                 resourceId="com.google.android.youtube:id/interstitials_container").child(
-                                                className="android.widget.ImageView")[2].exists:
+                                                    logger_run.info(f"设备 {device.device_id} 存在发送元素2")
 
-                                                print("发送元素1")
-
-                                                d(className="android.widget.FrameLayout",
-                                                  resourceId="com.google.android.youtube:id/interstitials_container").child(
-                                                    className="android.widget.ImageView")[2].click()
-                                            elif d(className="android.widget.FrameLayout",
-                                                   resourceId="com.google.android.youtube:id/interstitials_container").child(
-                                                className="android.widget.ImageView")[1].exists:
-                                                d(className="android.widget.FrameLayout",
-                                                  resourceId="com.google.android.youtube:id/interstitials_container").child(
-                                                    className="android.widget.ImageView")[1].click()
-
-                                                print("发送元素2")
+                                                else:
+                                                    logger_run.info(f"设备 {device.device_id} 不存在发送元素")
+                                                    UIAutoMotorUtil.back(device.device_id)
+                                                    pass
 
                                             else:
-                                                print("不存在相关元素")
+                                                # text_ = CommentUtil.place_review()
+                                                # d.send_keys(text_)
+                                                # time.sleep(2)
+                                                # if d(className="android.widget.FrameLayout",
+                                                #      resourceId="com.google.android.youtube:id/interstitials_container").child(
+                                                #     className="android.widget.ImageView")[2].exists:
+                                                #
+                                                #     print("发送元素1")
+                                                #
+                                                #     d(className="android.widget.FrameLayout",
+                                                #       resourceId="com.google.android.youtube:id/interstitials_container").child(
+                                                #         className="android.widget.ImageView")[2].click()
+                                                # elif d(className="android.widget.FrameLayout",
+                                                #        resourceId="com.google.android.youtube:id/interstitials_container").child(
+                                                #     className="android.widget.ImageView")[1].exists:
+                                                #     d(className="android.widget.FrameLayout",
+                                                #       resourceId="com.google.android.youtube:id/interstitials_container").child(
+                                                #         className="android.widget.ImageView")[1].click()
+                                                #
+                                                #     print("发送元素2")
+                                                #
+                                                # else:
+                                                #     print("不存在相关元素")
+                                                #     pass
                                                 pass
 
                                     time.sleep(2)
@@ -592,8 +563,8 @@ class RunAdvertisingThread(QThread):
                                     if d(className="android.widget.FrameLayout",
                                          resourceId="com.google.android.youtube:id/elements_button_bar_container").child(
                                         className="android.widget.ImageView")[0].exists:
+                                        logger_run.info(f"设备 {device.device_id} 存在点赞元素")
 
-                                        print("存在like元素")
                                         d(className="android.widget.FrameLayout",
                                           resourceId="com.google.android.youtube:id/elements_button_bar_container").child(
                                             className="android.widget.ImageView")[0].click()
@@ -605,11 +576,6 @@ class RunAdvertisingThread(QThread):
 
                     else:
                         break
-                # if current_script["wait_time"] >= 0:
-                #     wait_time = int(current_script["wait_time"])
-                #     if isinstance(wait_time, int):
-                #         time.sleep(wait_time)
-
                 ######################################
 
                 ######################################
@@ -624,10 +590,6 @@ class RunAdvertisingThread(QThread):
                         UIAutoMotorUtil.input_text(device.device_id, text_)
                     else:
                         break
-                # if current_script["wait_time"] >= 0:
-                #     wait_time = int(current_script["wait_time"])
-                #     if isinstance(wait_time, int):
-                #         time.sleep(wait_time)
                 ######################################
 
                 ######################################
@@ -648,8 +610,8 @@ class RunAdvertisingThread(QThread):
             # 如果是在执行任务的过程中出现了异常, 则需要停止app并返回到手机主界面
             UIAutoMotorUtil.home(device.device_id)
             UIAutoMotorUtil.stop_app(device.device_id, script.app.package_name)
-            print(f"error: {str(e)}")
-            logger_run.error(str(e))
+            logger_run.error(f"设备 ######## {device.device_id} ########### error: {str(e)}")
+            # logger_run.error(str(e))
 
         finally:
             # 更新手机任务状态
