@@ -221,12 +221,14 @@ class DetailAppTaskDialog(MessageBoxBase):
         self.app_label = BodyLabel('关联app: ', self)
         self.ratio_label = BodyLabel('任务执行比率: ', self)
         self.execution_date_label = BodyLabel('app任务执行时间: ', self)
+        self.is_execution_label = BodyLabel('执行状态', self)
 
 
         vbox1.addWidget(self.app_task_type_label)
         vbox1.addWidget(self.app_label)
         vbox1.addWidget(self.ratio_label)
         vbox1.addWidget(self.execution_date_label)
+        vbox1.addWidget(self.is_execution_label)
 
         ###############################
 
@@ -234,16 +236,19 @@ class DetailAppTaskDialog(MessageBoxBase):
         self.app_edit = LineEdit(self)
         self.ratio_edit = LineEdit(self)
         self.execution_edit = LineEdit(self)
+        self.is_execution_edit= LineEdit(self)
 
         self.app_task_type_edit.setText(obj_.task_type)
         self.app_edit.setText(obj_.app.app_name)
         self.ratio_edit.setText(str(obj_.ratio))
         self.execution_edit.setText(str(obj_.execution_date))
+        self.is_execution_edit.setText('未执行' if obj_.is_execution == 0 else '已执行')
 
         vbox2.addWidget(self.app_task_type_edit)
         vbox2.addWidget(self.app_edit)
         vbox2.addWidget(self.ratio_edit)
         vbox2.addWidget(self.execution_edit)
+        vbox2.addWidget(self.is_execution_edit)
 
         hbox1.addLayout(vbox1)
         hbox1.addLayout(vbox2)
