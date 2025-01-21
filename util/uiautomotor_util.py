@@ -3,10 +3,12 @@
 # @Time : 2025/1/17 9:15
 # @Author : limber
 # @desc :
-import dis
+from datetime import datetime
 from typing import List, Tuple
 
 import uiautomator2 as uam2
+
+from util.path_util import PathUtil
 
 
 class UIAutoMotorUtil:
@@ -40,7 +42,6 @@ class UIAutoMotorUtil:
         except Exception as e:
             print(e)
             raise e
-
 
     @staticmethod
     def click_by_coord(device_id: str, coord_: List[int]) -> bool:
@@ -135,5 +136,35 @@ class UIAutoMotorUtil:
             print(e)
             raise e
 
+    @staticmethod
+    def element_exist(device_uid: str, ele_xpath: str) -> bool:
+        """判断元素是否存在"""
+        try:
+            device_ = uam2.connect(serial=device_uid)
+            is_exist = device_.xpath(ele_xpath).exists
+            return is_exist
+        except Exception as e:
+            raise e
+
+    @staticmethod
+    def screen_shot(device_id: str) -> str:
+        try:
+            device_ = uam2.connect(serial=device_id)
+            datetime_ = datetime.now()
+            time_str = f"{datetime_.year}_{datetime_.month}_{datetime_.day}_{datetime_.hour}_{datetime_.minute}_{datetime_.second}"
+            # resources/exception_step
+            file_path = str(PathUtil.get_root_path(__file__, 2).joinpath("resources").joinpath("exception_step"))
+            file_name = f"{file_path}/{device_id}_{time_str}.png"
+            device_.screenshot(filename=file_name)
+            return file_name
+        except Exception as e:
+            raise e
+
     def generate_uam(self, device_id: str) -> uam2.Device:
         return uam2.connect(serial=device_id)
+
+
+if __name__ == '__main__':
+    device_id = "R5CN90H2FVX"
+    file_path = UIAutoMotorUtil.screen_shot(device_id)
+    print(file_path)

@@ -292,7 +292,9 @@ class RunAdvertisingThread(QThread):
                             """
                                 "data": "该元素的xpath定位"
                             """
-                            UIAutoMotorUtil.click_by_xpath(device.device_id, current_script["data"])
+                            ui_xpath = current_script["data"]
+                            if UIAutoMotorUtil.element_exist(device.device_id, ui_xpath):
+                                UIAutoMotorUtil.click_by_xpath(device.device_id, ui_xpath)
 
                         ########
                         # 绝对定位
@@ -616,6 +618,11 @@ class RunAdvertisingThread(QThread):
             # 如果是在执行任务的过程中出现了异常, 则需要停止app并返回到手机主界面
             UIAutoMotorUtil.home(device.device_id)
             UIAutoMotorUtil.stop_app(device.device_id, script.app.package_name)
+
+            # 发生异常 手机截图
+            UIAutoMotorUtil.screen_shot(device.device_id)
+
+
             logger_run.error(f"设备 ######## {device.device_id} ########### error: {str(e)}")
             # logger_run.error(str(e))
 
