@@ -12,18 +12,11 @@ from datetime import datetime
 
 from PyQt6.QtCore import QThread
 
-from database_service.db import database
-from database_service.model.app_task_record_model import AppTaskRecord
 from database_service.model.device_model import Device
-from database_service.service.app_task_record_service import AppTaskRecordService
 from database_service.service.app_task_service import AppTaskService
 from database_service.service.device_service import DeviceService
-from util.adb_util import AdbUtil
-from util.config_util import APP_TASK_TYPE_ONE, APP_TASK_TYPE_TWO, DOWNLOAD_APP_ICON, UPDATE_APP_ICON
 from util.device_queue import DeviceQueue
-from util.image_util import ImageUtil
 from util.manage_app_util import ManageAppUtil
-from util.path_util import PathUtil
 from util import config_util
 
 
