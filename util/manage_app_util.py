@@ -7,12 +7,16 @@ import time
 
 import uiautomator2 as uam2
 
+from database_service.model.device_model import Device
+from util.device_queue import DeviceQueue
+
+
 class ManageAppUtil:
 
     @staticmethod
-    def download_app(device_id: str, app_short_link: str) -> bool:
+    def download_app(device: Device, app_short_link: str) -> bool:
         try:
-            d = uam2.connect(serial=device_id)
+            d = uam2.connect(serial=device.device_id)
             time.sleep(1)
             d.press("home")
             time.sleep(1)
@@ -53,7 +57,6 @@ class ManageAppUtil:
             else:
                 raise Exception("未找到该组件")
 
-
             # 7. 点击下载按钮
             widget_ = d.xpath('//android.widget.TextView[@text="Install"]').exists
             if widget_:
@@ -69,12 +72,12 @@ class ManageAppUtil:
             print(str(e))
             return False
         finally:
-            pass
+            DeviceQueue.put(device)
 
     @staticmethod
-    def update_app(device_id: str, app_short_link: str) -> bool:
+    def update_app(device: Device, app_short_link: str) -> bool:
         try:
-            d = uam2.connect(serial=device_id)
+            d = uam2.connect(serial=device.device_id)
             time.sleep(1)
             d.press("home")
             time.sleep(1)
@@ -130,12 +133,12 @@ class ManageAppUtil:
             print(str(e))
             return False
         finally:
-            pass
+            DeviceQueue.put(device)
 
     @staticmethod
-    def delete_app(device_id: str, app_package_name: str) -> bool:
+    def delete_app(device: Device, app_package_name: str) -> bool:
         try:
-            d = uam2.connect(serial=device_id)
+            d = uam2.connect(serial=device.device_id)
             time.sleep(1)
             d.app_uninstall(app_package_name)
             time.sleep(2)
@@ -146,6 +149,4 @@ class ManageAppUtil:
             print(str(e))
             return False
         finally:
-            pass
-
-
+            DeviceQueue.put(device)
