@@ -3,17 +3,19 @@
 # @Time : 2024/12/19 16:07
 # @Author : limber
 # @desc :
-
+import json
 
 from PyQt6.QtCore import QThread, pyqtSignal
 import time
 from database_service.model.device_model import Device
+from database_service.service.app_service import AppService
 from database_service.service.device_service import DeviceService
 from logger_zk.logger_types import logger_watch
 from util.adb_util import AdbUtil
 from util.config_util import COORD_ONE, COORD_TWO
 from util.device_queue import DeviceQueue
 from util.general_util import GeneralUtil
+from util.uiautomotor_util import UIAutoMotorUtil
 
 
 # from adb.adb import device_list, info
@@ -56,6 +58,14 @@ class NewDeviceMonitor(QThread):
                         if result is None:
                             # 实例化一个Device对象
                             device_ = Device(**device_info)
+
+                            # 判断设备具有哪些终端已注册的app
+                            app_name_list = [app.package_name for app in AppService.select_all()]
+                            download_app_list = []
+                            for package_name in app_name_list:
+                                if UIAutoMotorUtil.is_download_app(device_.device_id, package_name):
+                                    download_app_list.append(package_name)
+                            device_.download_app = json.dumps(download_app_list)
                             DeviceService.add(device_)
                             # 将新设备添加到队列
                             new_device = DeviceService.select_by_device_id(device_.device_id)
