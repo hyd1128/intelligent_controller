@@ -161,20 +161,24 @@ class AddAppTaskDialog(MessageBoxBase):
         self.app_task_type_label = BodyLabel('app任务类型: ', self)
         self.app_label = BodyLabel('关联app: ', self)
         self.ratio_label = BodyLabel('任务执行比率: ', self)
+        self.execution_date_label = BodyLabel('app任务执行时间: ', self)
 
         vbox1.addWidget(self.app_task_type_label)
         vbox1.addWidget(self.app_label)
         vbox1.addWidget(self.ratio_label)
+        vbox1.addWidget(self.execution_date_label)
 
         ###############################
 
         self.app_task_type_edit = AppTaskTypeRadioButtonWidget(self)
         self.app_edit = RadioButtonWidget(self)
         self.ratio_edit = LineEdit(self)
+        self.execution_date_edit = ZhDatePicker(self)
 
         vbox2.addWidget(self.app_task_type_edit)
         vbox2.addWidget(self.app_edit)
         vbox2.addWidget(self.ratio_edit)
+        vbox2.addWidget(self.execution_date_edit)
 
         hbox1.addLayout(vbox1)
         hbox1.addLayout(vbox2)
@@ -191,10 +195,12 @@ class AddAppTaskDialog(MessageBoxBase):
         self.widget.setMinimumWidth(500)
 
     def validate(self) -> bool:
+        date_ = self.execution_date_edit.date
         app_task_ = AppTask(
             task_type=self.app_task_type_edit.get_selected_method(),
             app=self.app_edit.get_selected_method(),
-            ratio=self.ratio_edit.text()
+            ratio=self.ratio_edit.text(),
+            execution_date=date(year=date_.year(), month=date_.month(), day=date_.day())
         )
 
         AppTaskService.add(app_task_)
@@ -214,24 +220,30 @@ class DetailAppTaskDialog(MessageBoxBase):
         self.app_task_type_label = BodyLabel('app任务类型: ', self)
         self.app_label = BodyLabel('关联app: ', self)
         self.ratio_label = BodyLabel('任务执行比率: ', self)
+        self.execution_date_label = BodyLabel('app任务执行时间: ', self)
+
 
         vbox1.addWidget(self.app_task_type_label)
         vbox1.addWidget(self.app_label)
         vbox1.addWidget(self.ratio_label)
+        vbox1.addWidget(self.execution_date_label)
 
         ###############################
 
         self.app_task_type_edit = LineEdit(self)
         self.app_edit = LineEdit(self)
         self.ratio_edit = LineEdit(self)
+        self.execution_edit = LineEdit(self)
 
         self.app_task_type_edit.setText(obj_.task_type)
         self.app_edit.setText(obj_.app.app_name)
         self.ratio_edit.setText(str(obj_.ratio))
+        self.execution_edit.setText(str(obj_.execution_date))
 
         vbox2.addWidget(self.app_task_type_edit)
         vbox2.addWidget(self.app_edit)
         vbox2.addWidget(self.ratio_edit)
+        vbox2.addWidget(self.execution_edit)
 
         hbox1.addLayout(vbox1)
         hbox1.addLayout(vbox2)

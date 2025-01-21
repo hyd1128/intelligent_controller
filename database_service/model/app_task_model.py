@@ -14,6 +14,7 @@ class AppTask(Base):
     id = IntegerField(primary_key=True)
     task_type = CharField()  # App任务类型: 下载/更新 设备需要已下载该软件后才可以更新软件
     ratio = FloatField(default=1)  # 当前节点执行该任务的设备比率(0 - 1)
+    execution_date = DateField()    # app 任务执行时间
     app = ForeignKeyField(App, backref="appTask")
 
     class Meta:
