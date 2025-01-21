@@ -74,7 +74,6 @@ if __name__ == '__main__':
     task = AdvertisingTaskMapper.select_by_id(1)
     date = date.today()
     result = AdvertisingTaskRecordMapper.select_by_multiple_conditions(task, device, date)
-    print(type(result))
     if isinstance(result, AdvertisingTaskRecord):
         print(result.execution_times)
 
