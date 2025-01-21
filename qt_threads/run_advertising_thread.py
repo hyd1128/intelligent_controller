@@ -224,8 +224,6 @@ class RunAdvertisingThread(QThread):
         # 按步骤执行
         script.script_content = json.loads(script.script_content)
 
-        # 统计脚本步骤
-        total_steps = len(script.script_content)
         ############################################################################################
         # 新版本执行脚本程序
         ##################
@@ -238,7 +236,7 @@ class RunAdvertisingThread(QThread):
                     current_script: {
                         "action": "",  # 动作
                         "pattern": "",    # 执行方式
-                        "dat`a": "",     # 具体数据
+                        "data": "",     # 具体数据
                         "wait_time": 0, # 睡眠时间
                         "execute_probability": 1   # 执行概率
                     }
