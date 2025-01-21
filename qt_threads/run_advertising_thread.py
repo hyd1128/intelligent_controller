@@ -441,10 +441,6 @@ class RunAdvertisingThread(QThread):
                         time.sleep(current_script["data"])
                     else:
                         break
-                    # if current_script["wait_time"] >= 0:
-                    #     wait_time = int(current_script["wait_time"])
-                    #     if isinstance(wait_time, int):
-                    #         time.sleep(wait_time)
                 ######################################
 
                 ######################################
