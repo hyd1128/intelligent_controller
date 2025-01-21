@@ -165,6 +165,7 @@ class UIAutoMotorUtil:
 
 
 if __name__ == '__main__':
-    device_id = "R5CN90H2FVX"
-    file_path = UIAutoMotorUtil.screen_shot(device_id)
-    print(file_path)
+    # device_id = "R5CN90H2FVX"
+    # file_path = UIAutoMotorUtil.screen_shot(device_id)
+    # print(file_path)
+    pass

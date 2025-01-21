@@ -227,6 +227,7 @@ class RunAdvertisingThread(QThread):
         ############################################################################################
         # 新版本执行脚本程序
         ##################
+        current_step = 0
         try:
             for current_step, current_script in enumerate(script.script_content):
                 # 每一个步骤之间停顿两秒
@@ -620,11 +621,11 @@ class RunAdvertisingThread(QThread):
             UIAutoMotorUtil.stop_app(device.device_id, script.app.package_name)
 
             # 发生异常 手机截图
-            UIAutoMotorUtil.screen_shot(device.device_id)
+            error_step_photo_path = UIAutoMotorUtil.screen_shot(device.device_id)
 
-
-            logger_run.error(f"设备 ######## {device.device_id} ########### error: {str(e)}")
-            # logger_run.error(str(e))
+            logger_run.error((f"""################# \n 设备名称: {device.device_id} 
+            \n error_info: {str(e)} \n 脚本名称: {script.script_name} \n 
+            脚本步骤: {current_step} \n photo: {error_step_photo_path}"""))
 
         finally:
             # 更新手机任务状态
