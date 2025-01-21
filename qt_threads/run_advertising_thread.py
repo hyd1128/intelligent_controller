@@ -219,6 +219,8 @@ class RunAdvertisingThread(QThread):
                 - enter
                 - browse
                 - comment
+                - multi_click
+                - swipe_ele_click
         """
         logger_run.info(f"##### 设备 {device.device_id} 开始执行 {script.script_name} 脚本 #####")
         # 按步骤执行
@@ -595,25 +597,82 @@ class RunAdvertisingThread(QThread):
                         "data": ""
                     """
                     if GeneralUtil.probability_tool(current_script["execute_probability"]):
-                        text_ = CommentUtil.place_review()
+                        if current_script["data"] == "place":
+                            text_ = CommentUtil.place_review()
+                        elif current_script["data"] == "vedio":
+                            text_ = CommentUtil.multi_media_review()
+                        else:
+                            text_ = CommentUtil.place_review()
                         UIAutoMotorUtil.input_text(device.device_id, text_)
                     else:
                         break
                 ######################################
 
                 ######################################
-                # 未知操作
+                # 匹配相同元素多次点击操作
                 ########
-                else:
+                elif current_script["action"] == 'multi_click':
+                    """
+                        "data": "xpath"
+                    """
                     if GeneralUtil.probability_tool(current_script["execute_probability"]):
-                        pass
+                        d = UIAutoMotorUtil().generate_uam(device.device_id)
+                        time.sleep(2)
+                        selector_list = d.xpath(current_script["data"]).all()
+                        time.sleep(2)
+                        if selector_list:
+                            for selector_ in selector_list:
+                                time.sleep(1)
+                                selector_.click()
                     else:
-                        pass
-                if current_script["wait_time"] >= 0:
-                    wait_time = int(current_script["wait_time"])
-                    if isinstance(wait_time, int):
-                        time.sleep(wait_time)
+                        break
                 ######################################
+
+                ######################################
+                # 滑动查找元素并点击操作
+                ########
+                elif current_script["action"] == 'swipe_ele_click':
+                    """
+                                "data": {
+                                    "ele_xpath": "xpath",
+                                    "duration_time": 60
+                                },
+                    """
+                    if GeneralUtil.probability_tool(current_script["execute_probability"]):
+                        d = UIAutoMotorUtil().generate_uam(device.device_id)
+                        is_ele_exist = False
+                        start_time = datetime.now()
+                        duration_time = 0
+                        total_time = current_script["data"]["duration_time"]
+                        while total_time >= duration_time:
+                            time.sleep(2)
+                            result_ = d.xpath(current_script["data"]["ele_xpath"]).exists
+                            if result_:
+                                d.xpath(current_script["data"]["ele_xpath"]).click()
+                                is_ele_exist = True
+                                break
+                            device.swipe(500, 1200, 500, 500, 0.3)
+                            time.sleep(1)
+                            duration_time = (datetime.now() - start_time).total_seconds()
+                        if not is_ele_exist:
+                            raise Exception("未找到坐标元素")
+                        else:
+                            break
+                    ######################################
+
+                    ######################################
+                    # 未知操作
+                    ########
+                    else:
+                        if GeneralUtil.probability_tool(current_script["execute_probability"]):
+                            pass
+                        else:
+                            pass
+                    if current_script["wait_time"] >= 0:
+                        wait_time = int(current_script["wait_time"])
+                        if isinstance(wait_time, int):
+                            time.sleep(wait_time)
+                    ######################################
 
         except Exception as e:
             # 如果是在执行任务的过程中出现了异常, 则需要停止app并返回到手机主界面
