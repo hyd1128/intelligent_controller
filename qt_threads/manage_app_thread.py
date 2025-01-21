@@ -21,6 +21,7 @@ from util.config_util import APP_TASK_TYPE_ONE, APP_TASK_TYPE_TWO, DOWNLOAD_APP_
 from util.device_queue import DeviceQueue
 from util.image_util import ImageUtil
 from util.path_util import PathUtil
+from util import config_util
 
 
 class ManageAppThread(QThread):
@@ -35,6 +36,32 @@ class ManageAppThread(QThread):
             if self.flag:
                 break
 
+            # 查询今日app 下载 更新 删除任务
+            date_ = datetime.now().date()
+            is_execution = 0  # 未执行的任务
+            today_app_tasks = AppTaskService.select_by_multi_condition_one(date_, is_execution)
+
+            if today_app_tasks:
+                config_util.SWITCH = 0  # 停止广告任务的执行
+                for app_task in today_app_tasks:
+                    if app_task.task_type == "download":
+                        pass
+
+                    elif app_task.task_type == "update":
+                        pass
+
+                    elif app_task.task_type == "delete":
+                        pass
+
+                    else:
+                        pass
+
+
+
+
+
+
+            #####################################################################
             # 1. 查询今日app任务
             have_app_task = AppTaskService.select_by_date(datetime.now().date())
             if have_app_task:
@@ -146,6 +173,8 @@ class ManageAppThread(QThread):
                             pass
                     # 5. 该台设备今日任务执行完毕, 将其放入任务队列中
                     self.put_device(device_)
+            #####################################################################
+
 
             # 每隔1个小时检测是否有处理app任务
             time.sleep(1 * 60 * 60)

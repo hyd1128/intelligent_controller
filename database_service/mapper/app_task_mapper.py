@@ -49,6 +49,14 @@ class AppTaskMapper:
     def select_count() -> int:
         return AppTask.select().count()
 
+    @staticmethod
+    def select_by_multi_condition_one(date_: date, is_execution: int) -> List[AppTask]:
+        """根据执行日期和执行状态查找符合条件的app任务"""
+        query = AppTask.select().where((fn.Date(AppTask.execution_date) == date_) &
+                                       (AppTask.is_execution == is_execution))
+        return list(query)
+
+
 
 
 if __name__ == '__main__':

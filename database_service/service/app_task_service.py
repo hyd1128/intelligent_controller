@@ -31,3 +31,7 @@ class AppTaskService:
     @staticmethod
     def add(app_task) -> int:
         return AppTaskMapper.add(app_task)
+
+    @staticmethod
+    def select_by_multi_condition_one(date_: date, is_execution: int) -> List[AppTask]:
+        return AppTaskMapper.select_by_multi_condition_one(date_, is_execution)
