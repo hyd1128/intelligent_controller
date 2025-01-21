@@ -120,7 +120,7 @@ class RunAdvertisingThread(QThread):
         target_file_path = root_path.joinpath(RESOURCES).joinpath(POOL_FILE_NAME)
         content = FileUtil.read_file_content(target_file_path)
         thread_pool_size = content[THREAD_POOL_SIZE]
-        logger_run.info(f"##### 当前线程数: {thread_pool_size} #####<-----***")
+        logger_run.info(f"##### 当前线程数: {thread_pool_size} #####")
 
         with ThreadPoolExecutor(max_workers=thread_pool_size) as executor:
             while True:
