@@ -33,3 +33,13 @@ class AppService:
     @staticmethod
     def select_all() -> List[App]:
         return AppMapper.select_all()
+
+
+if __name__ == '__main__':
+    app = AppService.select_by_name("youtube")
+    try:
+        AppService.delete_app(app_id=app.id)
+        print("删除成功")
+    except Exception as e:
+        print(str(e))
+        print("删除失败")

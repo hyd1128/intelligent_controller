@@ -12,4 +12,4 @@ from util.path_util import PathUtil
 db_file = "database.db"
 root_path = PathUtil.get_root_path(__file__, 2)
 db_file_path = root_path.joinpath(RESOURCES).joinpath("database").joinpath(db_file)
-database = SqliteDatabase(db_file_path)
+database = SqliteDatabase(db_file_path, pragmas={'foreign_keys': 1})
