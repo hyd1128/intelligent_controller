@@ -8,7 +8,9 @@ import time
 import uiautomator2 as uam2
 
 from database_service.model.app_task_model import AppTask
+from database_service.model.app_task_record_model import AppTaskRecord
 from database_service.model.device_model import Device
+from database_service.service.app_task_record_service import AppTaskRecordService
 from util.device_queue import DeviceQueue
 
 
@@ -68,6 +70,10 @@ class ManageAppUtil:
 
             # 8. 返回桌面
             d.press("home")
+
+            # 添加一条列表
+            app_task_record = AppTaskRecord(device=device, app_task=app_task)
+            AppTaskRecordService.add(app_task_record)
             return True
         except Exception as e:
             print(str(e))
@@ -129,6 +135,10 @@ class ManageAppUtil:
 
             # 8. 返回桌面
             d.press("home")
+
+            # 添加一条列表
+            app_task_record = AppTaskRecord(device=device, app_task=app_task)
+            AppTaskRecordService.add(app_task_record)
             return True
         except Exception as e:
             print(str(e))
@@ -145,6 +155,10 @@ class ManageAppUtil:
             time.sleep(2)
             d.press("home")
             time.sleep(2)
+
+            # 添加一条列表
+            app_task_record = AppTaskRecord(device=device, app_task=app_task)
+            AppTaskRecordService.add(app_task_record)
             return True
         except Exception as e:
             print(str(e))
