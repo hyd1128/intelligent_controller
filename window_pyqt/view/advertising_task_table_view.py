@@ -5,6 +5,7 @@
 # @desc :
 import math
 from datetime import datetime, time, date
+from sqlite3 import IntegrityError
 from typing import Any
 
 from PyQt6 import QtWidgets, QtCore
@@ -112,14 +113,17 @@ class AdvertisingTaskTableView(Widget):
         self.setStyleSheet("Demo{background: rgb(255, 255, 255)} ")
 
     def delete_advertising_task(self, app_id):
-        # 删除数据
-        result = AdvertisingTaskService.delete(app_id)
-        if result:
-            # # 立即重新加载当前页数据
-            # current_page = self.paging_widget.page_number_
-            # self.tableView.clearContents()  # 清空当前表格内容
-            # self.init_table_data(current_page)  # 重新加载数据
-            self.update_page()
+        try:
+            # 删除数据
+            result = AdvertisingTaskService.delete(app_id)
+            if result:
+                # # 立即重新加载当前页数据
+                # current_page = self.paging_widget.page_number_
+                # self.tableView.clearContents()  # 清空当前表格内容
+                # self.init_table_data(current_page)  # 重新加载数据
+                self.update_page()
+        except IntegrityError:
+            MessageWidget.error_message(self, content="该广告任务还绑定了广告任务记录, 请删除后再进行处理")
 
     def update_page_slot(self, page_number):
         self.tableView.clearContents()  # 清空当前表格内容

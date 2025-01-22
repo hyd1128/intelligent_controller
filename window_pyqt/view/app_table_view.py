@@ -4,6 +4,7 @@
 # @Author : limber
 # @desc :
 import math
+from sqlite3 import IntegrityError
 from typing import Any
 
 from PyQt6 import QtWidgets, QtCore
@@ -109,14 +110,17 @@ class AppTableView(Widget):
         self.setStyleSheet("Demo{background: rgb(255, 255, 255)} ")
 
     def delete_app(self, app_id):
-        # 删除数据
-        result = AppService.delete_app(app_id)
-        if result:
-            # # 立即重新加载当前页数据
-            # current_page = self.paging_widget.page_number_
-            # self.tableView.clearContents()  # 清空当前表格内容
-            # self.init_table_data(current_page)  # 重新加载数据
-            self.update_page()
+        try:
+            # 删除数据
+            result = AppService.delete_app(app_id)
+            if result:
+                # # 立即重新加载当前页数据
+                # current_page = self.paging_widget.page_number_
+                # self.tableView.clearContents()  # 清空当前表格内容
+                # self.init_table_data(current_page)  # 重新加载数据
+                self.update_page()
+        except Exception:
+            MessageWidget.error_message(self, content="该app还绑定了其他数据, 请删除后再进行处理")
 
     def update_page_slot(self, page_number):
         self.tableView.clearContents()  # 清空当前表格内容

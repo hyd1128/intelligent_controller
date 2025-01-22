@@ -113,14 +113,17 @@ class ScriptTableView(Widget):
         self.setStyleSheet("Demo{background: rgb(255, 255, 255)} ")
 
     def delete_script(self, script_id):
-        # 删除数据
-        result = ScriptService.delete(script_id)
-        if result:
-            # # 立即重新加载当前页数据
-            # current_page = self.paging_widget.page_number_
-            # self.tableView.clearContents()  # 清空当前表格内容
-            # self.init_table_data(current_page)  # 重新加载数据
-            self.update_page()
+        try:
+            # 删除数据
+            result = ScriptService.delete(script_id)
+            if result:
+                # # 立即重新加载当前页数据
+                # current_page = self.paging_widget.page_number_
+                # self.tableView.clearContents()  # 清空当前表格内容
+                # self.init_table_data(current_page)  # 重新加载数据
+                self.update_page()
+        except Exception:
+            MessageWidget.error_message(self, "该脚本还绑定了其他数据, 暂时不能够被删除")
 
     def update_page_slot(self, page_number):
         self.tableView.clearContents()  # 清空当前表格内容
