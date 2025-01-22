@@ -19,3 +19,13 @@ class App(Base):
 
     class Meta:
         table_name = "tb_app"
+
+
+if __name__ == '__main__':
+    try:
+        app = App.get(App.id == 1)
+        app.delete_instance()
+        print(111)
+    except IntegrityError as e:
+        print(222)
+        print(str(e))
