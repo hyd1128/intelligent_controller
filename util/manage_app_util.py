@@ -7,6 +7,7 @@ import time
 
 import uiautomator2 as uam2
 
+from database_service.model.app_task_model import AppTask
 from database_service.model.device_model import Device
 from util.device_queue import DeviceQueue
 
@@ -14,7 +15,7 @@ from util.device_queue import DeviceQueue
 class ManageAppUtil:
 
     @staticmethod
-    def download_app(device: Device, app_short_link: str) -> bool:
+    def download_app(device: Device, app_task: AppTask) -> bool:
         try:
             d = uam2.connect(serial=device.device_id)
             time.sleep(1)
@@ -42,7 +43,7 @@ class ManageAppUtil:
                 raise Exception("未找到该组件")
 
             # 4. 输入框输入短链接
-            d.send_keys(app_short_link)
+            d.send_keys(app_task.app.download_url)
             time.sleep(1)
 
             # 5. 确认搜索
@@ -75,7 +76,7 @@ class ManageAppUtil:
             DeviceQueue.put(device)
 
     @staticmethod
-    def update_app(device: Device, app_short_link: str) -> bool:
+    def update_app(device: Device, app_task: AppTask) -> bool:
         try:
             d = uam2.connect(serial=device.device_id)
             time.sleep(1)
@@ -103,7 +104,7 @@ class ManageAppUtil:
                 raise Exception("未找到该组件")
 
             # 4. 输入框输入短链接
-            d.send_keys(app_short_link)
+            d.send_keys(app_task.app.download_url)
             time.sleep(1)
 
             # 5. 确认搜索
@@ -136,11 +137,11 @@ class ManageAppUtil:
             DeviceQueue.put(device)
 
     @staticmethod
-    def delete_app(device: Device, app_package_name: str) -> bool:
+    def delete_app(device: Device, app_task: AppTask) -> bool:
         try:
             d = uam2.connect(serial=device.device_id)
             time.sleep(1)
-            d.app_uninstall(app_package_name)
+            d.app_uninstall(app_task.app.package_name)
             time.sleep(2)
             d.press("home")
             time.sleep(2)

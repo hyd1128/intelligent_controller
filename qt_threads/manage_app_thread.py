@@ -75,21 +75,21 @@ class ManageAppThread(QThread):
                                 with ThreadPoolExecutor(max_workers=20) as executor:
                                     # 遍历列表，为每个元素提交任务
                                     for device in device_no_app_list:
-                                        executor.submit(ManageAppUtil.download_app, device, app_task.app.download_link)
+                                        executor.submit(ManageAppUtil.download_app, device, app_task)
 
                             elif app_task.task_type == "update":
                                 # 创建线程池，这里使用最大线程数为3作为示例
                                 with ThreadPoolExecutor(max_workers=20) as executor:
                                     # 遍历列表，为每个元素提交任务
                                     for device in device_no_app_list:
-                                        executor.submit(ManageAppUtil.update_app, device, app_task.app.download_link)
+                                        executor.submit(ManageAppUtil.update_app, device, app_task)
 
                             elif app_task.task_type == "delete":
                                 # 创建线程池，这里使用最大线程数为3作为示例
                                 with ThreadPoolExecutor(max_workers=20) as executor:
                                     # 遍历列表，为每个元素提交任务
                                     for device in device_no_app_list:
-                                        executor.submit(ManageAppUtil.download_app, device, app_task.app.package_name)
+                                        executor.submit(ManageAppUtil.download_app, device, app_task)
 
                             else:
                                 pass
