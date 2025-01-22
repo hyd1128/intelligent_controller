@@ -14,7 +14,7 @@ class Script(Base):
     script_name = CharField(unique=True)  # 脚本名称
     script_content = TextField()  # 脚本内容
     script_type = CharField(null=True)  # 脚本类型 广告任务相关的脚本或者app操作相关的脚本
-    app = ForeignKeyField(App, backref="scripts")  # 脚本关联的app
+    app = ForeignKeyField(App, backref="scripts", on_delete="RESTRICT")  # 脚本关联的app
 
     class Meta:
         table_name = "tb_script"

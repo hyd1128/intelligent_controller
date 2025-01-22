@@ -19,8 +19,8 @@ class AdvertisingTaskRecord(Base):
     specify_device_execution_time = IntegerField()  # 指定设备
     task_last_execution_time = DateTimeField(null=True)  # 任务上一次执行时间
     date = DateField()  # 记录时间
-    device = ForeignKeyField(Device, backref="records")  # 记录关联的设备
-    task = ForeignKeyField(AdvertisingTask, backref="records")  # 记录关联的任务
+    device = ForeignKeyField(Device, backref="records", on_delete="RESTRICT")  # 记录关联的设备
+    task = ForeignKeyField(AdvertisingTask, backref="records", on_delete="RESTRICT")  # 记录关联的任务
 
     class Meta:
         table_name = "tb_advertising_task_record"

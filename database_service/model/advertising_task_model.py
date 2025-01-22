@@ -17,7 +17,7 @@ class AdvertisingTask(Base):
     max_execution_times = IntegerField()  # 任务最多执行次数
     task_release_date = DateField()  # 任务发布时间
     task_execution_date = DateField()  # 任务执行时间
-    app = ForeignKeyField(App, backref="tasks")  # 任务关联的app
+    app = ForeignKeyField(App, backref="tasks", on_delete="RESTRICT")  # 任务关联的app
     ratio = FloatField(default=1)  # 当前节点执行该任务的设备比率(0 - 1)
 
     class Meta:

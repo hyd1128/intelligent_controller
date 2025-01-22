@@ -16,7 +16,7 @@ class AppTask(Base):
     ratio = FloatField(default=1)  # 当前节点执行该任务的设备比率(0 - 1)
     execution_date = DateField()    # app 任务执行时间
     is_execution = SmallIntegerField(default=0)
-    app = ForeignKeyField(App, backref="appTask")
+    app = ForeignKeyField(App, backref="appTask", on_delete="RESTRICT")
 
     class Meta:
         table_name = "tb_app_task"
