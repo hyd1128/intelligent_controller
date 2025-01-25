@@ -641,15 +641,12 @@ class RunAdvertisingThread(QThread):
                                     time.sleep(2)
                                     d = UIAutoMotorUtil().generate_uam(device.device_id)
 
-                                    like_element_exist = d(className="android.widget.FrameLayout",
-                                                           resourceId="com.google.android.youtube:id/elements_button_bar_container").child(
-                                        className="android.widget.ImageView")[0].exists
+                                    like_element_exist = d.xpath(
+                                        '//*[@resource-id="com.instagram.android:id/like_button"]').exists
                                     if like_element_exist:
                                         logger_run.info(f"设备 {device.device_id} 存在点赞元素")
 
-                                        d(className="android.widget.FrameLayout",
-                                          resourceId="com.google.android.youtube:id/elements_button_bar_container").child(
-                                            className="android.widget.ImageView")[0].click()
+                                        d.xpath('//*[@resource-id="com.instagram.android:id/like_button"]').click()
 
                                 UIAutoMotorUtil.swipe_by_coord(device.device_id, [(500, 1200), (500, 300)], 0.2)
 
@@ -708,15 +705,12 @@ class RunAdvertisingThread(QThread):
                                     time.sleep(2)
                                     d = UIAutoMotorUtil().generate_uam(device.device_id)
 
-                                    like_element_exist = d(className="android.widget.FrameLayout",
-                                                           resourceId="com.google.android.youtube:id/elements_button_bar_container").child(
-                                        className="android.widget.ImageView")[0].exists
+                                    like_element_exist = d.xpath(
+                                        '//*[@content-desc="Like. Double tap and hold to react."]').exists
                                     if like_element_exist:
                                         logger_run.info(f"设备 {device.device_id} 存在点赞元素")
 
-                                        d(className="android.widget.FrameLayout",
-                                          resourceId="com.google.android.youtube:id/elements_button_bar_container").child(
-                                            className="android.widget.ImageView")[0].click()
+                                        d.xpath('//*[@content-desc="Like. Double tap and hold to react."]').click()
 
                                 UIAutoMotorUtil.swipe_by_coord(device.device_id, [(500, 1200), (500, 300)], 0.2)
 
