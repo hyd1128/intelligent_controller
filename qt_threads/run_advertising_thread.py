@@ -583,6 +583,145 @@ class RunAdvertisingThread(QThread):
 
                                 # 判断浏览视频的时长
                                 duration_browse_time = (datetime.now() - start_browse_time).total_seconds()
+                        if current_script["data"]["app_name"] == "instagram":
+                            total_browse_time = current_script["data"]["total_duration_time"]
+                            while duration_browse_time <= total_browse_time:
+                                # 观看视频时间
+                                time.sleep(current_script["data"]["once_duration_time"])
+
+                                # 评论视频
+                                if GeneralUtil.probability_tool(current_script["data"]["review_probability"]):
+                                    time.sleep(2)
+                                    d = UIAutoMotorUtil().generate_uam(device.device_id)
+
+                                    view_one_exist = d.xpath(
+                                        '//*[@resource-id="com.instagram.android:id/comment_button"]').exists
+
+                                    if view_one_exist:
+                                        logger_run.info(f"##### 设备 {device.device_id} 存在评论元素")
+                                        d.xpath('//*[@resource-id="com.instagram.android:id/comment_button"]').click()
+                                        time.sleep(2)
+
+                                        view_two_exist = d.xpath(
+                                            '//*[@resource-id="com.instagram.android:id/layout_comment_thread_edittext"]').exists
+
+                                        if view_two_exist:
+                                            logger_run.info(f"##### 设备 {device.device_id} 存在输入文本元素")
+                                            d.xpath(
+                                                '//*[@resource-id="com.instagram.android:id/layout_comment_thread_edittext"]').click()
+
+                                            # 评论类型1
+                                            if current_script["data"]["browse_type"] == "vedio":
+                                                text_ = CommentUtil.multi_media_review()
+                                                d.send_keys(text_)
+                                                time.sleep(2)
+
+                                                send_condition_one = d.xpath(
+                                                    '//*[@resource-id="com.instagram.android:id/layout_comment_thread_post_button_icon"]').exists
+
+                                                if send_condition_one:
+                                                    logger_run.info(f"设备 {device.device_id} 存在发送元素1")
+                                                    d.xpath(
+                                                        '//*[@resource-id="com.instagram.android:id/layout_comment_thread_post_button_icon"]').click()
+                                                else:
+                                                    logger_run.info(f"设备 {device.device_id} 不存在发送元素")
+                                                    UIAutoMotorUtil.back(device.device_id)
+                                                    pass
+
+                                            # 评论类型2
+                                            else:
+                                                pass
+
+                                    time.sleep(2)
+                                    if view_one_exist:
+                                        AdbUtil.back(device.device_id)
+
+                                # 点赞视频
+                                if GeneralUtil.probability_tool(current_script["data"]["like_probability"]):
+                                    time.sleep(2)
+                                    d = UIAutoMotorUtil().generate_uam(device.device_id)
+
+                                    like_element_exist = d(className="android.widget.FrameLayout",
+                                                           resourceId="com.google.android.youtube:id/elements_button_bar_container").child(
+                                        className="android.widget.ImageView")[0].exists
+                                    if like_element_exist:
+                                        logger_run.info(f"设备 {device.device_id} 存在点赞元素")
+
+                                        d(className="android.widget.FrameLayout",
+                                          resourceId="com.google.android.youtube:id/elements_button_bar_container").child(
+                                            className="android.widget.ImageView")[0].click()
+
+                                UIAutoMotorUtil.swipe_by_coord(device.device_id, [(500, 1200), (500, 300)], 0.2)
+
+                                # 判断浏览视频的时长
+                                duration_browse_time = (datetime.now() - start_browse_time).total_seconds()
+                        if current_script["data"]["app_name"] == "facebook":
+                            total_browse_time = current_script["data"]["total_duration_time"]
+                            while duration_browse_time <= total_browse_time:
+                                # 观看视频时间
+                                time.sleep(current_script["data"]["once_duration_time"])
+
+                                # 评论视频
+                                if GeneralUtil.probability_tool(current_script["data"]["review_probability"]):
+                                    time.sleep(2)
+                                    d = UIAutoMotorUtil().generate_uam(device.device_id)
+
+                                    view_one_exist = d.xpath('//*[@content-desc="Comment"]').exists
+
+                                    if view_one_exist:
+                                        logger_run.info(f"##### 设备 {device.device_id} 存在评论元素")
+                                        d.xpath('//*[@content-desc="Comment"]').click()
+                                        time.sleep(2)
+
+                                        view_two_exist = d.xpath('//*[@text="Write a comment…"]').exists
+
+                                        if view_two_exist:
+                                            logger_run.info(f"##### 设备 {device.device_id} 存在输入文本元素")
+                                            d.xpath('//*[@text="Write a comment…"]').click()
+
+                                            # 评论类型1
+                                            if current_script["data"]["browse_type"] == "vedio":
+                                                text_ = CommentUtil.multi_media_review()
+                                                d.send_keys(text_)
+                                                time.sleep(2)
+
+                                                send_condition_one = d.xpath('//*[@content-desc="Send"]').exists
+
+                                                if send_condition_one:
+                                                    logger_run.info(f"设备 {device.device_id} 存在发送元素1")
+                                                    d.xpath('//*[@content-desc="Send"]').click()
+                                                else:
+                                                    logger_run.info(f"设备 {device.device_id} 不存在发送元素")
+                                                    UIAutoMotorUtil.back(device.device_id)
+                                                    pass
+
+                                            # 评论类型2
+                                            else:
+                                                pass
+
+                                    time.sleep(2)
+                                    if view_one_exist:
+                                        AdbUtil.back(device.device_id)
+
+                                # 点赞视频
+                                if GeneralUtil.probability_tool(current_script["data"]["like_probability"]):
+                                    time.sleep(2)
+                                    d = UIAutoMotorUtil().generate_uam(device.device_id)
+
+                                    like_element_exist = d(className="android.widget.FrameLayout",
+                                                           resourceId="com.google.android.youtube:id/elements_button_bar_container").child(
+                                        className="android.widget.ImageView")[0].exists
+                                    if like_element_exist:
+                                        logger_run.info(f"设备 {device.device_id} 存在点赞元素")
+
+                                        d(className="android.widget.FrameLayout",
+                                          resourceId="com.google.android.youtube:id/elements_button_bar_container").child(
+                                            className="android.widget.ImageView")[0].click()
+
+                                UIAutoMotorUtil.swipe_by_coord(device.device_id, [(500, 1200), (500, 300)], 0.2)
+
+                                # 判断浏览视频的时长
+                                duration_browse_time = (datetime.now() - start_browse_time).total_seconds()
                         else:
                             pass
                     else:
