@@ -652,6 +652,7 @@ class RunAdvertisingThread(QThread):
 
                                 # 判断浏览视频的时长
                                 duration_browse_time = (datetime.now() - start_browse_time).total_seconds()
+
                         if current_script["data"]["app_name"] == "facebook":
                             total_browse_time = current_script["data"]["total_duration_time"]
                             while duration_browse_time <= total_browse_time:
