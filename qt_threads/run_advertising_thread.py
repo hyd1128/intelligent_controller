@@ -651,7 +651,7 @@ class RunAdvertisingThread(QThread):
                                 d.xpath(current_script["data"]["ele_xpath"]).click()
                                 is_ele_exist = True
                                 break
-                            device.swipe(500, 1200, 500, 500, 0.3)
+                            d.swipe(500, 1200, 500, 500, 0.3)
                             time.sleep(1)
                             duration_time = (datetime.now() - start_time).total_seconds()
                         if not is_ele_exist:
