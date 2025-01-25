@@ -264,9 +264,8 @@ class RunAdvertisingThread(QThread):
                             screen_image = AdbUtil.screen_cap_pull(device.device_id)
                             template_image_path = (PathUtil.get_root_path(__file__, 2)
                                                    .joinpath(RESOURCES)
-                                                   .joinpath("advertising_template").
-                                                   joinpath("train_account").
-                                                   joinpath(current_script["data"]))
+                                                   .joinpath("advertising_template")
+                                                   .joinpath(current_script["data"]))
                             point = ImageUtil.match(screen_image, str(template_image_path))
                             if point:
                                 AdbUtil.click(device.device_id, point[0], point[1])
